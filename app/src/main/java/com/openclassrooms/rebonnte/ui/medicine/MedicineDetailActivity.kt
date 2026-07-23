@@ -87,7 +87,7 @@ fun MedicineDetailScreen(name: String, viewModel: MedicineViewModel) {
             ) {
                 IconButton(onClick = {
                     if (stock > 0) {
-                        medicines[medicines.size].histories.toMutableList().add(
+                        medicine.histories.toMutableList().add(        // IndexOutOfBoundsException
                             History(
                                 medicine.name,
                                 "efeza56f1e65f",
@@ -111,7 +111,7 @@ fun MedicineDetailScreen(name: String, viewModel: MedicineViewModel) {
                     modifier = Modifier.weight(1f)
                 )
                 IconButton(onClick = {
-                    medicines[medicines.size].histories.toMutableList().add(
+                    medicine.histories.toMutableList().add(        // IndexOutOfBoundsException
                         History(
                             medicine.name,
                             "efeza56f1e65f",

@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
     private fun startMyBroadcast() {
         val intent = Intent("com.rebonnte.ACTION_UPDATE")
         sendBroadcast(intent)
-        startBroadcastReceiver()
+        startBroadcastReceiver()                  // creates an infinite loop
     }
 
     private fun startBroadcastReceiver() {

@@ -12,7 +12,7 @@ class MedicineViewModel : ViewModel() {
     val medicines: StateFlow<List<Medicine>> get() = _medicines
 
     init {
-        _medicines.value = ArrayList() // Initialiser avec une liste vide
+        _medicines.value = ArrayList()
     }
 
     fun addRandomMedicine(aisles: List<Aisle>) {
@@ -38,11 +38,11 @@ class MedicineViewModel : ViewModel() {
                 filteredMedicines.add(medicine)
             }
         }
-        _medicines.value = filteredMedicines
+        _medicines.value = filteredMedicines        // Shouldn't modify original state, loss of data
     }
 
     fun sortByNone() {
-        _medicines.value = medicines.value.toMutableList() // Pas de tri
+        _medicines.value = medicines.value.toMutableList()
     }
 
     fun sortByName() {
