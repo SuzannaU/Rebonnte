@@ -1,4 +1,4 @@
-package com.openclassrooms.rebonnte.ui.medicine
+package com.openclassrooms.rebonnte.ui.medicineDetail
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -35,7 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.openclassrooms.rebonnte.MainActivity
-import com.openclassrooms.rebonnte.ui.history.History
+import com.openclassrooms.rebonnte.domain.model.History
+import com.openclassrooms.rebonnte.ui.medicineList.MedicineViewModel
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 import java.util.Date
 

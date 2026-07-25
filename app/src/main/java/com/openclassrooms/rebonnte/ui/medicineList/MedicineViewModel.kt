@@ -1,7 +1,8 @@
-package com.openclassrooms.rebonnte.ui.medicine
+package com.openclassrooms.rebonnte.ui.medicineList
 
 import androidx.lifecycle.ViewModel
-import com.openclassrooms.rebonnte.ui.aisle.Aisle
+import com.openclassrooms.rebonnte.domain.model.Aisle
+import com.openclassrooms.rebonnte.domain.model.Medicine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.Locale

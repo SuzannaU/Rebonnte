@@ -1,4 +1,4 @@
-package com.openclassrooms.rebonnte.ui.aisle
+package com.openclassrooms.rebonnte.ui.aisleList
 
 import android.content.Context
 import android.content.Intent
@@ -21,6 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.openclassrooms.rebonnte.domain.model.Aisle
+import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailActivity
 
 @Composable
 fun AisleScreen(viewModel: AisleViewModel) {

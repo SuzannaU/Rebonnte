@@ -1,4 +1,4 @@
-package com.openclassrooms.rebonnte.ui.medicine
+package com.openclassrooms.rebonnte.ui.medicineList
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.platform.LocalContext
+import com.openclassrooms.rebonnte.domain.model.Medicine
+import com.openclassrooms.rebonnte.ui.medicineDetail.MedicineDetailActivity
 
 @Composable
 fun MedicineScreen(viewModel: MedicineViewModel = viewModel()) {

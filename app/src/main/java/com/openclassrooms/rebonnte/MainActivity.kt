@@ -58,10 +58,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.openclassrooms.rebonnte.ui.aisle.AisleScreen
-import com.openclassrooms.rebonnte.ui.aisle.AisleViewModel
-import com.openclassrooms.rebonnte.ui.medicine.MedicineScreen
-import com.openclassrooms.rebonnte.ui.medicine.MedicineViewModel
+import com.openclassrooms.rebonnte.ui.aisleList.AisleScreen
+import com.openclassrooms.rebonnte.ui.aisleList.AisleViewModel
+import com.openclassrooms.rebonnte.ui.medicineList.MedicineScreen
+import com.openclassrooms.rebonnte.ui.medicineList.MedicineViewModel
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 
 class MainActivity : ComponentActivity() {
