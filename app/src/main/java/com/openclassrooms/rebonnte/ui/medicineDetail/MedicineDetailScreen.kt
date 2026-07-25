@@ -1,8 +1,5 @@
 package com.openclassrooms.rebonnte.ui.medicineDetail
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,26 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import com.openclassrooms.rebonnte.MainActivity
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineViewModel
-import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 import java.util.Date
-
-class MedicineDetailActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val name = intent.getStringExtra("nameMedicine") ?: "Unknown"
-        val viewModel = ViewModelProvider(MainActivity.mainActivity)[MedicineViewModel::class.java]
-
-        setContent {
-            RebonnteTheme {
-                MedicineDetailScreen(name, viewModel)
-            }
-        }
-    }
-}
 
 @Composable
 fun MedicineDetailScreen(name: String, viewModel: MedicineViewModel) {

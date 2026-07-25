@@ -1,11 +1,12 @@
 package com.openclassrooms.rebonnte.ui.medicineList
 
-import android.content.Context
-import androidx.compose.runtime.Composable
-
-import android.content.Intent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -13,36 +14,39 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.ui.platform.LocalContext
 import com.openclassrooms.rebonnte.domain.model.Medicine
-import com.openclassrooms.rebonnte.ui.medicineDetail.MedicineDetailActivity
 
 @Composable
-fun MedicineScreen(viewModel: MedicineViewModel = viewModel()) {
+fun MedicineScreen(
+    viewModel: MedicineViewModel = viewModel(),
+    onMedicineClick: (String) -> Unit,
+) {
     val medicines by viewModel.medicines.collectAsState(initial = emptyList())
-    val context = LocalContext.current
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
         items(medicines) { medicine ->
-            MedicineItem(medicine = medicine, onClick = {
-                startDetailActivity(context, medicine.name)
-            })
+            MedicineItem(
+                medicine = medicine,
+                onClick = { onMedicineClick(medicine.name) }
+            )
         }
     }
 }
 
 @Composable
-fun MedicineItem(medicine: Medicine, onClick: () -> Unit) {
+fun MedicineItem(medicine: Medicine, onClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
+            .clickable { onClick(medicine.name) }
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -52,11 +56,4 @@ fun MedicineItem(medicine: Medicine, onClick: () -> Unit) {
         }
         Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Arrow")
     }
-}
-
-private fun startDetailActivity(context: Context, name: String) {
-    val intent = Intent(context, MedicineDetailActivity::class.java).apply {
-        putExtra("nameMedicine", name)
-    }
-    context.startActivity(intent)
 }

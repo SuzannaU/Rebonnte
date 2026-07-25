@@ -1,13 +1,6 @@
 package com.openclassrooms.rebonnte
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -58,51 +51,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.openclassrooms.rebonnte.ui.AISLE_DETAIL_ROUTE
+import com.openclassrooms.rebonnte.ui.AISLE_LIST_ROUTE
+import com.openclassrooms.rebonnte.ui.MEDICINE_DETAIL_ROUTE
+import com.openclassrooms.rebonnte.ui.MEDICINE_LIST_ROUTE
+import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailScreen
 import com.openclassrooms.rebonnte.ui.aisleList.AisleScreen
 import com.openclassrooms.rebonnte.ui.aisleList.AisleViewModel
+import com.openclassrooms.rebonnte.ui.medicineDetail.MedicineDetailScreen
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineScreen
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineViewModel
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var myBroadcastReceiver: MyBroadcastReceiver
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainActivity = this
         setContent {
             MyApp()
-        }
-        startBroadcastReceiver()
-    }
-
-    private fun startMyBroadcast() {
-        val intent = Intent("com.rebonnte.ACTION_UPDATE")
-        sendBroadcast(intent)
-        //startBroadcastReceiver()                  // creates an infinite loop
-    }
-
-    private fun startBroadcastReceiver() {
-        myBroadcastReceiver = MyBroadcastReceiver()
-        val filter = IntentFilter().apply {
-            addAction("com.rebonnte.ACTION_UPDATE")
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(myBroadcastReceiver, filter, RECEIVER_NOT_EXPORTED)
-        } else {
-            registerReceiver(myBroadcastReceiver, filter)
-        }
-
-        Handler().postDelayed({
-            startMyBroadcast()
-        }, 200)
-    }
-
-
-    class MyBroadcastReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            Toast.makeText(mainActivity, "Update reçu", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -128,10 +95,10 @@ fun MyApp() {
 
                 Column(verticalArrangement = Arrangement.spacedBy((-1).dp)) {
                     TopAppBar(
-                        title = { if (route == "aisle") Text(text = "Aisle") else Text(text = "Medicines") },
+                        title = { if (route == AISLE_LIST_ROUTE) Text(text = "Aisle") else Text(text = "Medicines") },
                         actions = {
                             var expanded by remember { mutableStateOf(false) }
-                            if (currentRoute(navController) == "medicine") {
+                            if (currentRoute(navController) == MEDICINE_LIST_ROUTE) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
@@ -175,7 +142,7 @@ fun MyApp() {
                             }
                         }
                     )
-                    if (currentRoute(navController) == "medicine") {
+                    if (currentRoute(navController) == MEDICINE_LIST_ROUTE) {
                         EmbeddedSearchBar(
                             query = searchQuery,
                             onQueryChange = {
@@ -194,22 +161,22 @@ fun MyApp() {
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.Home, contentDescription = null) },
                         label = { Text("Aisle") },
-                        selected = currentRoute(navController) == "aisle",
-                        onClick = { navController.navigate("aisle") }
+                        selected = currentRoute(navController) == AISLE_LIST_ROUTE,
+                        onClick = { navController.navigate(AISLE_LIST_ROUTE) }
                     )
                     NavigationBarItem(
                         icon = { Icon(Icons.Default.List, contentDescription = null) },
                         label = { Text("Medicine") },
-                        selected = currentRoute(navController) == "medicine",
-                        onClick = { navController.navigate("medicine") }
+                        selected = currentRoute(navController) == MEDICINE_LIST_ROUTE,
+                        onClick = { navController.navigate(MEDICINE_LIST_ROUTE) }
                     )
                 }
             },
             floatingActionButton = {
                 FloatingActionButton(onClick = {
-                    if (route == "medicine") {
+                    if (route == MEDICINE_LIST_ROUTE) {
                         medicineViewModel.addRandomMedicine(aisleViewModel.aisles.value)
-                    } else if (route == "aisle") {
+                    } else if (route == AISLE_LIST_ROUTE) {
                         aisleViewModel.addRandomAisle()
                     }
                 }) {
@@ -220,10 +187,33 @@ fun MyApp() {
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = "aisle"
+                startDestination = AISLE_LIST_ROUTE
             ) {
-                composable("aisle") { AisleScreen(aisleViewModel) }
-                composable("medicine") { MedicineScreen(medicineViewModel) }
+                composable(AISLE_LIST_ROUTE) {
+                    AisleScreen(
+                        aisleViewModel,
+                        onAisleClick = { name -> navController.navigate("detail/$name")}
+                    )
+                }
+                composable(AISLE_DETAIL_ROUTE) {
+                    AisleDetailScreen(
+                        "name",
+                        medicineViewModel,
+                        onMedicineClick = { name -> navController.navigate("detail/$name") }
+                    )
+                }
+                composable(MEDICINE_LIST_ROUTE) {
+                    MedicineScreen(
+                        medicineViewModel,
+                        onMedicineClick = { name -> navController.navigate("detail/$name") }
+                    )
+                }
+                composable(MEDICINE_DETAIL_ROUTE) {
+                    MedicineDetailScreen(
+                        "name",
+                        medicineViewModel
+                    )
+                }
             }
         }
     }
