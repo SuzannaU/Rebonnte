@@ -39,15 +39,15 @@ fun AisleScreen(
 }
 
 @Composable
-fun AisleItem(aisle: Aisle, onMedicineClick: (String) -> Unit) {
+fun AisleItem(aisle: Aisle, onMedicineClick: (Int) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onMedicineClick(aisle.name) }
+            .clickable { onMedicineClick(aisle.number) }
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = aisle.name, style = MaterialTheme.typography.bodyMedium)
+        Text(text = aisle.number.toString(), style = MaterialTheme.typography.bodyMedium)
         Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Arrow")
     }
 }

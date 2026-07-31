@@ -23,24 +23,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.openclassrooms.rebonnte.domain.model.Medicine
-import com.openclassrooms.rebonnte.ui.medicineList.MedicineViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AisleDetailScreen(
     name: String,
-    viewModel: MedicineViewModel,
+    viewModel: AisleDetailViewModel,
     onMedicineClick: (String) -> Unit,
 ) {
     val medicines by viewModel.medicines.collectAsState(initial = emptyList())
-    val filteredMedicines = medicines.filter { it.nameAisle == name }
 
     Scaffold { paddingValues ->
         LazyColumn(
             contentPadding = paddingValues,
             modifier = Modifier.fillMaxSize()
         ) {
-            items(filteredMedicines) { medicine ->
+            items(medicines) { medicine ->
                 MedicineItem(
                     medicine = medicine,
                     onClick = { onMedicineClick(name) }
@@ -61,7 +59,7 @@ fun MedicineItem(medicine: Medicine, onClick: (String) -> Unit) {
     ) {
         Column {
             Text(text = medicine.name, fontWeight = FontWeight.Bold)
-            Text(text = "Stock: ${medicine.stock}", color = Color.Gray)
+            Text(text = "Stock: ${medicine.currentStock}", color = Color.Gray)
         }
         Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Arrow")
     }

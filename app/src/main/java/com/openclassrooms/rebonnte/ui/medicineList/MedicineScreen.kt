@@ -52,7 +52,7 @@ fun MedicineItem(medicine: Medicine, onClick: (String) -> Unit) {
     ) {
         Column {
             Text(text = medicine.name, style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Stock: ${medicine.stock}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Stock: ${medicine.currentStock}", style = MaterialTheme.typography.bodyMedium)
         }
         Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Arrow")
     }

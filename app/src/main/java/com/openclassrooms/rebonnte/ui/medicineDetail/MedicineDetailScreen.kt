@@ -38,7 +38,7 @@ import java.util.Date
 fun MedicineDetailScreen(name: String, viewModel: MedicineViewModel) {
     val medicines by viewModel.medicines.collectAsState(initial = emptyList())
     val medicine = medicines.find { it.name == name } ?: return
-    var stock by remember { mutableStateOf(medicine.stock) }
+    var stock by remember { mutableStateOf(medicine.currentStock) }
 
     Scaffold { paddingValues ->
         Column(
@@ -55,7 +55,7 @@ fun MedicineDetailScreen(name: String, viewModel: MedicineViewModel) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
-                value = medicine.nameAisle,
+                value = medicine.aisleNumber.toString(),
                 onValueChange = {},
                 label = { Text("Aisle") },
                 enabled = false,
@@ -68,15 +68,15 @@ fun MedicineDetailScreen(name: String, viewModel: MedicineViewModel) {
             ) {
                 IconButton(onClick = {
                     if (stock > 0) {
-                        medicine.histories.toMutableList().add(        // IndexOutOfBoundsException
-                            History(
-                                medicine.name,
-                                "efeza56f1e65f",
-                                Date().toString(),
-                                "Updated medicine details"
-                            )
-                        )
-                        stock--
+//                        medicine.histories.toMutableList().add(        // IndexOutOfBoundsException
+//                            History(
+//                                medicine.name,
+//                                "efeza56f1e65f",
+//                                Date().toString(),
+//                                "Updated medicine details"
+//                            )
+//                        )
+//                        stock--
                     }
                 }) {
                     Icon(
@@ -92,15 +92,15 @@ fun MedicineDetailScreen(name: String, viewModel: MedicineViewModel) {
                     modifier = Modifier.weight(1f)
                 )
                 IconButton(onClick = {
-                    medicine.histories.toMutableList().add(        // IndexOutOfBoundsException
-                        History(
-                            medicine.name,
-                            "efeza56f1e65f",
-                            Date().toString(),
-                            "Updated medicine details"
-                        )
-                    )
-                    stock++
+//                    medicine.histories.toMutableList().add(        // IndexOutOfBoundsException
+//                        History(
+//                            medicine.name,
+//                            "efeza56f1e65f",
+//                            Date().toString(),
+//                            "Updated medicine details"
+//                        )
+//                    )
+//                    stock++
                 }) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowUp,
@@ -111,11 +111,11 @@ fun MedicineDetailScreen(name: String, viewModel: MedicineViewModel) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "History", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(medicine.histories) { history ->
-                    HistoryItem(history = history)
-                }
-            }
+//            LazyColumn(modifier = Modifier.fillMaxSize()) {
+//                items(medicine.histories) { history ->
+//                    HistoryItem(history = history)
+//                }
+//            }
         }
     }
 }
@@ -128,11 +128,11 @@ fun HistoryItem(history: History) {
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = history.medicineName, fontWeight = FontWeight.Bold)
-            Text(text = "User: ${history.userId}")
-            Text(text = "Date: ${history.date}")
-            Text(text = "Details: ${history.details}")
-        }
+//        Column(modifier = Modifier.padding(16.dp)) {
+//            Text(text = history.medicineName, fontWeight = FontWeight.Bold)
+//            Text(text = "User: ${history.userId}")
+//            Text(text = "Date: ${history.date}")
+//            Text(text = "Details: ${history.details}")
+//        }
     }
 }

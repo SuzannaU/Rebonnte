@@ -9,7 +9,7 @@ import java.util.Locale
 import java.util.Random
 
 class MedicineViewModel : ViewModel() {
-    var _medicines = MutableStateFlow<MutableList<Medicine>>(mutableListOf())
+    private var _medicines = MutableStateFlow<MutableList<Medicine>>(mutableListOf())
     val medicines: StateFlow<List<Medicine>> get() = _medicines
 
     init {
@@ -21,9 +21,9 @@ class MedicineViewModel : ViewModel() {
         currentMedicines.add(
             Medicine(
                 "Medicine " + (currentMedicines.size + 1),
-                Random().nextInt(100),
-                aisles[Random().nextInt(aisles.size)].name,
-                emptyList()
+                Random().nextInt(100).toString(),
+                aisles[Random().nextInt(aisles.size)].number,
+                55,
             )
         )
         _medicines.value = currentMedicines
@@ -54,7 +54,7 @@ class MedicineViewModel : ViewModel() {
 
     fun sortByStock() {
         val currentMedicines = ArrayList(medicines.value)
-        currentMedicines.sortWith(Comparator.comparingInt(Medicine::stock))
+        currentMedicines.sortWith(Comparator.comparingInt(Medicine::currentStock))
         _medicines.value = currentMedicines
     }
 }

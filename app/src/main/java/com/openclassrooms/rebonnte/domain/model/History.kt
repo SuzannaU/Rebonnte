@@ -1,3 +1,11 @@
 package com.openclassrooms.rebonnte.domain.model
 
-class History(var medicineName: String, var userId: String, var date: String, var details: String)
+import java.util.Date
+
+data class History(
+    val id: String,
+    val medicineId: String,
+    val userId: String,
+    val dateTime: Date,
+    val details: String,
+)

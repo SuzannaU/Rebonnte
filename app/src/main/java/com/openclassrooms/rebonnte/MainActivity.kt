@@ -56,6 +56,7 @@ import com.openclassrooms.rebonnte.ui.AISLE_LIST_ROUTE
 import com.openclassrooms.rebonnte.ui.MEDICINE_DETAIL_ROUTE
 import com.openclassrooms.rebonnte.ui.MEDICINE_LIST_ROUTE
 import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailScreen
+import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailViewModel
 import com.openclassrooms.rebonnte.ui.aisleList.AisleScreen
 import com.openclassrooms.rebonnte.ui.aisleList.AisleViewModel
 import com.openclassrooms.rebonnte.ui.medicineDetail.MedicineDetailScreen
@@ -84,6 +85,7 @@ fun MyApp() {
     val navController = rememberNavController()
     val medicineViewModel: MedicineViewModel = viewModel()
     val aisleViewModel: AisleViewModel = viewModel()
+    val aisleDetailViewModel : AisleDetailViewModel = viewModel()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val route = navBackStackEntry?.destination?.route
 
@@ -198,7 +200,7 @@ fun MyApp() {
                 composable(AISLE_DETAIL_ROUTE) {
                     AisleDetailScreen(
                         "name",
-                        medicineViewModel,
+                        aisleDetailViewModel,
                         onMedicineClick = { name -> navController.navigate("detail/$name") }
                     )
                 }

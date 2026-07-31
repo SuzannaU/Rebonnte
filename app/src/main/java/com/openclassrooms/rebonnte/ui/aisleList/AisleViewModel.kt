@@ -10,12 +10,12 @@ class AisleViewModel : ViewModel() {
     val aisles: StateFlow<List<Aisle>> get() = _aisles
 
     init {
-        _aisles.value = listOf(Aisle("Main Aisle"))
+        _aisles.value = listOf(Aisle("MainAisle", 1))
     }
 
     fun addRandomAisle() {
         val currentAisles: MutableList<Aisle> = ArrayList(aisles.value)
-        currentAisles.add(Aisle("Aisle " + (currentAisles.size + 1)))
+        currentAisles.add(Aisle("Aisle " + (currentAisles.size + 1).toString(), 1))
         _aisles.value = currentAisles
     }
 }
