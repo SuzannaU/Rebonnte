@@ -1,6 +1,10 @@
 package com.openclassrooms.rebonnte.data.dto
 
+import com.google.firebase.firestore.DocumentId
+import java.io.Serializable
+
 data class AisleDto(
-    val id: String,
+    @DocumentId
+    val id: String = "",
     val number: Int,
-)
+) : Serializable
