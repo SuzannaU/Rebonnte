@@ -29,7 +29,7 @@ fun Aisle.toDto(): AisleDto {
     )
 }
 
-fun AisleDto.ToDomain(): Aisle {
+fun AisleDto.toDomain(): Aisle {
     return Aisle(
         id = this.id,
         number = this.number,
@@ -40,7 +40,7 @@ fun Medicine.toDto(): MedicineDto {
     return MedicineDto(
         id = this.id,
         name = this.name,
-        aisleNumber = this.aisleNumber,
+        aisleId = this.aisleId,
         currentStock = this.currentStock,
     )
 }
@@ -49,7 +49,7 @@ fun MedicineDto.toDomain(): Medicine {
     return Medicine(
         id = this.id,
         name = this.name,
-        aisleNumber = this.aisleNumber,
+        aisleId = this.id,
         currentStock = this.currentStock
     )
 }
@@ -64,7 +64,7 @@ fun History.toDto(): HistoryDto {
     )
 }
 
-fun HistoryDto.toDomain() : History {
+fun HistoryDto.toDomain(): History {
     return History(
         id = this.id,
         medicineId = this.medicineId,

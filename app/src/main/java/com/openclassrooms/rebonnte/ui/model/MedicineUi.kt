@@ -1,7 +1,7 @@
 package com.openclassrooms.rebonnte.ui.model
 
 data class MedicineUi(
+    val id: String,
     val name: String,
     val currentStock: Int,
-    val aisleNumber: Int,
 )
