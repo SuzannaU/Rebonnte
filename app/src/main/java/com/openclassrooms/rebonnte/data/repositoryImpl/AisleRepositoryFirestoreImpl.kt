@@ -16,6 +16,10 @@ class AisleRepositoryFirestoreImpl(
         return aisleDataSource.getAisleById(aisleId)?.toDomain()
     }
 
+    override suspend fun getAisleByNumber(aisleNumber: Int): Aisle? {
+        return aisleDataSource.getAisleByNumber(aisleNumber)?.toDomain()
+    }
+
     override fun getAisles(): Flow<List<Aisle>> {
         return aisleDataSource.getAisles().map { aisleDtos ->
             aisleDtos.map { aisleDto ->

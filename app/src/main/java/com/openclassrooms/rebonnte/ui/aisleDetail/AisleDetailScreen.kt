@@ -123,9 +123,9 @@ private fun AisleDetailContentPreview() {
     RebonnteTheme {
         AisleDetailContent(
             medicines = listOf(
-                MedicineUi("1", "Paracetamol", 10),
-                MedicineUi("2", "Ibuprofen", 5),
-                MedicineUi("3", "Aspirin", 20)
+                MedicineUi("1", "Paracetamol", 1, 10),
+                MedicineUi("2", "Ibuprofen", 1, 5),
+                MedicineUi("3", "Aspirin", 1, 20)
             ),
             onMedicineClick = {}
         )
@@ -137,7 +137,7 @@ private fun AisleDetailContentPreview() {
 private fun MedicineItemPreview() {
     RebonnteTheme {
         MedicineItem(
-            medicine = MedicineUi("1", "Paracetamol", 10),
+            medicine = MedicineUi("1", "Paracetamol", 1, 10),
             onClick = {}
         )
     }

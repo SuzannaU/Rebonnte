@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class MedicineDetailViewModel(
     private val medicineRepository: MedicineRepository,
     private val historyRepository: HistoryRepository,
-    private val medicineId : String,
+    private val medicineId: String,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow<MedicineDetailState>(MedicineDetailState.Loading)
@@ -27,15 +27,22 @@ class MedicineDetailViewModel(
         viewModelScope.launch {
             _uiState.value = MedicineDetailState.Loading
             val medicine = medicineRepository.getMedicineById(medicineId = medicineId)?.toUi()
-            historyRepository.getHistoryByMedicineId(medicineId = medicineId).collect { histories ->
-                val historiesUi = histories.map { history ->
-                    history.toUi()
-                }
-
+            if (medicine != null) {
                 _uiState.value = MedicineDetailState.MedicineFound(
-                    medicine = medicine ?: MedicineUi("id", "name", 999),
-                    histories = historiesUi,
+                    medicine = medicine,
+                    histories = emptyList(),
                 )
+                historyRepository.getHistoryByMedicineId(medicineId = medicineId)
+                    .collect { histories ->
+                        val historiesUi = histories.map { history ->
+                            history.toUi()
+                        }
+
+                        _uiState.value = MedicineDetailState.MedicineFound(
+                            medicine = medicine ?: MedicineUi("id", "name", 0, 0),
+                            histories = historiesUi,
+                        )
+                    }
             }
         }
     }

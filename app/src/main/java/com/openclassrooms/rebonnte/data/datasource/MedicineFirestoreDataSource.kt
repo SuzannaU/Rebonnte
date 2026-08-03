@@ -38,20 +38,22 @@ class MedicineFirestoreDataSource(
             .dataObjects<MedicineDto>()
     }
 
-    override suspend fun saveMedicine(medicine: MedicineDto) {
+    override suspend fun saveMedicine(medicine: MedicineDto) : String {
         val docRef = if (medicine.id.isEmpty()) {
             firestore.collection(MEDICINE_COLLECTION).document()
         } else {
             firestore.collection(MEDICINE_COLLECTION).document(medicine.id)
         }
+        val docRefId = docRef.id
 
         val medicineToSave = if (medicine.id.isEmpty()) {
-            medicine.copy(id = docRef.id)
+            medicine.copy(id = docRefId)
         } else {
             medicine
         }
 
         docRef.set(medicineToSave).await()
+        return docRef.id
     }
 
     override suspend fun deleteMedicineById(medicineId: String) {

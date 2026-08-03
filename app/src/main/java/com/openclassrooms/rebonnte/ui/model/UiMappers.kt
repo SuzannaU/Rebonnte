@@ -41,6 +41,7 @@ fun Medicine.toUi(): MedicineUi {
     return MedicineUi(
         id = this.id,
         name = this.name,
+        aisleNumber = 999,                  // figure out how to deal with id->number
         currentStock = this.currentStock,
     )
 }

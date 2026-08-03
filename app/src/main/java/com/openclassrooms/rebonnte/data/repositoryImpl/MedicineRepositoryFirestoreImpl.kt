@@ -31,8 +31,8 @@ class MedicineRepositoryFirestoreImpl(
         }
     }
 
-    override suspend fun addMedicine(medicine: Medicine) {
-        medicineDataSource.saveMedicine(medicine.toDto())
+    override suspend fun addMedicine(medicine: Medicine) : String {
+        return medicineDataSource.saveMedicine(medicine.toDto())
     }
 
     override suspend fun deleteMedicineById(medicineId: String) {

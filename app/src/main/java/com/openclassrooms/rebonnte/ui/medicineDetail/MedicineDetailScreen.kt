@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.model.HistoryUi
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
@@ -74,7 +75,9 @@ fun MedicineDetailScreen(
                 .padding(paddingValues)
         ) {
             when (val state = uiState) {
-                MedicineDetailState.Loading -> {}
+                MedicineDetailState.Loading -> {
+                    LoadingScreen()
+                }
                 is MedicineDetailState.MedicineFound -> {
                     MedicineDetailContent(
                         medicine = state.medicine,
@@ -191,7 +194,7 @@ private fun HistoryItem(history: HistoryUi) {
 private fun MedicineDetailContentPreview() {
     RebonnteTheme {
         MedicineDetailContent(
-            medicine = MedicineUi("1", "Paracetamol", 10),
+            medicine = MedicineUi("1", "Paracetamol", 1, 10),
             histories = listOf(
                 HistoryUi("1", "user1", "2026-08-01 10:00", "Initial stock"),
                 HistoryUi("1", "user2", "2026-08-02 11:00", "Added 5 items")

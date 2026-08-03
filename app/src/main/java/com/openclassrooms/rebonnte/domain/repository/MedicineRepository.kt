@@ -7,6 +7,6 @@ interface MedicineRepository {
     suspend fun getMedicineById(medicineId: String): Medicine?
     fun getMedicines(): Flow<List<Medicine>>
     fun getMedicinesByAisleId(aisleId: String): Flow<List<Medicine>>
-    suspend fun addMedicine(medicine: Medicine)
+    suspend fun addMedicine(medicine: Medicine) : String
     suspend fun deleteMedicineById(medicineId: String)
 }

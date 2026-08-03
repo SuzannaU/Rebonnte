@@ -5,6 +5,7 @@ import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
 import com.openclassrooms.rebonnte.data.dto.AisleDto
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 
 private const val AISlE_COLLECTION = "aisles"
@@ -20,6 +21,14 @@ class AisleFirestoreDataSource(
             .get()
             .await()
             .toObject<AisleDto>()
+    }
+
+    override suspend fun getAisleByNumber(number: Int): AisleDto? {
+        return firestore
+            .collection(AISlE_COLLECTION)
+            .whereEqualTo("number", number)
+            .dataObjects<AisleDto>()
+            .first()[0]
     }
 
     override fun getAisles(): Flow<List<AisleDto>> {

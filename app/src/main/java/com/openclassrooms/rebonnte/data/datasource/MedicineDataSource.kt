@@ -8,6 +8,6 @@ interface MedicineDataSource {
     fun getMedicines(): Flow<List<MedicineDto>>
     fun getMedicinesByAisleId(aisleId: String): Flow<List<MedicineDto>>
 
-    suspend fun saveMedicine(medicine: MedicineDto)
+    suspend fun saveMedicine(medicine: MedicineDto) : String
     suspend fun deleteMedicineById(medicineId: String)
 }

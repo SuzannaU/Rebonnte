@@ -36,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.openclassrooms.rebonnte.ui.addMedicine.AddMedicineScreen
 import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailScreen
 import com.openclassrooms.rebonnte.ui.aisleList.AisleListScreen
 import com.openclassrooms.rebonnte.ui.medicineDetail.MedicineDetailScreen
@@ -93,7 +94,8 @@ private fun RebonnteNavHost(
             MedicineListScreen(
                 viewModel = koinViewModel(),
                 onMedicineClick = { id -> navController.navigate("medicineDetail/$id") },
-                onAislesClick = { navController.navigate(AISLE_LIST_ROUTE) }
+                onAislesClick = { navController.navigate(AISLE_LIST_ROUTE) },
+                onAddMedicineClick = { navController.navigate(ADD_MEDICINE_ROUTE) }
             )
         }
         composable(
@@ -104,6 +106,12 @@ private fun RebonnteNavHost(
             MedicineDetailScreen(
                 viewModel = koinViewModel { parametersOf(medicineId) },
                 onBackClick = { navController.navigateUp() },
+            )
+        }
+        composable(ADD_MEDICINE_ROUTE) {
+            AddMedicineScreen(
+                viewModel = koinViewModel(),
+                onBackClick = { navController.navigateUp() }
             )
         }
     }

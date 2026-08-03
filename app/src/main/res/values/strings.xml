@@ -9,4 +9,11 @@
     <string name="stock_ascending">Stock (Lowest first)</string>
     <string name="stock_descending">Stock (Highest  first)</string>
     <string name="aisle_number">Aisle number</string>
+    <string name="add_medicine">Add Medicine</string>
+    <string name="medicine_name">Medicine Name</string>
+    <string name="current_stock">Current Stock</string>
+    <string name="error_name_empty">Name cannot be empty</string>
+    <string name="error_name_too_long">Name is too long (max 25 chars)</string>
+    <string name="error_stock_invalid">Stock must be a number</string>
+    <string name="error_aisle_invalid">Aisle must be a number</string>
 </resources>

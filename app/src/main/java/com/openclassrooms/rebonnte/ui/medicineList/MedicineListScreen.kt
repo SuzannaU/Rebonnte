@@ -58,6 +58,7 @@ fun MedicineListScreen(
     viewModel: MedicineListViewModel,
     onMedicineClick: (String) -> Unit,
     onAislesClick: () -> Unit,
+    onAddMedicineClick: () -> Unit,
 ) {
     val uiState by viewModel.listScreenState.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -133,7 +134,7 @@ fun MedicineListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.addRandomMedicine() }
+                onClick = onAddMedicineClick
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
@@ -183,7 +184,7 @@ private fun MedicineItem(medicine: MedicineUi, onClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick(medicine.name) }
+            .clickable { onClick(medicine.id) }
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -284,9 +285,9 @@ private fun MedicineListContentPreview() {
     RebonnteTheme {
         MedicineListContent(
             medicines = listOf(
-                MedicineUi("1", "Paracetamol", 10),
-                MedicineUi("2", "Ibuprofen", 5),
-                MedicineUi("3", "Aspirin", 20)
+                MedicineUi("1", "Paracetamol", 1, 10),
+                MedicineUi("2", "Ibuprofen", 1, 5),
+                MedicineUi("3", "Aspirin", 2, 20)
             ),
             onMedicineClick = {}
         )
@@ -298,7 +299,7 @@ private fun MedicineListContentPreview() {
 private fun MedicineItemPreview() {
     RebonnteTheme {
         MedicineItem(
-            medicine = MedicineUi("1", "Paracetamol", 10),
+            medicine = MedicineUi("1", "Paracetamol", 1, 10),
             onClick = {}
         )
     }
