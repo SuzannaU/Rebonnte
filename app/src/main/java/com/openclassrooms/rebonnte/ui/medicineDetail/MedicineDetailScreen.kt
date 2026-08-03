@@ -25,21 +25,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.openclassrooms.rebonnte.domain.model.History
-import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailScreenState
-import com.openclassrooms.rebonnte.ui.medicineList.MedicineListViewModel
 import com.openclassrooms.rebonnte.ui.model.HistoryUi
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
+import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,9 +44,6 @@ fun MedicineDetailScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-//    val medicines by viewModel.medicines.collectAsState(initial = emptyList())
-//    val medicine = medicines.find { it.name == name } ?: return
-//    var stock by remember { mutableStateOf(medicine.currentStock) }
 
     Scaffold (
         topBar = {
@@ -169,11 +161,11 @@ private fun MedicineDetailContent(
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "History", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(8.dp))
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(histories) { history ->
-                    HistoryItem(history = history)
-                }
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(histories) { history ->
+                HistoryItem(history = history)
             }
+        }
     }
 }
 
@@ -191,5 +183,29 @@ private fun HistoryItem(history: HistoryUi) {
             Text(text = "Date: ${history.dateTime}")
             Text(text = "Details: ${history.details}")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MedicineDetailContentPreview() {
+    RebonnteTheme {
+        MedicineDetailContent(
+            medicine = MedicineUi("1", "Paracetamol", 10),
+            histories = listOf(
+                HistoryUi("1", "user1", "2026-08-01 10:00", "Initial stock"),
+                HistoryUi("1", "user2", "2026-08-02 11:00", "Added 5 items")
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HistoryItemPreview() {
+    RebonnteTheme {
+        HistoryItem(
+            history = HistoryUi("1", "user1", "2026-08-01 10:00", "Initial stock")
+        )
     }
 }

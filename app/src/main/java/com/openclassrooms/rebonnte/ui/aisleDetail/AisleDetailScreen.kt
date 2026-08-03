@@ -26,6 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.tooling.preview.Preview
+import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,5 +114,31 @@ private fun MedicineItem(
             Text(text = "Stock: ${medicine.currentStock}", color = Color.Gray)
         }
         Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Arrow")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AisleDetailContentPreview() {
+    RebonnteTheme {
+        AisleDetailContent(
+            medicines = listOf(
+                MedicineUi("1", "Paracetamol", 10),
+                MedicineUi("2", "Ibuprofen", 5),
+                MedicineUi("3", "Aspirin", 20)
+            ),
+            onMedicineClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MedicineItemPreview() {
+    RebonnteTheme {
+        MedicineItem(
+            medicine = MedicineUi("1", "Paracetamol", 10),
+            onClick = {}
+        )
     }
 }

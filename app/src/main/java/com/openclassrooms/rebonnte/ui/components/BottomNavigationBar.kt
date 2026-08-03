@@ -12,7 +12,7 @@ import com.openclassrooms.rebonnte.ui.AISLE_LIST_ROUTE
 import com.openclassrooms.rebonnte.ui.MEDICINE_LIST_ROUTE
 
 @Composable
-fun CustomNavigationBar(
+fun BottomNavigationBar(
     currentRoute: String,
     onAislesClick: () -> Unit,
     onMedicinesClick: () -> Unit,

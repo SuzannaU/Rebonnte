@@ -24,8 +24,8 @@ import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailViewModel
 import com.openclassrooms.rebonnte.ui.aisleList.AisleListViewModel
 import com.openclassrooms.rebonnte.ui.medicineDetail.MedicineDetailViewModel
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineListViewModel
-import org.koin.dsl.module
 import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
 
 val appModule = module {
 

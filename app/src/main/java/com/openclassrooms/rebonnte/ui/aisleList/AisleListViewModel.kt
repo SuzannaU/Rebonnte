@@ -2,6 +2,7 @@ package com.openclassrooms.rebonnte.ui.aisleList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openclassrooms.rebonnte.data.dto.AisleDto
 import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.repository.AisleRepository
 import com.openclassrooms.rebonnte.ui.model.AisleUi
@@ -33,9 +34,14 @@ class AisleListViewModel(
         }
     }
 
-    fun addRandomAisle() {
-//        val currentAisles: MutableList<AisleUi> = ArrayList((_uiState as? AisleListScreenState.AislesFound)?.aisles)
-//        currentAisles.add(AisleUi(currentAisles.size + 1))
+    fun addAisle(aisleNumber : String) {
+        viewModelScope.launch {
+            aisleRepository.addAisle(
+                Aisle(
+                    number = aisleNumber.toInt()
+                )
+            )
+        }
     }
 }
 
