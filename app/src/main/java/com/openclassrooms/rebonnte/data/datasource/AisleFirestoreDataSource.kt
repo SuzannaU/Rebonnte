@@ -14,21 +14,13 @@ class AisleFirestoreDataSource(
     private val firestore: FirebaseFirestore,
 ) : AisleDataSource {
 
-    override suspend fun getAisleById(id: String): AisleDto? {
+    override suspend fun getAisleByNumber(number: String): AisleDto? {
         return firestore
             .collection(AISlE_COLLECTION)
-            .document(id)
+            .document(number)
             .get()
             .await()
             .toObject<AisleDto>()
-    }
-
-    override suspend fun getAisleByNumber(number: Int): AisleDto? {
-        return firestore
-            .collection(AISlE_COLLECTION)
-            .whereEqualTo("number", number)
-            .dataObjects<AisleDto>()
-            .first()[0]
     }
 
     override fun getAisles(): Flow<List<AisleDto>> {
@@ -38,19 +30,8 @@ class AisleFirestoreDataSource(
     }
 
     override suspend fun saveAisle(aisle: AisleDto) {
-        val docRef = if (aisle.id.isEmpty()) {
-            firestore.collection(AISlE_COLLECTION).document()
-        } else {
-            firestore.collection(AISlE_COLLECTION).document(aisle.id)
-        }
-
-        val aisleToSave = if (aisle.id.isEmpty()) {
-            aisle.copy(id = docRef.id)
-        } else {
-            aisle
-        }
-
-        docRef.set(aisleToSave).await()
+        val docRef = firestore.collection(AISlE_COLLECTION).document(aisle.id)
+        docRef.set(aisle).await()
     }
 
 }

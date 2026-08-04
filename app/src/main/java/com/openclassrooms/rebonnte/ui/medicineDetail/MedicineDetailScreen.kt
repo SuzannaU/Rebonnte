@@ -120,7 +120,7 @@ private fun MedicineDetailContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             IconButton(onClick = {
-                if (medicine.currentStock > 0) {
+                //if (medicine.currentStock > 0) {
 //                        medicine.histories.toMutableList().add(        // IndexOutOfBoundsException
 //                            History(
 //                                medicine.name,
@@ -130,7 +130,7 @@ private fun MedicineDetailContent(
 //                            )
 //                        )
 //                        stock--
-                }
+               // }
             }) {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
@@ -138,7 +138,7 @@ private fun MedicineDetailContent(
                 )
             }
             TextField(
-                value = medicine.currentStock.toString(),
+                value = medicine.currentStock,
                 onValueChange = {},
                 label = { Text("Stock") },
                 enabled = false,
@@ -194,7 +194,7 @@ private fun HistoryItem(history: HistoryUi) {
 private fun MedicineDetailContentPreview() {
     RebonnteTheme {
         MedicineDetailContent(
-            medicine = MedicineUi("1", "Paracetamol", 1, 10),
+            medicine = MedicineUi("1", "Paracetamol", "1", "10"),
             histories = listOf(
                 HistoryUi("1", "user1", "2026-08-01 10:00", "Initial stock"),
                 HistoryUi("1", "user2", "2026-08-02 11:00", "Added 5 items")

@@ -39,7 +39,7 @@ class MedicineDetailViewModel(
                         }
 
                         _uiState.value = MedicineDetailState.MedicineFound(
-                            medicine = medicine ?: MedicineUi("id", "name", 0, 0),
+                            medicine = medicine,
                             histories = historiesUi,
                         )
                     }

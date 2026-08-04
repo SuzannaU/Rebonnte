@@ -25,14 +25,6 @@ fun UserUi.toDomain(): User {
 
 fun Aisle.toUi(): AisleUi {
     return AisleUi(
-        id = this.id,
-        number = this.number,
-    )
-}
-
-fun AisleUi.toDomain(): Aisle {
-    return Aisle(
-        id = this.id,
         number = this.number,
     )
 }
@@ -41,17 +33,8 @@ fun Medicine.toUi(): MedicineUi {
     return MedicineUi(
         id = this.id,
         name = this.name,
-        aisleNumber = 999,                  // figure out how to deal with id->number
-        currentStock = this.currentStock,
-    )
-}
-
-fun MedicineUi.toMedicine(): Medicine {
-    return Medicine(
-        id = this.id,
-        name = this.name,
-        currentStock = this.currentStock,
-        aisleId = "",
+        aisleNumber = this.aisleNumber,
+        currentStock = this.currentStock.toString(),
     )
 }
 

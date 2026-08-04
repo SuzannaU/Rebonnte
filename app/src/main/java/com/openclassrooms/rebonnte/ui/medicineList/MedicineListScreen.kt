@@ -285,9 +285,9 @@ private fun MedicineListContentPreview() {
     RebonnteTheme {
         MedicineListContent(
             medicines = listOf(
-                MedicineUi("1", "Paracetamol", 1, 10),
-                MedicineUi("2", "Ibuprofen", 1, 5),
-                MedicineUi("3", "Aspirin", 2, 20)
+                MedicineUi("1", "Paracetamol", "1", "10"),
+                MedicineUi("2", "Ibuprofen", "1", "5"),
+                MedicineUi("3", "Aspirin", "2", "20")
             ),
             onMedicineClick = {}
         )
@@ -299,7 +299,7 @@ private fun MedicineListContentPreview() {
 private fun MedicineItemPreview() {
     RebonnteTheme {
         MedicineItem(
-            medicine = MedicineUi("1", "Paracetamol", 1, 10),
+            medicine = MedicineUi("1", "Paracetamol", "1", "10"),
             onClick = {}
         )
     }

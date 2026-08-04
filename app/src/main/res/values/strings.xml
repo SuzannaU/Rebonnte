@@ -16,4 +16,5 @@
     <string name="error_name_too_long">Name is too long (max 25 chars)</string>
     <string name="error_stock_invalid">Stock must be a number</string>
     <string name="error_aisle_invalid">Aisle must be a number</string>
+    <string name="error_aisle_exists">Aisle already exists</string>
 </resources>

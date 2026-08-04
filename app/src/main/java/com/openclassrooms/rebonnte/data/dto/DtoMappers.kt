@@ -24,15 +24,13 @@ fun UserDto.toDomain(): User {
 
 fun Aisle.toDto(): AisleDto {
     return AisleDto(
-        id = this.id,
-        number = this.number,
+        id = this.number,
     )
 }
 
 fun AisleDto.toDomain(): Aisle {
     return Aisle(
-        id = this.id,
-        number = this.number,
+        number = this.id,
     )
 }
 
@@ -40,7 +38,7 @@ fun Medicine.toDto(): MedicineDto {
     return MedicineDto(
         id = this.id,
         name = this.name,
-        aisleId = this.aisleId,
+        aisleNumber = this.aisleNumber,
         currentStock = this.currentStock,
     )
 }
@@ -49,7 +47,7 @@ fun MedicineDto.toDomain(): Medicine {
     return Medicine(
         id = this.id,
         name = this.name,
-        aisleId = this.id,
+        aisleNumber = this.aisleNumber,
         currentStock = this.currentStock
     )
 }

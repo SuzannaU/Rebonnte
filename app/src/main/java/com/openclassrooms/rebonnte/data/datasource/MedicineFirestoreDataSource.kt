@@ -1,9 +1,11 @@
 package com.openclassrooms.rebonnte.data.datasource
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
+import com.openclassrooms.rebonnte.data.dto.HistoryDto
 import com.openclassrooms.rebonnte.data.dto.MedicineDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
@@ -30,30 +32,29 @@ class MedicineFirestoreDataSource(
             .dataObjects<MedicineDto>()
     }
 
-    override fun getMedicinesByAisleId(aisleId: String): Flow<List<MedicineDto>> {
+    override fun getMedicinesByAisleNumber(aisleNumber: String): Flow<List<MedicineDto>> {
         return firestore
             .collection(MEDICINE_COLLECTION)
-            .whereEqualTo("aisle_id", aisleId)
+            .whereEqualTo("aisleNumber", aisleNumber)
             .orderBy("name", Query.Direction.DESCENDING)
             .dataObjects<MedicineDto>()
     }
 
-    override suspend fun saveMedicine(medicine: MedicineDto) : String {
-        val docRef = if (medicine.id.isEmpty()) {
-            firestore.collection(MEDICINE_COLLECTION).document()
-        } else {
-            firestore.collection(MEDICINE_COLLECTION).document(medicine.id)
-        }
-        val docRefId = docRef.id
+    override suspend fun saveMedicineWithHistory(medicine: MedicineDto, history: HistoryDto) {
+        println("datasource called")
+        firestore.runTransaction { transaction ->
+            val medicineDocRef = firestore.collection(MEDICINE_COLLECTION).document(medicine.id)
 
-        val medicineToSave = if (medicine.id.isEmpty()) {
-            medicine.copy(id = docRefId)
-        } else {
-            medicine
-        }
+            transaction.set(medicineDocRef, medicine)
 
-        docRef.set(medicineToSave).await()
-        return docRef.id
+            val historyDocRef = firestore.collection(HISTORY_COLLECTION).document()
+            val historyToSave = history.copy(
+                id = historyDocRef.id,
+                dateTime = Timestamp.now(),
+            )
+
+            transaction.set(historyDocRef, historyToSave)
+        }.await()
     }
 
     override suspend fun deleteMedicineById(medicineId: String) {

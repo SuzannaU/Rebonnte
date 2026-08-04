@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.repository.AisleRepository
-import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
-import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.useCase.AddMedicineUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,10 +11,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddMedicineViewModel(
+    private val aisleRepository: AisleRepository,
     private val addMedicineUseCase: AddMedicineUseCase,
 ) : ViewModel() {
 
-    private var _formState = MutableStateFlow<FormState>(FormState())
+    private var _formState = MutableStateFlow(FormState())
     val formState = _formState.asStateFlow()
 
     private var _saveState = MutableStateFlow<SaveState>(SaveState.Idle)
@@ -54,12 +53,25 @@ class AddMedicineViewModel(
         _saveState.value = SaveState.Loading
 
         viewModelScope.launch {
+            val aisleNumber = _formState.value.aisleNumber
+            val aisleExists = aisleRepository.getAisleByNumber(aisleNumber)
+            println(aisleExists)
+            if (aisleExists == null) {
+                _formState.update {
+                    it.copy(formErrors = it.formErrors.copy(aisleDoesNotExistError = true))
+                }
+                _saveState.value = SaveState.Idle
+                return@launch
+            }
+
             val medicine = Medicine(
+                id = _formState.value.id,
                 name = _formState.value.name,
+                aisleNumber = aisleNumber,
                 currentStock = _formState.value.currentStock.toInt()
             )
 
-            addMedicineUseCase.execute(_formState.value.aisleNumber.toInt(), medicine)
+            addMedicineUseCase.execute(medicine)
             _saveState.value = SaveState.MedicineSaved
         }
     }
@@ -69,8 +81,11 @@ class AddMedicineViewModel(
 
         val nameError = state.name.isBlank()
         val nameLengthError = state.name.length > 25
-        val stockDigitError = state.currentStock.isBlank() || !state.currentStock.all { it.isDigit() }
+        val stockDigitError =
+            state.currentStock.isBlank() || !state.currentStock.all { it.isDigit() }
         val aisleDigitError = state.aisleNumber.isBlank() || !state.aisleNumber.all { it.isDigit() }
+
+        // TODO add logic to check if aisle exists
 
         val errors = FormErrorState(
             nameError = nameError,

@@ -12,11 +12,7 @@ class AisleRepositoryFirestoreImpl(
     private val aisleDataSource: AisleDataSource,
 ) : AisleRepository {
 
-    override suspend fun getAisleById(aisleId: String): Aisle? {
-        return aisleDataSource.getAisleById(aisleId)?.toDomain()
-    }
-
-    override suspend fun getAisleByNumber(aisleNumber: Int): Aisle? {
+    override suspend fun getAisleByNumber(aisleNumber: String): Aisle? {
         return aisleDataSource.getAisleByNumber(aisleNumber)?.toDomain()
     }
 

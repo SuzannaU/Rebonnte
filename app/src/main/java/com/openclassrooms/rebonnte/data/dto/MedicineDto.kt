@@ -8,8 +8,6 @@ data class MedicineDto(
     @DocumentId
     val id: String = "",
     val name: String = "",
-    @PropertyName("aisle_id")
-    val aisleId: String = "",
-    @PropertyName("current_stock")
+    val aisleNumber: String = "",
     val currentStock: Int = 0,
 ) : Serializable

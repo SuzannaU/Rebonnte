@@ -3,6 +3,7 @@ package com.openclassrooms.rebonnte.data.repositoryImpl
 import com.openclassrooms.rebonnte.data.datasource.MedicineDataSource
 import com.openclassrooms.rebonnte.data.dto.toDomain
 import com.openclassrooms.rebonnte.data.dto.toDto
+import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import kotlinx.coroutines.flow.Flow
@@ -23,16 +24,17 @@ class MedicineRepositoryFirestoreImpl(
         }
     }
 
-    override fun getMedicinesByAisleId(aisleId: String): Flow<List<Medicine>> {
-        return medicineDataSource.getMedicinesByAisleId(aisleId).map { medicineDtos ->
+    override fun getMedicinesByAisleNumber(aisleNumber: String): Flow<List<Medicine>> {
+        return medicineDataSource.getMedicinesByAisleNumber(aisleNumber).map { medicineDtos ->
             medicineDtos.map { medicineDto ->
                 medicineDto.toDomain()
             }
         }
     }
 
-    override suspend fun addMedicine(medicine: Medicine) : String {
-        return medicineDataSource.saveMedicine(medicine.toDto())
+    override suspend fun addMedicineWithHistory(medicine: Medicine, history: History) {
+        println("repository called with $medicine and $history")
+        medicineDataSource.saveMedicineWithHistory(medicine.toDto(), history.toDto())
     }
 
     override suspend fun deleteMedicineById(medicineId: String) {

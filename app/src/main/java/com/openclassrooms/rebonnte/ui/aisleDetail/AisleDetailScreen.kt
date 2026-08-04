@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.tooling.preview.Preview
+import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 
@@ -43,11 +44,12 @@ fun AisleDetailScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    val aisle = (uiState as? AisleDetailScreenState.AisleFound)?.aisle
+                    //val aisle = (uiState as? AisleDetailScreenState.AisleFound)?.aisle
                     Text(
-                        text = aisle?.let {
-                            "Aisle # ${it.number}"
-                        } ?: "No Aisle Found",
+//                        text = aisle?.let {
+//                            "Aisle # ${it.number}"
+//                        } ?: "No Aisle Found",
+                        text = "Aisle # ${viewModel.aisleNumber}",
                         fontWeight = FontWeight.Bold
                     )
                 },
@@ -74,7 +76,9 @@ fun AisleDetailScreen(
 
                 AisleDetailScreenState.AisleNotFound -> {}
                 is AisleDetailScreenState.Error -> {}
-                AisleDetailScreenState.Loading -> {}
+                AisleDetailScreenState.Loading -> {
+                    LoadingScreen()
+                }
             }
         }
     }
@@ -123,9 +127,9 @@ private fun AisleDetailContentPreview() {
     RebonnteTheme {
         AisleDetailContent(
             medicines = listOf(
-                MedicineUi("1", "Paracetamol", 1, 10),
-                MedicineUi("2", "Ibuprofen", 1, 5),
-                MedicineUi("3", "Aspirin", 1, 20)
+                MedicineUi("1", "Paracetamol", "1", "10"),
+                MedicineUi("2", "Ibuprofen", "1", "5"),
+                MedicineUi("3", "Aspirin", "1", "20")
             ),
             onMedicineClick = {}
         )
@@ -137,7 +141,7 @@ private fun AisleDetailContentPreview() {
 private fun MedicineItemPreview() {
     RebonnteTheme {
         MedicineItem(
-            medicine = MedicineUi("1", "Paracetamol", 1, 10),
+            medicine = MedicineUi("1", "Paracetamol", "1", "10"),
             onClick = {}
         )
     }

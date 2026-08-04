@@ -8,7 +8,7 @@ import com.openclassrooms.rebonnte.data.dto.HistoryDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
-private const val HISTORY_COLLECTION = "histories"
+const val HISTORY_COLLECTION = "histories"
 
 class HistoryFirestoreDataSource(
     private val firestore: FirebaseFirestore,
@@ -20,20 +20,23 @@ class HistoryFirestoreDataSource(
             .document(historyId)
             .get()
             .await()
-            .toObject<HistoryDto>()    }
+            .toObject<HistoryDto>()
+    }
 
     override fun getHistories(): Flow<List<HistoryDto>> {
         return firestore
             .collection(HISTORY_COLLECTION)
             .orderBy("date_time", Query.Direction.DESCENDING)
-            .dataObjects<HistoryDto>()    }
+            .dataObjects<HistoryDto>()
+    }
 
     override fun getHistoryByMedicineId(medicineId: String): Flow<List<HistoryDto>> {
         return firestore
             .collection(HISTORY_COLLECTION)
             .whereEqualTo("medicine_id", medicineId)
             .orderBy("date_time", Query.Direction.DESCENDING)
-            .dataObjects<HistoryDto>()    }
+            .dataObjects<HistoryDto>()
+    }
 
     override suspend fun saveHistory(history: HistoryDto) {
         val docRef = if (history.id.isEmpty()) {
@@ -48,5 +51,6 @@ class HistoryFirestoreDataSource(
             history
         }
 
-        docRef.set(historyToSave).await()    }
+        docRef.set(historyToSave).await()
+    }
 }

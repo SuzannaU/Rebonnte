@@ -45,11 +45,11 @@ val appModule = module {
     single<HistoryRepository> { HistoryRepositoryFirestoreImpl(get()) }
     single<MedicineRepository> { MedicineRepositoryFirestoreImpl(get()) }
 
-    factory<AddMedicineUseCase> { AddMedicineUseCase(get(), get(), get(), get(),) }
+    factory<AddMedicineUseCase> { AddMedicineUseCase(get(), get(),) }
 
-    viewModel { (aisleId: String) -> AisleDetailViewModel(get(), get(), aisleId) }
+    viewModel { (aisleNumber: String) -> AisleDetailViewModel(get(), aisleNumber) }
     viewModel { AisleListViewModel(get()) }
     viewModel { (medicineId: String) -> MedicineDetailViewModel(get(), get(), medicineId) }
     viewModel { MedicineListViewModel(get()) }
-    viewModel { AddMedicineViewModel(get()) }
+    viewModel { AddMedicineViewModel(get(), get()) }
 }

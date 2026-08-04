@@ -81,12 +81,12 @@ private fun RebonnteNavHost(
         }
         composable(
             AISLE_DETAIL_ROUTE,
-            arguments = listOf(navArgument("aisleId") { type = NavType.StringType })
+            arguments = listOf(navArgument("aisleNumber") { type = NavType.StringType })
         ) { backStackEntry ->
-            val aisleId = backStackEntry.arguments?.getString("aisleId") ?: ""
+            val aisleNumber = backStackEntry.arguments?.getString("aisleNumber") ?: ""
             AisleDetailScreen(
-                viewModel = koinViewModel { parametersOf(aisleId) },
-                onMedicineClick = { id -> navController.navigate("medicineDetail/$id") },
+                viewModel = koinViewModel { parametersOf(aisleNumber) },
+                onMedicineClick = { number -> navController.navigate("medicineDetail/$number") },
                 onBackClick = { navController.navigateUp() }
             )
         }

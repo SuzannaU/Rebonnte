@@ -125,7 +125,7 @@ private fun AisleListContent(
         items(aisles) { aisle ->
             AisleItem(
                 aisle = aisle,
-                onAisleClick = { onAisleClick(aisle.id) }
+                onAisleClick = { onAisleClick(aisle.number) }
             )
         }
     }
@@ -140,7 +140,7 @@ private fun AisleItem(aisle: AisleUi, onAisleClick: () -> Unit) {
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = aisle.number.toString(), style = MaterialTheme.typography.bodyMedium)
+        Text(text = aisle.number, style = MaterialTheme.typography.bodyMedium)
         Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Arrow")
     }
 }
@@ -211,9 +211,9 @@ private fun AisleListContentPreview() {
     RebonnteTheme {
         AisleListContent(
             aisles = listOf(
-                AisleUi("1", 1),
-                AisleUi("2", 2),
-                AisleUi("3", 3)
+                AisleUi("1"),
+                AisleUi("2"),
+                AisleUi("3")
             ),
             onAisleClick = {}
         )
@@ -225,7 +225,7 @@ private fun AisleListContentPreview() {
 private fun AisleItemPreview() {
     RebonnteTheme {
         AisleItem(
-            aisle = AisleUi("1", 1),
+            aisle = AisleUi("1"),
             onAisleClick = {}
         )
     }
