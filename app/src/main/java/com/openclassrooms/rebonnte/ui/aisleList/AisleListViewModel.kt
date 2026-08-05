@@ -3,10 +3,8 @@ package com.openclassrooms.rebonnte.ui.aisleList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.R
-import com.openclassrooms.rebonnte.data.dto.AisleDto
 import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.repository.AisleRepository
-import com.openclassrooms.rebonnte.ui.model.AisleUi
 import com.openclassrooms.rebonnte.ui.model.toUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,7 +33,7 @@ class AisleListViewModel(
         }
     }
 
-    fun addAisle(aisleNumber : String) {
+    fun addAisle(aisleNumber : String) {        // TODO validate if aislenumber is a digit and display error message
         viewModelScope.launch {
             val existingAisle = aisleRepository.getAisleByNumber(aisleNumber = aisleNumber)
             if (existingAisle != null) {

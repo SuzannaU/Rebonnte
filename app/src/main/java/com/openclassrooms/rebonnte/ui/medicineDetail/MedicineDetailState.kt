@@ -10,6 +10,6 @@ sealed class MedicineDetailState {
 
     data class MedicineFound(
         val medicine: MedicineUi,
-        val histories: List<HistoryUi>
+        val histories: List<HistoryUi>,
     ) : MedicineDetailState()
 }

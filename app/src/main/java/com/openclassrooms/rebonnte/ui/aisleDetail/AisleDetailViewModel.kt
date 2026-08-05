@@ -2,10 +2,7 @@ package com.openclassrooms.rebonnte.ui.aisleDetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.rebonnte.domain.repository.AisleRepository
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
-import com.openclassrooms.rebonnte.ui.model.AisleUi
-import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.model.toUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -21,6 +21,7 @@ import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.repository.UserRepository
 import com.openclassrooms.rebonnte.domain.service.AuthService
 import com.openclassrooms.rebonnte.domain.useCase.AddMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
 import com.openclassrooms.rebonnte.ui.addMedicine.AddMedicineViewModel
 import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailViewModel
 import com.openclassrooms.rebonnte.ui.aisleList.AisleListViewModel
@@ -45,11 +46,12 @@ val appModule = module {
     single<HistoryRepository> { HistoryRepositoryFirestoreImpl(get()) }
     single<MedicineRepository> { MedicineRepositoryFirestoreImpl(get()) }
 
-    factory<AddMedicineUseCase> { AddMedicineUseCase(get(), get(),) }
+    factory<AddMedicineUseCase> { AddMedicineUseCase(get(), get()) }
+    factory<UpdateMedicineUseCase> { UpdateMedicineUseCase(get(), get()) }
 
     viewModel { (aisleNumber: String) -> AisleDetailViewModel(get(), aisleNumber) }
     viewModel { AisleListViewModel(get()) }
-    viewModel { (medicineId: String) -> MedicineDetailViewModel(get(), get(), medicineId) }
+    viewModel { (medicineId: String) -> MedicineDetailViewModel(get(), get(), get(),medicineId) }
     viewModel { MedicineListViewModel(get()) }
     viewModel { AddMedicineViewModel(get(), get()) }
 }

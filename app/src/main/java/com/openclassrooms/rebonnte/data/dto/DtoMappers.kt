@@ -4,70 +4,85 @@ import com.google.firebase.Timestamp
 import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
+import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.model.User
 
 fun User.toDto(): UserDto {
     return UserDto(
-        id = this.id,
-        username = this.username,
-        email = this.email,
+        id = id,
+        username = username,
+        email = email,
     )
 }
 
 fun UserDto.toDomain(): User {
     return User(
-        id = this.id,
-        username = this.username,
-        email = this.email,
+        id = id,
+        username = username,
+        email = email,
     )
 }
 
 fun Aisle.toDto(): AisleDto {
     return AisleDto(
-        id = this.number,
+        id = number,
     )
 }
 
 fun AisleDto.toDomain(): Aisle {
     return Aisle(
-        number = this.id,
+        number = id,
     )
 }
 
 fun Medicine.toDto(): MedicineDto {
     return MedicineDto(
-        id = this.id,
-        name = this.name,
-        aisleNumber = this.aisleNumber,
-        currentStock = this.currentStock,
+        id = id,
+        name = name,
+        aisleNumber = aisleNumber,
+        currentStock = currentStock,
     )
 }
 
 fun MedicineDto.toDomain(): Medicine {
     return Medicine(
-        id = this.id,
-        name = this.name,
-        aisleNumber = this.aisleNumber,
-        currentStock = this.currentStock
+        id = id,
+        name = name,
+        aisleNumber = aisleNumber,
+        currentStock = currentStock,
     )
 }
 
 fun History.toDto(): HistoryDto {
     return HistoryDto(
-        id = this.id,
-        medicineId = this.medicineId,
-        userId = this.userId,
-        dateTime = Timestamp(this.dateTime),
-        details = this.details,
+        id = id,
+        medicineId = medicineId,
+        userId = userId,
+        dateTime = Timestamp(dateTime),
+        creation = isCreation,
+        updatedField = updatedField?.toDto(),
     )
 }
 
 fun HistoryDto.toDomain(): History {
     return History(
-        id = this.id,
-        medicineId = this.medicineId,
-        userId = this.userId,
-        dateTime = this.dateTime.toDate(),
-        details = this.details,
+        id = id,
+        medicineId = medicineId,
+        userId = userId,
+        dateTime = dateTime.toDate(),
+        isCreation = creation,
+        updatedField = updatedField?.toDomain(),
     )
 }
+
+fun UpdatedField.toDto() = UpdatedFieldDto(
+    field = field,
+    oldValue = oldValue,
+    newValue = newValue
+)
+
+fun UpdatedFieldDto.toDomain() = UpdatedField(
+    field = field,
+    oldValue = oldValue,
+    newValue = newValue
+)

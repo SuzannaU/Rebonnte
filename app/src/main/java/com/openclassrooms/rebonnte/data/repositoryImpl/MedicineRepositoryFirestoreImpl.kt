@@ -5,6 +5,7 @@ import com.openclassrooms.rebonnte.data.dto.toDomain
 import com.openclassrooms.rebonnte.data.dto.toDto
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
+import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -33,8 +34,19 @@ class MedicineRepositoryFirestoreImpl(
     }
 
     override suspend fun addMedicineWithHistory(medicine: Medicine, history: History) {
-        println("repository called with $medicine and $history")
-        medicineDataSource.saveMedicineWithHistory(medicine.toDto(), history.toDto())
+        medicineDataSource.addMedicineWithHistory(medicine.toDto(), history.toDto())
+    }
+
+    override suspend fun updateMedicineWithHistory(
+        medicineId: String,
+        updatedField: UpdatedField,
+        history: History,
+    ) {
+        medicineDataSource.updateMedicineWithHistory(
+            medicineId = medicineId,
+            updatedField = updatedField.toDto(),
+            history = history.toDto(),
+        )
     }
 
     override suspend fun deleteMedicineById(medicineId: String) {

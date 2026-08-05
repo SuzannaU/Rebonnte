@@ -7,5 +7,18 @@ data class History(
     val medicineId: String,
     val userId: String,
     val dateTime: Date,
-    val details: String,
+    val isCreation: Boolean = false,
+    val updatedField: UpdatedField? = null,
+)
+
+enum class UpdatableFields {
+    NAME,
+    AISLE,
+    STOCK,
+}
+
+data class UpdatedField(
+    val field: UpdatableFields,
+    val oldValue: String,
+    val newValue: String,
 )

@@ -5,7 +5,6 @@ import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
 import com.openclassrooms.rebonnte.data.dto.AisleDto
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 
 private const val AISlE_COLLECTION = "aisles"

@@ -17,4 +17,8 @@
     <string name="error_stock_invalid">Stock must be a number</string>
     <string name="error_aisle_invalid">Aisle must be a number</string>
     <string name="error_aisle_exists">Aisle already exists</string>
+    <string name="medicine_field_name">name</string>
+    <string name="medicine_field_current_stock">currentStock</string>
+    <string name="medicine_field_aisle_number">aisleNumber</string>
+    <string name="update_history_details">%1$s updated from %2$s to %3$s</string>
 </resources>

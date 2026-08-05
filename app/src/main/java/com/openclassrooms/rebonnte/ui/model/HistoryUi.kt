@@ -4,5 +4,5 @@ data class HistoryUi(
     val medicineId: String,
     val userId: String,
     val dateTime: String,
-    val details: String,
+    val details: String = "",
 )

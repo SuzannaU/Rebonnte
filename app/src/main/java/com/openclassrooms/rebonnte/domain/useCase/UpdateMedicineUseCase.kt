@@ -1,28 +1,32 @@
 package com.openclassrooms.rebonnte.domain.useCase
 
 import com.openclassrooms.rebonnte.domain.model.History
-import com.openclassrooms.rebonnte.domain.model.Medicine
+import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.model.User
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.repository.UserRepository
 import java.util.Calendar
 
-class AddMedicineUseCase(
+class UpdateMedicineUseCase(
     private val medicineRepository: MedicineRepository,
     private val userRepository: UserRepository,
 ) {
 
-    suspend fun execute(
-        medicine: Medicine
-    ) {
+    suspend fun execute(medicineId: String, updatedField: UpdatedField) {
         val user = userRepository.getCurrentUser() ?: User("", "", "")
+
         val history = History(
-            medicineId = medicine.id,
+            medicineId = medicineId,
             userId = user.id,
             dateTime = Calendar.getInstance().time,
-            isCreation = true,
+            updatedField = updatedField,
         )
 
-        medicineRepository.addMedicineWithHistory(medicine, history)
+        medicineRepository.updateMedicineWithHistory(
+            medicineId = medicineId,
+            updatedField = updatedField,
+            history = history
+        )
     }
 }
+

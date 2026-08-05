@@ -26,15 +26,15 @@ class HistoryFirestoreDataSource(
     override fun getHistories(): Flow<List<HistoryDto>> {
         return firestore
             .collection(HISTORY_COLLECTION)
-            .orderBy("date_time", Query.Direction.DESCENDING)
+            .orderBy("dateTime", Query.Direction.DESCENDING)
             .dataObjects<HistoryDto>()
     }
 
     override fun getHistoryByMedicineId(medicineId: String): Flow<List<HistoryDto>> {
         return firestore
             .collection(HISTORY_COLLECTION)
-            .whereEqualTo("medicine_id", medicineId)
-            .orderBy("date_time", Query.Direction.DESCENDING)
+            .whereEqualTo("medicineId", medicineId)
+            .orderBy("dateTime", Query.Direction.DESCENDING)
             .dataObjects<HistoryDto>()
     }
 

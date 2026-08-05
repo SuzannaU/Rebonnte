@@ -78,39 +78,6 @@ class MedicineListViewModel(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = MedicineListScreenState.Loading
     )
-
-
-//    fun filterByName(name: String) {
-//        val currentMedicines: List<Medicine> = medicines.value
-//        val filteredMedicines: MutableList<Medicine> = ArrayList()
-//        for (medicine in currentMedicines) {
-//            if (medicine.name.lowercase(Locale.getDefault())
-//                    .contains(name.lowercase(Locale.getDefault()))
-//            ) {
-//                filteredMedicines.add(medicine)
-//            }
-//        }
-//        _medicines.value = filteredMedicines        // Shouldn't modify original state, loss of data
-//    }
-//
-//    fun sortByNone() {
-//        _medicines.value = medicines.value.toMutableList()
-//    }
-//
-//    fun sortByName() {
-//        val currentMedicines = ArrayList(medicines.value)
-//        currentMedicines.sortWith(Comparator.comparing(Medicine::name))
-//        _medicines.value = currentMedicines
-//    }
-//
-//    fun sortByStock() {
-//        val currentMedicines = ArrayList(medicines.value)
-//        currentMedicines.sortWith(Comparator.comparingInt(Medicine::currentStock))
-//        _medicines.value = currentMedicines
-//    }
-
-    fun addRandomMedicine() {
-    }
 }
 
 enum class SortOption(@get:StringRes val labelId: Int) {
