@@ -108,4 +108,10 @@ class MedicineDetailViewModel(
             loadMedicine()
         }
     }
+
+    fun deleteMedicine() {
+        viewModelScope.launch {
+            medicineRepository.deleteMedicineById(medicineId)
+        }
+    }
 }

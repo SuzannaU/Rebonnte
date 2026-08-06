@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -39,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.ui.LoadingScreen
+import com.openclassrooms.rebonnte.ui.components.ConfirmationDialog
 import com.openclassrooms.rebonnte.ui.components.TextFieldDialog
 import com.openclassrooms.rebonnte.ui.model.HistoryUi
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
@@ -55,6 +58,7 @@ fun MedicineDetailScreen(
     var showNameEditDialog by rememberSaveable { mutableStateOf(false) }
     var showAisleEditDialog by rememberSaveable { mutableStateOf(false) }
     var showStockEditDialog by rememberSaveable { mutableStateOf(false) }
+    var showDeleteConfirmationDialog by rememberSaveable { mutableStateOf(false) }
 
     when (val state = uiState) {
         MedicineDetailState.Loading -> {
@@ -69,6 +73,7 @@ fun MedicineDetailScreen(
                 onEditAisleClick = { showAisleEditDialog = true },
                 onEditStockClick = { showStockEditDialog = true },
                 onBackClick = onBackClick,
+                onDeleteClick = { showDeleteConfirmationDialog = true },
             )
             when {
                 showNameEditDialog -> {
@@ -100,7 +105,7 @@ fun MedicineDetailScreen(
 
                 showStockEditDialog -> {
                     TextFieldDialog(
-                        title = "Edit Medicine",
+                        title = "Edit Stock",
                         label = "Stock",
                         initialValue = state.medicine.currentStock,
                         isDigits = true,
@@ -108,6 +113,19 @@ fun MedicineDetailScreen(
                         onConfirm = { newStock ->
                             viewModel.updateStock(newStock)
                             showStockEditDialog = false
+                        },
+                    )
+                }
+
+                showDeleteConfirmationDialog -> {
+                    ConfirmationDialog(
+                        title = "Deletion Confirmation",
+                        text = "Please confirm the deletion of ${state.medicine.name}",
+                        onDismissRequest = { showDeleteConfirmationDialog = false },
+                        onDismissClick = { showDeleteConfirmationDialog = false },
+                        onConfirmClick = {
+                            viewModel.deleteMedicine()
+                            showDeleteConfirmationDialog = false
                         },
                     )
                 }
@@ -127,6 +145,7 @@ private fun MedicineDetailContent(
     onEditAisleClick: () -> Unit,
     onEditStockClick: () -> Unit,
     onBackClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -145,6 +164,14 @@ private fun MedicineDetailContent(
                         )
                     }
                 },
+                actions = {
+                    IconButton(onClick = onDeleteClick) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete ${medicine.name}"
+                        )
+                    }
+                }
             )
         }
     ) { paddingValues ->
@@ -277,6 +304,7 @@ private fun MedicineDetailContentPreview() {
             onEditAisleClick = {},
             onEditStockClick = {},
             onBackClick = {},
+            onDeleteClick = {},
         )
     }
 }
