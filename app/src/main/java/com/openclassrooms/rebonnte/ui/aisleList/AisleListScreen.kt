@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,15 +21,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.ui.AISLE_LIST_ROUTE
 import com.openclassrooms.rebonnte.ui.components.BottomNavigationBar
 import com.openclassrooms.rebonnte.ui.components.TextFieldDialog
@@ -43,7 +47,15 @@ fun AisleListScreen(
     onMedicinesClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val addAisleState by viewModel.addAisleState.collectAsStateWithLifecycle()
     var showAddAisleDialog by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(addAisleState.isSuccess) {
+        if (addAisleState.isSuccess) {
+            showAddAisleDialog = false
+            viewModel.resetAddAisleState()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -65,7 +77,10 @@ fun AisleListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showAddAisleDialog = true }
+                onClick = {
+                    viewModel.resetAddAisleState()
+                    showAddAisleDialog = true
+                }
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
@@ -95,10 +110,20 @@ fun AisleListScreen(
                     label = "Aisle Number",
                     initialValue = "",
                     isDigits = true,
-                    onDismiss = { showAddAisleDialog = false },
-                    onConfirm = {aisleNumber ->
-                        viewModel.addAisle(aisleNumber)
+                    isError =addAisleState.aisleBlankError || addAisleState.aisleDigitError || addAisleState.aisleExistsError,
+                    errorText = if (addAisleState.aisleBlankError) {
+                        stringResource(R.string.error_aisle_empty)
+                    } else if (addAisleState.aisleDigitError) {
+                        stringResource(R.string.error_aisle_invalid)
+                    } else if (addAisleState.aisleExistsError) {
+                        stringResource(R.string.error_aisle_exists)
+                    } else null,
+                    onDismiss = {
                         showAddAisleDialog = false
+                        viewModel.resetAddAisleState()
+                    },
+                    onConfirm = { aisleNumber ->
+                        viewModel.addAisle(aisleNumber)
                     }
                 )
             }
@@ -133,7 +158,7 @@ private fun AisleItem(aisle: AisleUi, onAisleClick: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = aisle.number, style = MaterialTheme.typography.bodyMedium)
-        Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Arrow")
+        Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Arrow")
     }
 }
 

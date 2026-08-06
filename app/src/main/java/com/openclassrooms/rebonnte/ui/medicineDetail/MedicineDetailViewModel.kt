@@ -6,29 +6,32 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
 import com.openclassrooms.rebonnte.domain.model.UpdatedField
+import com.openclassrooms.rebonnte.domain.repository.AisleRepository
 import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
+import com.openclassrooms.rebonnte.ui.aisleList.AddAisleState
 import com.openclassrooms.rebonnte.ui.model.toUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MedicineDetailViewModel(
     private val medicineRepository: MedicineRepository,
     private val historyRepository: HistoryRepository,
+    private val aisleRepository: AisleRepository,
     private val updateMedicineUseCase: UpdateMedicineUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val medicineId: String  = savedStateHandle["medicineId"] ?: ""
+    private val medicineId: String = savedStateHandle["medicineId"] ?: ""
 
     private var _uiState = MutableStateFlow<MedicineDetailState>(MedicineDetailState.Loading)
     val uiState = _uiState.asStateFlow()
 
-    private var _nameState = MutableStateFlow("")
-    private var _aisleState = MutableStateFlow("")
-    private var _stockState = MutableStateFlow("")
+    private var _formState = MutableStateFlow(EditMedicineFormState())
+    val formState = _formState.asStateFlow()
 
     lateinit var initialMedicine: Medicine
 
@@ -48,8 +51,13 @@ class MedicineDetailViewModel(
                     medicine = medicineUi,
                     histories = emptyList(),
                 )
-                _stockState.value = medicineUi.currentStock
-                _aisleState.value = medicineUi.aisleNumber
+                _formState.update {
+                    it.copy(
+                        name = medicineUi.name,
+                        aisleNumber = medicineUi.aisleNumber,
+                        stock = medicineUi.currentStock
+                    )
+                }
                 historyRepository.getHistoryByMedicineId(medicineId = medicineId)
                     .collect { histories ->
                         val historiesUi = histories.map { history ->
@@ -65,7 +73,28 @@ class MedicineDetailViewModel(
     }
 
     fun updateName(input: String) {
-        _nameState.value = input
+        if (input.isBlank()) {
+            _formState.update {
+                it.copy(
+                    formError = EditMedicineFormErrorState(nameBlankError = true)
+                )
+            }
+            return
+        }
+        if (input.length > 25) {
+            _formState.update {
+                it.copy(
+                    formError = EditMedicineFormErrorState(nameLengthError = true)
+                )
+            }
+            return
+        }
+        _formState.update {
+            it.copy(
+                name = input,
+                formError = EditMedicineFormErrorState(),
+            )
+        }
         updateField(
             updatedField = UpdatedField(
                 field = UpdatableFields.NAME,
@@ -76,20 +105,62 @@ class MedicineDetailViewModel(
     }
 
     fun updateAisle(input: String) {
-        if (!input.all { it.isDigit() }) return         // TODO proper form error
-        _aisleState.value = input
-        updateField(
-            updatedField = UpdatedField(
-                field = UpdatableFields.AISLE,
-                oldValue = initialMedicine.aisleNumber,
-                newValue = input,
+        if (!input.all { it.isDigit() }) {
+            _formState.update {
+                it.copy(
+                    formError = EditMedicineFormErrorState(aisleDigitError = true)
+                )
+            }
+            return
+        }
+        viewModelScope.launch {
+            if (!aisleExists(input)) {
+                _formState.update {
+                    it.copy(
+                        formError = EditMedicineFormErrorState(aisleDoesNotExistError = true)
+                    )
+                }
+                return@launch
+            }
+            _formState.update {
+                it.copy(
+                    aisleNumber = input,
+                    formError = EditMedicineFormErrorState(),
+                )
+            }
+            updateField(
+                updatedField = UpdatedField(
+                    field = UpdatableFields.AISLE,
+                    oldValue = initialMedicine.aisleNumber,
+                    newValue = input,
+                )
             )
-        )
+        }
     }
 
     fun updateStock(input: String) {
-        if (!input.all { it.isDigit() }) return         // TODO proper form error
-        _stockState.value = input
+        if (input.isBlank()) {
+            _formState.update {
+                it.copy(
+                    formError = EditMedicineFormErrorState(stockBlankError = true)
+                )
+            }
+            return
+        }
+        if (!input.all { it.isDigit() }) {
+            _formState.update {
+                it.copy(
+                    formError = EditMedicineFormErrorState(stockDigitError = true)
+                )
+            }
+            return
+        }
+        _formState.update {
+            it.copy(
+                stock = input,
+                formError = EditMedicineFormErrorState(),
+            )
+        }
         updateField(
             updatedField = UpdatedField(
                 field = UpdatableFields.STOCK,
@@ -108,8 +179,17 @@ class MedicineDetailViewModel(
                 medicineId = state.medicine.id,
                 updatedField = updatedField,
             )
+            _formState.update { it.copy(isSuccess = true) }
             loadMedicine()
         }
+    }
+
+    private suspend fun aisleExists(aisleNumber: String): Boolean {
+        return aisleRepository.getAisleByNumber(aisleNumber = aisleNumber) != null
+    }
+
+    fun resetAddAisleState() {
+        _formState.value = EditMedicineFormState()
     }
 
 

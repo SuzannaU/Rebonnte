@@ -51,7 +51,7 @@ val appModule = module {
 
     viewModel { AisleDetailViewModel(get(), get()) }
     viewModel { AisleListViewModel(get()) }
-    viewModel { MedicineDetailViewModel(get(), get(), get(),get()) }
+    viewModel { MedicineDetailViewModel(get(), get(), get(),get(), get()) }
     viewModel { MedicineListViewModel(get()) }
     viewModel { AddMedicineViewModel(get(), get(), get()) }
 }

@@ -13,3 +13,21 @@ sealed class MedicineDetailState {
         val histories: List<HistoryUi>,
     ) : MedicineDetailState()
 }
+
+data class EditMedicineFormState(
+    val name: String = "",
+    val aisleNumber: String = "",
+    val stock: String = "",
+    val formError: EditMedicineFormErrorState = EditMedicineFormErrorState(),
+    val isSuccess: Boolean = false,
+)
+
+data class EditMedicineFormErrorState(
+    val nameBlankError: Boolean = false,
+    val nameLengthError: Boolean = false,
+    val aisleBlankError: Boolean = false,
+    val aisleDigitError: Boolean = false,
+    val aisleDoesNotExistError: Boolean = false,
+    val stockBlankError: Boolean = false,
+    val stockDigitError: Boolean = false,
+)

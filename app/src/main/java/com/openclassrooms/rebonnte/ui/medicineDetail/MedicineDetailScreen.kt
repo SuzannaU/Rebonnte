@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,17 +28,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.components.ConfirmationDialog
 import com.openclassrooms.rebonnte.ui.components.TextFieldDialog
@@ -55,10 +57,20 @@ fun MedicineDetailScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val formState by viewModel.formState.collectAsStateWithLifecycle()
     var showNameEditDialog by rememberSaveable { mutableStateOf(false) }
     var showAisleEditDialog by rememberSaveable { mutableStateOf(false) }
     var showStockEditDialog by rememberSaveable { mutableStateOf(false) }
     var showDeleteConfirmationDialog by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(formState.isSuccess) {
+        if (formState.isSuccess) {
+            showNameEditDialog = false
+            showAisleEditDialog = false
+            showStockEditDialog = false
+            viewModel.resetAddAisleState()
+        }
+    }
 
     when (val state = uiState) {
         MedicineDetailState.Loading -> {
@@ -80,11 +92,16 @@ fun MedicineDetailScreen(
                     TextFieldDialog(
                         title = "Edit Name",
                         label = "Name",
-                        initialValue = state.medicine.name,
+                        initialValue = formState.name,
+                        isError = formState.formError.nameBlankError || formState.formError.nameLengthError,
+                        errorText = if (formState.formError.nameBlankError) {
+                            stringResource(R.string.error_name_empty)
+                        } else if (formState.formError.nameLengthError) {
+                            stringResource(R.string.error_name_too_long)
+                        } else null,
                         onDismiss = { showNameEditDialog = false },
                         onConfirm = { newName ->
                             viewModel.updateName(newName)
-                            showNameEditDialog = false
                         },
                     )
                 }
@@ -93,12 +110,19 @@ fun MedicineDetailScreen(
                     TextFieldDialog(
                         title = "Edit Aisle Number",
                         label = "Aisle Number",
-                        initialValue = state.medicine.aisleNumber,
+                        initialValue = formState.aisleNumber,
                         isDigits = true,
+                        isError = formState.formError.aisleBlankError || formState.formError.aisleDigitError || formState.formError.aisleDoesNotExistError,
+                        errorText = if (formState.formError.aisleBlankError) {
+                            stringResource(R.string.error_aisle_empty)
+                        } else if (formState.formError.aisleDigitError) {
+                            stringResource(R.string.error_aisle_invalid)
+                        } else if (formState.formError.aisleDoesNotExistError) {
+                            stringResource(R.string.error_aisle_not_exists)
+                        } else null,
                         onDismiss = { showAisleEditDialog = false },
                         onConfirm = { newAisle ->
                             viewModel.updateAisle(newAisle)
-                            showAisleEditDialog = false
                         },
                     )
                 }
@@ -107,12 +131,17 @@ fun MedicineDetailScreen(
                     TextFieldDialog(
                         title = "Edit Stock",
                         label = "Stock",
-                        initialValue = state.medicine.currentStock,
+                        initialValue = formState.stock,
                         isDigits = true,
+                        isError = formState.formError.stockBlankError || formState.formError.stockDigitError,
+                        errorText = if (formState.formError.stockBlankError) {
+                            stringResource(R.string.error_stock_empty)
+                        } else if (formState.formError.stockDigitError) {
+                            stringResource(R.string.error_stock_invalid)
+                        } else null,
                         onDismiss = { showStockEditDialog = false },
                         onConfirm = { newStock ->
                             viewModel.updateStock(newStock)
-                            showStockEditDialog = false
                         },
                     )
                 }

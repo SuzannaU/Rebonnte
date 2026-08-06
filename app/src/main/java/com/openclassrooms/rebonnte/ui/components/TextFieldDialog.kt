@@ -35,17 +35,21 @@ fun TextFieldDialog(
     label: String,
     initialValue: String,
     isDigits: Boolean = false,
+    isError: Boolean = false,
+    errorText: String? = null,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismiss
     ) {
-        EditDialogContent(
+        TextFieldDialogContent(
             title = title,
             label = label,
             initialValue = initialValue,
             isDigits = isDigits,
+            isError = isError,
+            errorText = errorText,
             onDismiss = onDismiss,
             onConfirm = onConfirm
         )
@@ -53,11 +57,13 @@ fun TextFieldDialog(
 }
 
 @Composable
-private fun EditDialogContent(
+private fun TextFieldDialogContent(
     title: String,
     label: String,
     initialValue: String,
     isDigits: Boolean = false,
+    isError: Boolean = false,
+    errorText: String? = null,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
@@ -77,6 +83,16 @@ private fun EditDialogContent(
                 value = value,
                 onValueChange = { input -> value = input },
                 label = { Text(label) },
+                isError = isError,
+                supportingText = {
+                    if (errorText != null) {
+                        Text(
+                            text = errorText,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                },
                 keyboardOptions = if (isDigits) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -103,7 +119,7 @@ private fun EditDialogContent(
 @Composable
 private fun AddAisleDialogPreview() {
     RebonnteTheme {
-        EditDialogContent(
+        TextFieldDialogContent(
             onDismiss = {},
             onConfirm = {},
             title = "Title",

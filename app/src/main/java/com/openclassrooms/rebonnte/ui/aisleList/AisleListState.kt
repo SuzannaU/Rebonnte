@@ -14,3 +14,10 @@ sealed class AisleListScreenState {
         val errorMessageId: Int,
     ) : AisleListScreenState()
 }
+
+data class AddAisleState(
+    val aisleBlankError: Boolean = false,
+    val aisleDigitError: Boolean = false,
+    val aisleExistsError: Boolean = false,
+    val isSuccess: Boolean = false,
+)
