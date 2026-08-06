@@ -109,9 +109,10 @@ class MedicineDetailViewModel(
         }
     }
 
-    fun deleteMedicine() {
+
+    fun archiveMedicine() {
         viewModelScope.launch {
-            medicineRepository.deleteMedicineById(medicineId)
+            medicineRepository.archiveMedicineById(medicineId)
         }
     }
 }

@@ -9,4 +9,5 @@ data class MedicineDto(
     val name: String = "",
     val aisleNumber: String = "",
     val currentStock: Int = 0,
+    val archived: Boolean = false,
 ) : Serializable

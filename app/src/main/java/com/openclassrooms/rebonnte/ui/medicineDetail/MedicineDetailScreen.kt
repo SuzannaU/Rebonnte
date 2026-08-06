@@ -124,8 +124,8 @@ fun MedicineDetailScreen(
                         onDismissRequest = { showDeleteConfirmationDialog = false },
                         onDismissClick = { showDeleteConfirmationDialog = false },
                         onConfirmClick = {
-                            viewModel.deleteMedicine()
-                            showDeleteConfirmationDialog = false
+                            viewModel.archiveMedicine()
+                            onBackClick()
                         },
                     )
                 }

@@ -17,6 +17,7 @@ private const val MEDICINE_COLLECTION = "medicines"
 private const val NAME_FIELD = "name"
 private const val AISLE_NUMBER_FIELD = "aisleNumber"
 private const val CURRENT_STOCK_FIELD = "currentStock"
+private const val ARCHIVED_FIELD = "archived"
 
 class MedicineFirestoreDataSource(
     private val firestore: FirebaseFirestore,
@@ -38,9 +39,18 @@ class MedicineFirestoreDataSource(
             .dataObjects<MedicineDto>()
     }
 
+    override fun getUnarchivedMedicines(): Flow<List<MedicineDto>> {
+        return firestore
+            .collection(MEDICINE_COLLECTION)
+            .whereEqualTo(ARCHIVED_FIELD, false)
+            .orderBy(NAME_FIELD, Query.Direction.DESCENDING)
+            .dataObjects<MedicineDto>()
+    }
+
     override fun getMedicinesByAisleNumber(aisleNumber: String): Flow<List<MedicineDto>> {
         return firestore
             .collection(MEDICINE_COLLECTION)
+            .whereEqualTo(ARCHIVED_FIELD, false)
             .whereEqualTo(AISLE_NUMBER_FIELD, aisleNumber)
             .orderBy(NAME_FIELD, Query.Direction.DESCENDING)
             .dataObjects<MedicineDto>()
@@ -112,10 +122,9 @@ class MedicineFirestoreDataSource(
         }.await()
     }
 
-    override suspend fun deleteMedicineById(medicineId: String) {
-        firestore.collection(MEDICINE_COLLECTION)
+    override suspend fun archiveMedicineById(medicineId: String) {
+        val docRef = firestore.collection(MEDICINE_COLLECTION)
             .document(medicineId)
-            .delete()
-            .await()
+        docRef.update(ARCHIVED_FIELD, true)
     }
 }

@@ -20,5 +20,5 @@ interface MedicineRepository {
         history: History,
     )
 
-    suspend fun deleteMedicineById(medicineId: String)
+    suspend fun archiveMedicineById(medicineId: String)
 }

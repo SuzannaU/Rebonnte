@@ -5,4 +5,5 @@ data class Medicine(
     val name: String,
     val aisleNumber: String,
     val currentStock: Int,
+    val isArchived: Boolean = false,
 )

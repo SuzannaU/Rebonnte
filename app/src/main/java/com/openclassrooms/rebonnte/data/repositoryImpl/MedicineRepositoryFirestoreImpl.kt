@@ -18,7 +18,7 @@ class MedicineRepositoryFirestoreImpl(
     }
 
     override fun getMedicines(): Flow<List<Medicine>> {
-        return medicineDataSource.getMedicines().map { medicineDtos ->
+        return medicineDataSource.getUnarchivedMedicines().map { medicineDtos ->
             medicineDtos.map { medicineDto ->
                 medicineDto.toDomain()
             }
@@ -49,7 +49,7 @@ class MedicineRepositoryFirestoreImpl(
         )
     }
 
-    override suspend fun deleteMedicineById(medicineId: String) {
-        medicineDataSource.deleteMedicineById(medicineId)
+    override suspend fun archiveMedicineById(medicineId: String) {
+        medicineDataSource.archiveMedicineById(medicineId)
     }
 }

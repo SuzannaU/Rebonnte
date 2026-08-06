@@ -41,6 +41,7 @@ fun Medicine.toDto(): MedicineDto {
         name = name,
         aisleNumber = aisleNumber,
         currentStock = currentStock,
+        archived = isArchived,
     )
 }
 
@@ -50,6 +51,7 @@ fun MedicineDto.toDomain(): Medicine {
         name = name,
         aisleNumber = aisleNumber,
         currentStock = currentStock,
+        isArchived = archived,
     )
 }
 
