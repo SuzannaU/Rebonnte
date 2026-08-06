@@ -1,5 +1,6 @@
 package com.openclassrooms.rebonnte.ui.addMedicine
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.Medicine
@@ -13,9 +14,12 @@ import kotlinx.coroutines.launch
 class AddMedicineViewModel(
     private val aisleRepository: AisleRepository,
     private val addMedicineUseCase: AddMedicineUseCase,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private var _formState = MutableStateFlow(FormState())
+    private val initialAisleNumber: String = savedStateHandle["aisleNumber"] ?: ""
+
+    private var _formState = MutableStateFlow(FormState(aisleNumber = initialAisleNumber))
     val formState = _formState.asStateFlow()
 
     private var _saveState = MutableStateFlow<SaveState>(SaveState.Idle)

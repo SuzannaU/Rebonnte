@@ -1,5 +1,6 @@
 package com.openclassrooms.rebonnte.ui.medicineDetail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.Medicine
@@ -17,8 +18,10 @@ class MedicineDetailViewModel(
     private val medicineRepository: MedicineRepository,
     private val historyRepository: HistoryRepository,
     private val updateMedicineUseCase: UpdateMedicineUseCase,
-    private val medicineId: String,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    private val medicineId: String  = savedStateHandle["medicineId"] ?: ""
 
     private var _uiState = MutableStateFlow<MedicineDetailState>(MedicineDetailState.Loading)
     val uiState = _uiState.asStateFlow()

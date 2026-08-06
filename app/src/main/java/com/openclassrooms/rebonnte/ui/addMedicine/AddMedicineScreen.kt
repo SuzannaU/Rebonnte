@@ -129,7 +129,7 @@ private fun AddMedicineContent(
                         Text(stringResource(R.string.error_aisle_invalid))
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -177,7 +177,7 @@ private fun AddMedicineContent(
 private fun AddMedicineContentPreview() {
     RebonnteTheme {
         AddMedicineContent(
-            formState = FormState(),
+            formState = FormState(aisleNumber = "10"),
             saveState = SaveState.Idle,
             onNameChange = {},
             onAisleChange = {},

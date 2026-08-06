@@ -49,9 +49,9 @@ val appModule = module {
     factory<AddMedicineUseCase> { AddMedicineUseCase(get(), get()) }
     factory<UpdateMedicineUseCase> { UpdateMedicineUseCase(get(), get()) }
 
-    viewModel { (aisleNumber: String) -> AisleDetailViewModel(get(), aisleNumber) }
+    viewModel { AisleDetailViewModel(get(), get()) }
     viewModel { AisleListViewModel(get()) }
-    viewModel { (medicineId: String) -> MedicineDetailViewModel(get(), get(), get(),medicineId) }
+    viewModel { MedicineDetailViewModel(get(), get(), get(),get()) }
     viewModel { MedicineListViewModel(get()) }
-    viewModel { AddMedicineViewModel(get(), get()) }
+    viewModel { AddMedicineViewModel(get(), get(), get()) }
 }

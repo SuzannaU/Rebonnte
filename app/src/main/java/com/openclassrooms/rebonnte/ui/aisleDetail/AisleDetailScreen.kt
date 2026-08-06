@@ -12,8 +12,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -24,32 +26,56 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.ui.tooling.preview.Preview
 import com.openclassrooms.rebonnte.ui.LoadingScreen
-import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
+import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AisleDetailScreen(
     viewModel: AisleDetailViewModel,
     onMedicineClick: (String) -> Unit,
+    onAddMedicineClick: (String) -> Unit,
     onBackClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    when (val state = uiState) {
+        is AisleDetailScreenState.AisleFound -> {
+            AisleDetailContent(
+                state.aisleNumber,
+                state.medicines,
+                onMedicineClick,
+                onAddMedicineClick,
+                onBackClick,
+            )
+        }
+
+        AisleDetailScreenState.AisleNotFound -> {}
+        is AisleDetailScreenState.Error -> {}
+        AisleDetailScreenState.Loading -> {
+            LoadingScreen()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AisleDetailContent(
+    aisleNumber: String,
+    medicines: List<MedicineUi>,
+    onMedicineClick: (String) -> Unit,
+    onAddMedicineClick: (String) -> Unit,
+    onBackClick: () -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    //val aisle = (uiState as? AisleDetailScreenState.AisleFound)?.aisle
                     Text(
-//                        text = aisle?.let {
-//                            "Aisle # ${it.number}"
-//                        } ?: "No Aisle Found",
-                        text = "Aisle # ${viewModel.aisleNumber}",
+                        text = "Aisle # $aisleNumber",
                         fontWeight = FontWeight.Bold
                     )
                 },
@@ -62,6 +88,13 @@ fun AisleDetailScreen(
                     }
                 },
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onAddMedicineClick(aisleNumber)}
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add medicine")
+            }
         }
     ) { paddingValues ->
         Box(
@@ -69,34 +102,16 @@ fun AisleDetailScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when (val state = uiState) {
-                is AisleDetailScreenState.AisleFound -> {
-                    AisleDetailContent(state.medicines, onMedicineClick)
-                }
-
-                AisleDetailScreenState.AisleNotFound -> {}
-                is AisleDetailScreenState.Error -> {}
-                AisleDetailScreenState.Loading -> {
-                    LoadingScreen()
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(medicines) { medicine ->
+                    MedicineItem(
+                        medicine = medicine,
+                        onClick = { onMedicineClick(medicine.id) }
+                    )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun AisleDetailContent(
-    medicines: List<MedicineUi>,
-    onMedicineClick: (String) -> Unit,
-) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(medicines) { medicine ->
-            MedicineItem(
-                medicine = medicine,
-                onClick = { onMedicineClick(medicine.id) }
-            )
         }
     }
 }
@@ -126,12 +141,15 @@ private fun MedicineItem(
 private fun AisleDetailContentPreview() {
     RebonnteTheme {
         AisleDetailContent(
+            aisleNumber = "15",
             medicines = listOf(
                 MedicineUi("1", "Paracetamol", "1", "10"),
                 MedicineUi("2", "Ibuprofen", "1", "5"),
                 MedicineUi("3", "Aspirin", "1", "20")
             ),
-            onMedicineClick = {}
+            onMedicineClick = {},
+            onAddMedicineClick = {},
+            onBackClick = {},
         )
     }
 }

@@ -3,7 +3,7 @@ package com.openclassrooms.rebonnte.ui.addMedicine
 data class FormState(
     val id: String = generateRandomAlphanumeric(20),
     val name: String = "",
-    val aisleNumber: String ="",
+    val aisleNumber: String,
     val currentStock: String = "",
     val formErrors: FormErrorState = FormErrorState(),
 )

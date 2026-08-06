@@ -7,7 +7,8 @@ sealed class AisleDetailScreenState {
     object AisleNotFound : AisleDetailScreenState()
 
     data class AisleFound(
-        val medicines : List<MedicineUi>
+        val aisleNumber: String,
+        val medicines: List<MedicineUi>,
     ) : AisleDetailScreenState()
 
     data class Error(

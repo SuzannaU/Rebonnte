@@ -1,5 +1,6 @@
 package com.openclassrooms.rebonnte.ui.aisleDetail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
@@ -10,8 +11,10 @@ import kotlinx.coroutines.launch
 
 class AisleDetailViewModel(
     private val medicineRepository: MedicineRepository,
-    val aisleNumber: String,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    private val aisleNumber: String = savedStateHandle["aisleNumber"] ?: ""
 
     private var _uiState = MutableStateFlow<AisleDetailScreenState>(AisleDetailScreenState.Loading)
     val uiState = _uiState.asStateFlow()
@@ -28,7 +31,7 @@ class AisleDetailViewModel(
                     medicine.toUi()
                 }
                 _uiState.value = AisleDetailScreenState.AisleFound(
-                    medicinesUi,
+                    aisleNumber, medicinesUi,
                 )
             }
         }

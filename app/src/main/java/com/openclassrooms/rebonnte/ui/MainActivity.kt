@@ -20,7 +20,6 @@ import com.openclassrooms.rebonnte.ui.medicineDetail.MedicineDetailScreen
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineListScreen
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 class MainActivity : ComponentActivity() {
 
@@ -52,18 +51,22 @@ private fun RebonnteNavHost(
         composable(AISLE_LIST_ROUTE) {
             AisleListScreen(
                 viewModel = koinViewModel(),
-                onAisleClick = { id -> navController.navigate("aisleDetail/$id") },
+                onAisleClick = { number -> navController.navigate("aisleDetail/$number") },
                 onMedicinesClick = { navController.navigate(MEDICINE_LIST_ROUTE) }
             )
         }
         composable(
             AISLE_DETAIL_ROUTE,
-            arguments = listOf(navArgument("aisleNumber") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val aisleNumber = backStackEntry.arguments?.getString("aisleNumber") ?: ""
+            arguments = listOf(
+                navArgument("aisleNumber") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
             AisleDetailScreen(
-                viewModel = koinViewModel { parametersOf(aisleNumber) },
-                onMedicineClick = { number -> navController.navigate("medicineDetail/$number") },
+                viewModel = koinViewModel(),
+                onMedicineClick = { id -> navController.navigate("medicineDetail/$id") },
+                onAddMedicineClick = { aisleNumber -> navController.navigate("addMedicine?aisleNumber=$aisleNumber") },
                 onBackClick = { navController.navigateUp() }
             )
         }
@@ -77,15 +80,27 @@ private fun RebonnteNavHost(
         }
         composable(
             MEDICINE_DETAIL_ROUTE,
-            arguments = listOf(navArgument("medicineId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val medicineId = backStackEntry.arguments?.getString("medicineId") ?: ""
+            arguments = listOf(
+                navArgument("medicineId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
             MedicineDetailScreen(
-                viewModel = koinViewModel { parametersOf(medicineId) },
+                viewModel = koinViewModel(),
                 onBackClick = { navController.navigateUp() },
             )
         }
-        composable(ADD_MEDICINE_ROUTE) {
+        composable(
+            ADD_MEDICINE_ROUTE,
+            arguments = listOf(
+                navArgument("aisleNumber") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = ""
+                }
+            )
+        ) {
             AddMedicineScreen(
                 viewModel = koinViewModel(),
                 onBackClick = { navController.navigateUp() }
