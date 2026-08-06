@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -22,23 +23,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.openclassrooms.rebonnte.R
+import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 
 @Composable
-fun EditDialog(
+fun TextFieldDialog(
+    title: String,
     label: String,
     initialValue: String,
+    isDigits: Boolean = false,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismiss
     ) {
-        AddAisleDialogContent(
+        EditDialogContent(
+            title = title,
             label = label,
             initialValue = initialValue,
+            isDigits = isDigits,
             onDismiss = onDismiss,
             onConfirm = onConfirm
         )
@@ -46,9 +53,11 @@ fun EditDialog(
 }
 
 @Composable
-private fun AddAisleDialogContent(
+private fun EditDialogContent(
+    title: String,
     label: String,
     initialValue: String,
+    isDigits: Boolean = false,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
@@ -62,11 +71,13 @@ private fun AddAisleDialogContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(28.dp),
         ) {
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
+            Spacer(modifier = Modifier.height(8.dp))
             TextField(
                 value = value,
                 onValueChange = { input -> value = input },
                 label = { Text(label) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = if (isDigits) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row(
@@ -85,5 +96,20 @@ private fun AddAisleDialogContent(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AddAisleDialogPreview() {
+    RebonnteTheme {
+        EditDialogContent(
+            onDismiss = {},
+            onConfirm = {},
+            title = "Title",
+            label = "Label",
+            initialValue = "Initial Value",
+            isDigits = false,
+        )
     }
 }

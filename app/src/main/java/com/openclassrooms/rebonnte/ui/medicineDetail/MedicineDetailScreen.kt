@@ -39,7 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.ui.LoadingScreen
-import com.openclassrooms.rebonnte.ui.components.EditDialog
+import com.openclassrooms.rebonnte.ui.components.TextFieldDialog
 import com.openclassrooms.rebonnte.ui.model.HistoryUi
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
@@ -72,7 +72,8 @@ fun MedicineDetailScreen(
             )
             when {
                 showNameEditDialog -> {
-                    EditDialog(
+                    TextFieldDialog(
+                        title = "Edit Name",
                         label = "Name",
                         initialValue = state.medicine.name,
                         onDismiss = { showNameEditDialog = false },
@@ -84,9 +85,11 @@ fun MedicineDetailScreen(
                 }
 
                 showAisleEditDialog -> {
-                    EditDialog(
+                    TextFieldDialog(
+                        title = "Edit Aisle Number",
                         label = "Aisle Number",
                         initialValue = state.medicine.aisleNumber,
+                        isDigits = true,
                         onDismiss = { showAisleEditDialog = false },
                         onConfirm = { newAisle ->
                             viewModel.updateAisle(newAisle)
@@ -96,9 +99,11 @@ fun MedicineDetailScreen(
                 }
 
                 showStockEditDialog -> {
-                    EditDialog(
+                    TextFieldDialog(
+                        title = "Edit Medicine",
                         label = "Stock",
                         initialValue = state.medicine.currentStock,
+                        isDigits = true,
                         onDismiss = { showStockEditDialog = false },
                         onConfirm = { newStock ->
                             viewModel.updateStock(newStock)
