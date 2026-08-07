@@ -48,6 +48,7 @@ import com.openclassrooms.rebonnte.ui.components.TextFieldDialog
 import com.openclassrooms.rebonnte.ui.model.HistoryUi
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
+import com.openclassrooms.rebonnte.ui.util.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,8 +91,8 @@ fun MedicineDetailScreen(
             when {
                 showNameEditDialog -> {
                     TextFieldDialog(
-                        title = "Edit Name",
-                        label = "Name",
+                        title = stringResource(R.string.edit_name),
+                        label = stringResource(R.string.name),
                         initialValue = formState.name,
                         isError = formState.formError.nameBlankError || formState.formError.nameLengthError,
                         errorText = if (formState.formError.nameBlankError) {
@@ -108,8 +109,8 @@ fun MedicineDetailScreen(
 
                 showAisleEditDialog -> {
                     TextFieldDialog(
-                        title = "Edit Aisle Number",
-                        label = "Aisle Number",
+                        title = stringResource(R.string.edit_aisle_number),
+                        label = stringResource(R.string.aisle_number),
                         initialValue = formState.aisleNumber,
                         isDigits = true,
                         isError = formState.formError.aisleBlankError || formState.formError.aisleDigitError || formState.formError.aisleDoesNotExistError,
@@ -129,8 +130,8 @@ fun MedicineDetailScreen(
 
                 showStockEditDialog -> {
                     TextFieldDialog(
-                        title = "Edit Stock",
-                        label = "Stock",
+                        title = stringResource(R.string.edit_stock),
+                        label = stringResource(R.string.stock),
                         initialValue = formState.stock,
                         isDigits = true,
                         isError = formState.formError.stockBlankError || formState.formError.stockDigitError,
@@ -148,8 +149,11 @@ fun MedicineDetailScreen(
 
                 showDeleteConfirmationDialog -> {
                     ConfirmationDialog(
-                        title = "Deletion Confirmation",
-                        text = "Please confirm the deletion of ${state.medicine.name}",
+                        title = stringResource(R.string.deletion_confirmation),
+                        text = stringResource(
+                            R.string.please_confirm_the_deletion_of_medicine,
+                            state.medicine.name
+                        ),
                         onDismissRequest = { showDeleteConfirmationDialog = false },
                         onDismissClick = { showDeleteConfirmationDialog = false },
                         onConfirmClick = {
@@ -189,7 +193,7 @@ private fun MedicineDetailContent(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "navigate back"
+                            contentDescription = stringResource(R.string.navigate_back)
                         )
                     }
                 },
@@ -309,7 +313,7 @@ private fun HistoryItem(history: HistoryUi) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "User: ${history.userId}")
             Text(text = "Date: ${history.dateTime}")
-            Text(text = "Details: ${history.details}")
+            Text(text = "Details: ${history.details.asString()}")
         }
     }
 }
@@ -326,8 +330,8 @@ private fun MedicineDetailContentPreview() {
                 "10"
             ),
             histories = listOf(
-                HistoryUi("1", "user1", "2026-08-01 10:00"),
-                HistoryUi("1", "user2", "2026-08-02 11:00")
+                HistoryUi("1", "user1", "2026-08-01 10:00", UiText.RawString("Creation")),
+                HistoryUi("1", "user2", "2026-08-02 11:00", UiText.RawString("Stock changed from 10 to 5"))
             ),
             onEditNameClick = {},
             onEditAisleClick = {},
@@ -343,7 +347,7 @@ private fun MedicineDetailContentPreview() {
 private fun HistoryItemPreview() {
     RebonnteTheme {
         HistoryItem(
-            history = HistoryUi("1", "user1", "2026-08-01 10:00")
+            history = HistoryUi("1", "user1", "2026-08-01 10:00", UiText.RawString("Stock changed from 10 to 5"))
         )
     }
 }

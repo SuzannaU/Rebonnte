@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -88,7 +87,12 @@ private fun AddMedicineContent(
                 title = { Text(stringResource(R.string.add_medicine)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(
+                                R.string.navigate_back
+                            )
+                        )
                     }
                 }
             )
@@ -150,24 +154,20 @@ private fun AddMedicineContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            if (saveState is SaveState.Loading) {
-                CircularProgressIndicator()
-            } else {
-                Button(
-                    onClick = onAddClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(R.string.add_medicine))
-                }
+            Button(
+                onClick = onAddClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.add_medicine))
             }
+        }
 
-            if (saveState is SaveState.Error) {
-                Text(
-                    text = stringResource(saveState.messageId),
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
+        if (saveState is SaveState.Error) {
+            Text(
+                text = stringResource(saveState.messageId),
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 8.dp)
+            )
         }
     }
 }

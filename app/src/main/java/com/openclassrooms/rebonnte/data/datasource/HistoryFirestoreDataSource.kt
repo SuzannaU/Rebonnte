@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
 const val HISTORY_COLLECTION = "histories"
+private const val DATETIME_FIELD = "dateTime"
+private const val MEDICINE_ID_FIELD = "medicineId"
 
 class HistoryFirestoreDataSource(
     private val firestore: FirebaseFirestore,
@@ -26,15 +28,15 @@ class HistoryFirestoreDataSource(
     override fun getHistories(): Flow<List<HistoryDto>> {
         return firestore
             .collection(HISTORY_COLLECTION)
-            .orderBy("dateTime", Query.Direction.DESCENDING)
+            .orderBy(DATETIME_FIELD, Query.Direction.DESCENDING)
             .dataObjects<HistoryDto>()
     }
 
     override fun getHistoryByMedicineId(medicineId: String): Flow<List<HistoryDto>> {
         return firestore
             .collection(HISTORY_COLLECTION)
-            .whereEqualTo("medicineId", medicineId)
-            .orderBy("dateTime", Query.Direction.DESCENDING)
+            .whereEqualTo(MEDICINE_ID_FIELD, medicineId)
+            .orderBy(DATETIME_FIELD, Query.Direction.DESCENDING)
             .dataObjects<HistoryDto>()
     }
 

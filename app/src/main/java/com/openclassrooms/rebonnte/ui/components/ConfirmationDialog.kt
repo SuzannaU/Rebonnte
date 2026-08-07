@@ -7,6 +7,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.openclassrooms.rebonnte.R
 
 @Composable
 fun ConfirmationDialog(
@@ -31,14 +33,14 @@ fun ConfirmationDialog(
             TextButton(
                 onClick = onConfirmClick
             ) {
-                Text("Confirm")
+                Text(stringResource(R.string.confirm))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismissClick
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

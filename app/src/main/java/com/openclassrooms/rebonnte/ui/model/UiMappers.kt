@@ -5,6 +5,8 @@ import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
 import com.openclassrooms.rebonnte.domain.model.User
+import com.openclassrooms.rebonnte.R
+import com.openclassrooms.rebonnte.ui.util.UiText
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -37,16 +39,31 @@ fun History.toUi(): HistoryUi {
         userId = this.userId,
         dateTime = this.dateTime.formatToString(),
         details = when {
-            isCreation -> "Creation"
-            updatedField == null && !isCreation ->
-                "No details available1"
-            updatedField?.field == UpdatableFields.AISLE ->
-                "Aisle number changed from ${updatedField.oldValue} to ${updatedField.newValue}"
-            updatedField?.field == UpdatableFields.NAME ->
-                "Name changed from ${updatedField.oldValue} to ${updatedField.newValue}"
-            updatedField?.field == UpdatableFields.STOCK ->
-                "Stock changed from ${updatedField.oldValue} to ${updatedField.newValue}"
-            else -> "No details available2"
+            isCreation -> UiText.StringResource(R.string.history_creation)
+            updatedField == null ->
+                UiText.StringResource(R.string.history_no_details)
+            updatedField.field == UpdatableFields.AISLE ->
+                UiText.StringResource(
+                    R.string.history_update_format,
+                    UiText.StringResource(R.string.aisle_number),
+                    updatedField.oldValue,
+                    updatedField.newValue
+                )
+            updatedField.field == UpdatableFields.NAME ->
+                UiText.StringResource(
+                    R.string.history_update_format,
+                    UiText.StringResource(R.string.name),
+                    updatedField.oldValue,
+                    updatedField.newValue
+                )
+            updatedField.field == UpdatableFields.STOCK ->
+                UiText.StringResource(
+                    R.string.history_update_format,
+                    UiText.StringResource(R.string.stock),
+                    updatedField.oldValue,
+                    updatedField.newValue
+                )
+            else -> UiText.StringResource(R.string.history_no_details)
         }
     )
 }

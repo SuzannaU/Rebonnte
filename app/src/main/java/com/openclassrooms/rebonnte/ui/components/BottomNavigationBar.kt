@@ -8,6 +8,8 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.ui.AISLE_LIST_ROUTE
 import com.openclassrooms.rebonnte.ui.MEDICINE_LIST_ROUTE
 
@@ -20,13 +22,13 @@ fun BottomNavigationBar(
     NavigationBar {
         NavigationBarItem(
             icon = { Icon(Icons.Default.Home, contentDescription = null) },
-            label = { Text("Aisles") },
+            label = { Text(stringResource(R.string.aisles)) },
             selected = currentRoute == AISLE_LIST_ROUTE,
             onClick = onAislesClick,
         )
         NavigationBarItem(
             icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
-            label = { Text("Medicines") },
+            label = { Text(stringResource(R.string.medicines)) },
             selected = currentRoute == MEDICINE_LIST_ROUTE,
             onClick = onMedicinesClick,
         )

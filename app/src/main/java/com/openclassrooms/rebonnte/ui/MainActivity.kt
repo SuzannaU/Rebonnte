@@ -75,7 +75,7 @@ private fun RebonnteNavHost(
                 viewModel = koinViewModel(),
                 onMedicineClick = { id -> navController.navigate("medicineDetail/$id") },
                 onAislesClick = { navController.navigate(AISLE_LIST_ROUTE) },
-                onAddMedicineClick = { navController.navigate(ADD_MEDICINE_ROUTE) }
+                onAddMedicineClick = { navController.navigate(ADD_MEDICINE_BASE_ROUTE) }
             )
         }
         composable(

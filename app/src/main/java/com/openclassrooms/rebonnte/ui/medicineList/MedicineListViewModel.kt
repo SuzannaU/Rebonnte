@@ -69,8 +69,6 @@ class MedicineListViewModel(
         }
 
         when {
-            medicines.isEmpty() -> MedicineListScreenState.NoMedicinesFound
-            filteredMedicines.isEmpty() -> MedicineListScreenState.NoResultFound
             else -> MedicineListScreenState.MedicinesFound(sortedMedicines)
         }
     }.stateIn(

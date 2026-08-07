@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -34,12 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.ui.AISLE_LIST_ROUTE
+import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.components.BottomNavigationBar
 import com.openclassrooms.rebonnte.ui.components.TextFieldDialog
 import com.openclassrooms.rebonnte.ui.model.AisleUi
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AisleListScreen(
     viewModel: AisleListViewModel,
@@ -57,12 +56,65 @@ fun AisleListScreen(
         }
     }
 
+    when (val state = uiState) {
+        is AisleListScreenState.AislesFound -> {
+            AisleListContent(
+                aisles = state.aisles,
+                onAisleClick = onAisleClick,
+                onMedicinesClick = onMedicinesClick,
+                onAddAisleClick = {
+                    viewModel.resetAddAisleState()
+                    showAddAisleDialog = true
+                },
+            )
+        }
+
+        is AisleListScreenState.Error -> {}
+        AisleListScreenState.Loading -> {
+            LoadingScreen()
+        }
+        AisleListScreenState.NoAisleFound -> {}
+    }
+
+    if (showAddAisleDialog) {
+        TextFieldDialog(
+            title = stringResource(R.string.add_aisle),
+            label = stringResource(R.string.aisle_number),
+            initialValue = "",
+            isDigits = true,
+            isError = addAisleState.aisleBlankError || addAisleState.aisleDigitError || addAisleState.aisleExistsError,
+            errorText = if (addAisleState.aisleBlankError) {
+                stringResource(R.string.error_aisle_empty)
+            } else if (addAisleState.aisleDigitError) {
+                stringResource(R.string.error_aisle_invalid)
+            } else if (addAisleState.aisleExistsError) {
+                stringResource(R.string.error_aisle_exists)
+            } else null,
+            onDismiss = {
+                showAddAisleDialog = false
+                viewModel.resetAddAisleState()
+            },
+            onConfirm = { aisleNumber ->
+                viewModel.addAisle(aisleNumber)
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AisleListContent(
+    aisles: List<AisleUi>,
+    onAisleClick: (String) -> Unit,
+    onMedicinesClick: () -> Unit,
+    onAddAisleClick: () -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Aisles",
+                        text = stringResource(R.string.aisles),
                         fontWeight = FontWeight.Bold,
                     )
                 }
@@ -77,12 +129,9 @@ fun AisleListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    viewModel.resetAddAisleState()
-                    showAddAisleDialog = true
-                }
+                onClick = onAddAisleClick
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_aisle))
             }
         }
     ) { paddingValues ->
@@ -91,59 +140,16 @@ fun AisleListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when (val state = uiState) {
-                is AisleListScreenState.AislesFound -> {
-                    AisleListContent(
-                        aisles = state.aisles,
-                        onAisleClick = onAisleClick,
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(aisles) { aisle ->
+                    AisleItem(
+                        aisle = aisle,
+                        onAisleClick = { onAisleClick(aisle.number) }
                     )
                 }
-
-                is AisleListScreenState.Error -> {}
-                AisleListScreenState.Loading -> {}
-                AisleListScreenState.NoAisleFound -> {}
             }
-
-            if (showAddAisleDialog) {
-                TextFieldDialog(
-                    title = "Add Aisle",
-                    label = "Aisle Number",
-                    initialValue = "",
-                    isDigits = true,
-                    isError =addAisleState.aisleBlankError || addAisleState.aisleDigitError || addAisleState.aisleExistsError,
-                    errorText = if (addAisleState.aisleBlankError) {
-                        stringResource(R.string.error_aisle_empty)
-                    } else if (addAisleState.aisleDigitError) {
-                        stringResource(R.string.error_aisle_invalid)
-                    } else if (addAisleState.aisleExistsError) {
-                        stringResource(R.string.error_aisle_exists)
-                    } else null,
-                    onDismiss = {
-                        showAddAisleDialog = false
-                        viewModel.resetAddAisleState()
-                    },
-                    onConfirm = { aisleNumber ->
-                        viewModel.addAisle(aisleNumber)
-                    }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun AisleListContent(
-    aisles: List<AisleUi>,
-    onAisleClick: (String) -> Unit,
-) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(aisles) { aisle ->
-            AisleItem(
-                aisle = aisle,
-                onAisleClick = { onAisleClick(aisle.number) }
-            )
         }
     }
 }
@@ -158,7 +164,10 @@ private fun AisleItem(aisle: AisleUi, onAisleClick: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = aisle.number, style = MaterialTheme.typography.bodyMedium)
-        Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Arrow")
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = stringResource(R.string.navigate_to_aisle_number_n, aisle.number),
+        )
     }
 }
 
@@ -172,7 +181,9 @@ private fun AisleListContentPreview() {
                 AisleUi("2"),
                 AisleUi("3")
             ),
-            onAisleClick = {}
+            onAisleClick = {},
+            onMedicinesClick = {},
+            onAddAisleClick = {},
         )
     }
 }
