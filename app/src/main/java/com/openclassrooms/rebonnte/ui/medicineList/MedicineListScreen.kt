@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
@@ -51,6 +50,7 @@ import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.ui.MEDICINE_LIST_ROUTE
 import com.openclassrooms.rebonnte.ui.components.BottomNavigationBar
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
+import com.openclassrooms.rebonnte.ui.model.SortOption
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 import kotlin.enums.EnumEntries
 
@@ -71,7 +71,7 @@ fun MedicineListScreen(
         is MedicineListScreenState.MedicinesFound -> {
             MedicineListContent(
                 medicines = state.medicines,
-                sortOptions = viewModel.sortOptions,
+                sortOptions = SortOption.entries,
                 searchQuery = searchQuery,
                 selectedSortOption = selectedSortOption,
                 onSortOptionClick = { viewModel.sortMedicinesBy(it) },
@@ -218,15 +218,16 @@ private fun MedicineItem(medicine: MedicineUi, onClick: (String) -> Unit) {
         Column {
             Text(text = medicine.name, style = MaterialTheme.typography.bodyLarge)
             Text(
-                text = stringResource(R.string.stock_n,medicine.currentStock),
+                text = stringResource(R.string.stock_n, medicine.currentStock),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = stringResource(
-            R.string.go_to_medicine_name, medicine.name
-        ))
+                R.string.go_to_medicine_name, medicine.name
+            )
+        )
     }
 }
 

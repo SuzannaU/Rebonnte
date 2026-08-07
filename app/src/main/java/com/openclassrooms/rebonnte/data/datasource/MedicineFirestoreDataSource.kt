@@ -9,6 +9,7 @@ import com.google.firebase.firestore.toObject
 import com.openclassrooms.rebonnte.data.dto.HistoryDto
 import com.openclassrooms.rebonnte.data.dto.MedicineDto
 import com.openclassrooms.rebonnte.data.dto.UpdatedFieldDto
+import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
@@ -32,18 +33,25 @@ class MedicineFirestoreDataSource(
             .toObject<MedicineDto>()
     }
 
-    override fun getMedicines(): Flow<List<MedicineDto>> {
-        return firestore
-            .collection(MEDICINE_COLLECTION)
-            .orderBy(NAME_FIELD, Query.Direction.DESCENDING)
-            .dataObjects<MedicineDto>()
-    }
-
     override fun getUnarchivedMedicines(): Flow<List<MedicineDto>> {
         return firestore
             .collection(MEDICINE_COLLECTION)
             .whereEqualTo(ARCHIVED_FIELD, false)
             .orderBy(NAME_FIELD, Query.Direction.DESCENDING)
+            .dataObjects<MedicineDto>()
+    }
+
+    override fun getUnarchivedMedicinesOrderedBy(sortOption: MedicineSortOption): Flow<List<MedicineDto>> {
+        val (field, direction) = when (sortOption) {
+            MedicineSortOption.NAME_ASCENDING -> NAME_FIELD to Query.Direction.ASCENDING
+            MedicineSortOption.NAME_DESCENDING -> NAME_FIELD to Query.Direction.DESCENDING
+            MedicineSortOption.STOCK_ASCENDING -> CURRENT_STOCK_FIELD to Query.Direction.ASCENDING
+            MedicineSortOption.STOCK_DESCENDING -> CURRENT_STOCK_FIELD to Query.Direction.DESCENDING
+        }
+        return firestore
+            .collection(MEDICINE_COLLECTION)
+            .whereEqualTo(ARCHIVED_FIELD, false)
+            .orderBy(field, direction)
             .dataObjects<MedicineDto>()
     }
 

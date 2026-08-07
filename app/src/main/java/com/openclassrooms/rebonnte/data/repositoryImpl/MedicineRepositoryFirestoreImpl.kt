@@ -5,6 +5,7 @@ import com.openclassrooms.rebonnte.data.dto.toDomain
 import com.openclassrooms.rebonnte.data.dto.toDto
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
+import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import kotlinx.coroutines.flow.Flow
@@ -17,8 +18,8 @@ class MedicineRepositoryFirestoreImpl(
         return medicineDataSource.getMedicineById(medicineId)?.toDomain()
     }
 
-    override fun getMedicines(): Flow<List<Medicine>> {
-        return medicineDataSource.getUnarchivedMedicines().map { medicineDtos ->
+    override fun getMedicinesOrderedBy(sortOption: MedicineSortOption): Flow<List<Medicine>> {
+        return medicineDataSource.getUnarchivedMedicinesOrderedBy(sortOption).map { medicineDtos ->
             medicineDtos.map { medicineDto ->
                 medicineDto.toDomain()
             }

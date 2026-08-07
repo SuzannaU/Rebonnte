@@ -6,6 +6,7 @@ import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
 import com.openclassrooms.rebonnte.domain.model.User
 import com.openclassrooms.rebonnte.R
+import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.ui.util.UiText
 import java.text.DateFormat
 import java.util.Date
@@ -66,6 +67,24 @@ fun History.toUi(): HistoryUi {
             else -> UiText.StringResource(R.string.history_no_details)
         }
     )
+}
+
+fun MedicineSortOption.toUiSortOption() : SortOption {
+    return when(this) {
+        MedicineSortOption.NAME_ASCENDING -> SortOption.NAME_ASCENDING
+        MedicineSortOption.NAME_DESCENDING -> SortOption.NAME_DESCENDING
+        MedicineSortOption.STOCK_ASCENDING -> SortOption.STOCK_ASCENDING
+        MedicineSortOption.STOCK_DESCENDING -> SortOption.STOCK_DESCENDING
+    }
+}
+
+fun SortOption.toDomainSortOption() : MedicineSortOption {
+    return when(this) {
+        SortOption.NAME_ASCENDING -> MedicineSortOption.NAME_ASCENDING
+        SortOption.NAME_DESCENDING -> MedicineSortOption.NAME_DESCENDING
+        SortOption.STOCK_ASCENDING -> MedicineSortOption.STOCK_ASCENDING
+        SortOption.STOCK_DESCENDING -> MedicineSortOption.STOCK_DESCENDING
+    }
 }
 
 fun Date.formatToString(): String {
