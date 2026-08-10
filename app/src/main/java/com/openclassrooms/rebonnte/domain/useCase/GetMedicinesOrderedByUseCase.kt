@@ -1,0 +1,14 @@
+package com.openclassrooms.rebonnte.domain.useCase
+
+import com.openclassrooms.rebonnte.domain.model.Medicine
+import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
+import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
+import kotlinx.coroutines.flow.Flow
+
+class GetMedicinesOrderedByUseCase(
+    private val medicineRepository: MedicineRepository,
+) {
+    operator fun invoke(selectedSortOption: MedicineSortOption): Flow<List<Medicine>> {
+        return medicineRepository.getMedicinesOrderedBy(selectedSortOption)
+    }
+}

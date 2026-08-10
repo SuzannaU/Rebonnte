@@ -12,7 +12,7 @@ class AddMedicineUseCase(
     private val userRepository: UserRepository,
 ) {
 
-    suspend fun execute(
+    suspend operator fun invoke(
         medicine: Medicine
     ) {
         val user = userRepository.getCurrentUser() ?: User("", "", "")

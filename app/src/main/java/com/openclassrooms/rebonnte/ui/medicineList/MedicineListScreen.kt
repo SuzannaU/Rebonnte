@@ -77,7 +77,7 @@ fun MedicineListScreen(
                 sortOptions = SortOption.entries,
                 searchQuery = searchQuery,
                 selectedSortOption = selectedSortOption,
-                onSortOptionClick = { viewModel.sortMedicinesBy(it) },
+                onSortOptionClick = { viewModel.onSortOptionSelected(it) },
                 onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
                 onMedicineClick = onMedicineClick,
                 onAislesClick = onAislesClick,

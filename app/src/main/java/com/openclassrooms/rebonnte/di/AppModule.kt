@@ -22,7 +22,15 @@ import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.repository.UserRepository
 import com.openclassrooms.rebonnte.domain.service.AuthService
+import com.openclassrooms.rebonnte.domain.useCase.AddAisleUseCase
 import com.openclassrooms.rebonnte.domain.useCase.AddMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.ArchiveMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetAislesUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetHistoryByMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesByAisleUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesOrderedByUseCase
 import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
 import com.openclassrooms.rebonnte.ui.addMedicine.AddMedicineViewModel
 import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailViewModel
@@ -54,12 +62,20 @@ val appModule = module {
     single<HistoryRepository> { HistoryRepositoryFirestoreImpl(get()) }
     single<MedicineRepository> { MedicineRepositoryFirestoreImpl(get()) }
 
+    factory<AddAisleUseCase> { AddAisleUseCase(get()) }
     factory<AddMedicineUseCase> { AddMedicineUseCase(get(), get()) }
+    factory<ArchiveMedicineUseCase> { ArchiveMedicineUseCase(get()) }
+    factory<CheckAisleExistsUseCase> { CheckAisleExistsUseCase(get()) }
+    factory<GetAislesUseCase> { GetAislesUseCase(get()) }
+    factory<GetHistoryByMedicineUseCase> { GetHistoryByMedicineUseCase(get()) }
+    factory<GetMedicineByIdUseCase> { GetMedicineByIdUseCase(get()) }
+    factory<GetMedicinesByAisleUseCase> { GetMedicinesByAisleUseCase(get())}
+    factory<GetMedicinesOrderedByUseCase> { GetMedicinesOrderedByUseCase(get()) }
     factory<UpdateMedicineUseCase> { UpdateMedicineUseCase(get(), get()) }
 
     viewModel { AisleDetailViewModel(get(), get()) }
-    viewModel { AisleListViewModel(get()) }
-    viewModel { MedicineDetailViewModel(get(), get(), get(),get(), get()) }
+    viewModel { AisleListViewModel(get(),get(), get()) }
+    viewModel { MedicineDetailViewModel(get(), get(), get(),get(), get(),get()) }
     viewModel { MedicineListViewModel(get()) }
     viewModel { AddMedicineViewModel(get(), get(), get()) }
 }

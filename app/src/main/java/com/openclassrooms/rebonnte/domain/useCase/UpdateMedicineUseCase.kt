@@ -12,7 +12,7 @@ class UpdateMedicineUseCase(
     private val userRepository: UserRepository,
 ) {
 
-    suspend fun execute(medicineId: String, updatedField: UpdatedField) {
+    suspend operator fun invoke(medicineId: String, updatedField: UpdatedField) {
         val user = userRepository.getCurrentUser() ?: User("", "", "")
 
         val history = History(

@@ -4,16 +4,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.Medicine
-import com.openclassrooms.rebonnte.domain.repository.AisleRepository
 import com.openclassrooms.rebonnte.domain.useCase.AddMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddMedicineViewModel(
-    private val aisleRepository: AisleRepository,
-    private val addMedicineUseCase: AddMedicineUseCase,
+    private val checkAisleExists: CheckAisleExistsUseCase,
+    private val addMedicine: AddMedicineUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -52,7 +52,7 @@ class AddMedicineViewModel(
         }
     }
 
-    fun addMedicine() {
+    fun onAddMedicine() {
         _saveState.value = SaveState.Loading
 
         viewModelScope.launch {
@@ -68,7 +68,7 @@ class AddMedicineViewModel(
                 currentStock = _formState.value.currentStock.toInt()
             )
 
-            addMedicineUseCase.execute(medicine)
+            addMedicine(medicine)
             _saveState.value = SaveState.MedicineSaved
         }
     }
@@ -83,7 +83,7 @@ class AddMedicineViewModel(
         val aisleDigitError = state.aisleNumber.isBlank() || !state.aisleNumber.all { it.isDigit() }
 
         val aisleDoesNotExistError = if (!aisleDigitError) {
-            aisleRepository.getAisleByNumber(aisleNumber = state.aisleNumber) == null
+            !checkAisleExists(aisleNumber = state.aisleNumber)
         } else {
             false
         }

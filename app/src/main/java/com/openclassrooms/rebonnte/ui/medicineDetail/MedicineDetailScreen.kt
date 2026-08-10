@@ -102,7 +102,7 @@ fun MedicineDetailScreen(
                         } else null,
                         onDismiss = { showNameEditDialog = false },
                         onConfirm = { newName ->
-                            viewModel.updateName(newName)
+                            viewModel.onNameChange(newName)
                         },
                     )
                 }
@@ -123,7 +123,7 @@ fun MedicineDetailScreen(
                         } else null,
                         onDismiss = { showAisleEditDialog = false },
                         onConfirm = { newAisle ->
-                            viewModel.updateAisle(newAisle)
+                            viewModel.onAisleChange(newAisle)
                         },
                     )
                 }
@@ -142,7 +142,7 @@ fun MedicineDetailScreen(
                         } else null,
                         onDismiss = { showStockEditDialog = false },
                         onConfirm = { newStock ->
-                            viewModel.updateStock(newStock)
+                            viewModel.onStockChange(newStock)
                         },
                     )
                 }
@@ -157,7 +157,7 @@ fun MedicineDetailScreen(
                         onDismissRequest = { showDeleteConfirmationDialog = false },
                         onDismissClick = { showDeleteConfirmationDialog = false },
                         onConfirmClick = {
-                            viewModel.archiveMedicine()
+                            viewModel.onArchiveClick()
                             onBackClick()
                         },
                     )

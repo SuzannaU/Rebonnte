@@ -55,7 +55,7 @@ fun AddMedicineScreen(
                 onNameChange = viewModel::updateName,
                 onAisleChange = viewModel::updateAisle,
                 onStockChange = viewModel::updateStock,
-                onAddClick = viewModel::addMedicine,
+                onAddClick = viewModel::onAddMedicine,
                 onBackClick = onBackClick
             )
         }

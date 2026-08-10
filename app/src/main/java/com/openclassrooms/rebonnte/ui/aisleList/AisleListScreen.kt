@@ -95,7 +95,7 @@ fun AisleListScreen(
                 viewModel.resetAddAisleState()
             },
             onConfirm = { aisleNumber ->
-                viewModel.addAisle(aisleNumber)
+                viewModel.onAddAisle(aisleNumber)
             }
         )
     }

@@ -2,8 +2,9 @@ package com.openclassrooms.rebonnte.ui.aisleList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.rebonnte.domain.model.Aisle
-import com.openclassrooms.rebonnte.domain.repository.AisleRepository
+import com.openclassrooms.rebonnte.domain.useCase.AddAisleUseCase
+import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetAislesUseCase
 import com.openclassrooms.rebonnte.ui.model.toUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AisleListViewModel(
-    private val aisleRepository: AisleRepository,
+    private val getAisles: GetAislesUseCase,
+    private val checkAisleExists: CheckAisleExistsUseCase,
+    private val addAisle: AddAisleUseCase,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow<AisleListScreenState>(AisleListScreenState.Loading)
@@ -27,7 +30,7 @@ class AisleListViewModel(
     fun loadAisles() {
         viewModelScope.launch {
             _uiState.value = AisleListScreenState.Loading
-            aisleRepository.getAisles().collect { aisles ->
+            getAisles().collect { aisles ->
                 val aislesUi = aisles.map { aisle ->
                     aisle.toUi()
                 }
@@ -36,7 +39,7 @@ class AisleListViewModel(
         }
     }
 
-    fun addAisle(aisleNumber: String) {
+    fun onAddAisle(aisleNumber: String) {
         _addAisleState.update {
             it.copy(
                 aisleBlankError = false,
@@ -55,12 +58,11 @@ class AisleListViewModel(
         }
 
         viewModelScope.launch {
-            val existingAisle = aisleRepository.getAisleByNumber(aisleNumber = aisleNumber)
-            if (existingAisle != null) {
+            if (checkAisleExists(aisleNumber)) {
                 _addAisleState.update { it.copy(aisleExistsError = true) }
                 return@launch
             } else {
-                aisleRepository.addAisle(Aisle(number = aisleNumber))
+                addAisle(aisleNumber = aisleNumber)
                 _addAisleState.update { it.copy(isSuccess = true) }
             }
         }

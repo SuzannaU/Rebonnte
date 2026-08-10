@@ -9,8 +9,11 @@ import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.repository.AisleRepository
 import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
+import com.openclassrooms.rebonnte.domain.useCase.ArchiveMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetHistoryByMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
 import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
-import com.openclassrooms.rebonnte.ui.aisleList.AddAisleState
 import com.openclassrooms.rebonnte.ui.model.toUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,10 +21,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MedicineDetailViewModel(
-    private val medicineRepository: MedicineRepository,
-    private val historyRepository: HistoryRepository,
-    private val aisleRepository: AisleRepository,
-    private val updateMedicineUseCase: UpdateMedicineUseCase,
+    private val getMedicineById: GetMedicineByIdUseCase,
+    private val updateMedicine: UpdateMedicineUseCase,
+    private val getHistoryByMedicine: GetHistoryByMedicineUseCase,
+    private val checkAisleExists: CheckAisleExistsUseCase,
+    private val archiveMedicine: ArchiveMedicineUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -42,7 +46,7 @@ class MedicineDetailViewModel(
     private fun loadMedicine() {
         viewModelScope.launch {
             _uiState.value = MedicineDetailState.Loading
-            val medicine = medicineRepository.getMedicineById(medicineId = medicineId)
+            val medicine = getMedicineById(medicineId)
             if (medicine != null) {
                 initialMedicine = medicine
                 val medicineUi = medicine.toUi()
@@ -58,7 +62,7 @@ class MedicineDetailViewModel(
                         stock = medicineUi.currentStock
                     )
                 }
-                historyRepository.getHistoryByMedicineId(medicineId = medicineId)
+                getHistoryByMedicine(medicineId = medicineId)
                     .collect { histories ->
                         val historiesUi = histories.map { history ->
                             history.toUi()
@@ -72,7 +76,7 @@ class MedicineDetailViewModel(
         }
     }
 
-    fun updateName(input: String) {
+    fun onNameChange(input: String) {
         if (input.isBlank()) {
             _formState.update {
                 it.copy(
@@ -104,7 +108,7 @@ class MedicineDetailViewModel(
         )
     }
 
-    fun updateAisle(input: String) {
+    fun onAisleChange(input: String) {
         if (!input.all { it.isDigit() }) {
             _formState.update {
                 it.copy(
@@ -114,7 +118,7 @@ class MedicineDetailViewModel(
             return
         }
         viewModelScope.launch {
-            if (!aisleExists(input)) {
+            if (!checkAisleExists(input)) {
                 _formState.update {
                     it.copy(
                         formError = EditMedicineFormErrorState(aisleDoesNotExistError = true)
@@ -138,7 +142,7 @@ class MedicineDetailViewModel(
         }
     }
 
-    fun updateStock(input: String) {
+    fun onStockChange(input: String) {
         if (input.isBlank()) {
             _formState.update {
                 it.copy(
@@ -175,7 +179,7 @@ class MedicineDetailViewModel(
         if (state !is MedicineDetailState.MedicineFound) return
         viewModelScope.launch {
             _uiState.value = MedicineDetailState.Loading
-            updateMedicineUseCase.execute(
+            updateMedicine(
                 medicineId = state.medicine.id,
                 updatedField = updatedField,
             )
@@ -184,18 +188,14 @@ class MedicineDetailViewModel(
         }
     }
 
-    private suspend fun aisleExists(aisleNumber: String): Boolean {
-        return aisleRepository.getAisleByNumber(aisleNumber = aisleNumber) != null
-    }
-
     fun resetAddAisleState() {
         _formState.value = EditMedicineFormState()
     }
 
 
-    fun archiveMedicine() {
+    fun onArchiveClick() {
         viewModelScope.launch {
-            medicineRepository.archiveMedicineById(medicineId)
+            archiveMedicine(medicineId)
         }
     }
 }
