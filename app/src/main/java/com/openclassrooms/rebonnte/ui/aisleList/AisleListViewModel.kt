@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.useCase.AddAisleUseCase
 import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetAislesUseCase
+import com.openclassrooms.rebonnte.domain.useCase.LogOutUseCase
+import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.model.toUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +17,8 @@ class AisleListViewModel(
     private val getAisles: GetAislesUseCase,
     private val checkAisleExists: CheckAisleExistsUseCase,
     private val addAisle: AddAisleUseCase,
+    private val logOut: LogOutUseCase,
+    private val dispatcher: DispatcherProvider,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow<AisleListScreenState>(AisleListScreenState.Loading)
@@ -28,7 +32,7 @@ class AisleListViewModel(
     }
 
     fun loadAisles() {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher.io) {
             _uiState.value = AisleListScreenState.Loading
             getAisles().collect { aisles ->
                 val aislesUi = aisles.map { aisle ->
@@ -57,7 +61,7 @@ class AisleListViewModel(
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher.io) {
             if (checkAisleExists(aisleNumber)) {
                 _addAisleState.update { it.copy(aisleExistsError = true) }
                 return@launch
@@ -70,5 +74,9 @@ class AisleListViewModel(
 
     fun resetAddAisleState() {
         _addAisleState.value = AddAisleState()
+    }
+
+    fun onLogout() {
+        logOut()
     }
 }

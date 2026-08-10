@@ -4,5 +4,7 @@ import com.openclassrooms.rebonnte.domain.model.AuthUser
 import kotlinx.coroutines.flow.Flow
 
 interface AuthService {
-    val authState: Flow<AuthUser?>
+    val authState: Flow<String?>
+    fun getAuthUser(): AuthUser?
+    fun signOut()
 }

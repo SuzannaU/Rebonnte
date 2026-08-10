@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.useCase.AddMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 class AddMedicineViewModel(
     private val checkAisleExists: CheckAisleExistsUseCase,
     private val addMedicine: AddMedicineUseCase,
+    private val dispatcher: DispatcherProvider,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -55,7 +57,7 @@ class AddMedicineViewModel(
     fun onAddMedicine() {
         _saveState.value = SaveState.Loading
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher.io) {
             if (!validate()) {
                 _saveState.value = SaveState.Idle
                 return@launch

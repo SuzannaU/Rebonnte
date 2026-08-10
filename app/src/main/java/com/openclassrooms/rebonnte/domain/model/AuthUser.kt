@@ -1,5 +1,7 @@
 package com.openclassrooms.rebonnte.domain.model
 
 data class AuthUser(
-    val uid: String
+    val uid: String,
+    val email: String,
+    val displayName: String,
 )

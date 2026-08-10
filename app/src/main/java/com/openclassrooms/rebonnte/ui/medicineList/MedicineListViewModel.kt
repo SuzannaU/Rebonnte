@@ -3,6 +3,7 @@ package com.openclassrooms.rebonnte.ui.medicineList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesOrderedByUseCase
+import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.model.SortOption
 import com.openclassrooms.rebonnte.ui.model.toDomainSortOption
@@ -14,11 +15,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MedicineListViewModel(
     private val getMedicinesOrderedBy: GetMedicinesOrderedByUseCase,
+    private val dispatcher: DispatcherProvider,
 ) : ViewModel() {
 
 
@@ -57,7 +60,9 @@ class MedicineListViewModel(
             }
 
         MedicineListScreenState.MedicinesFound(filteredMedicines)
-    }.stateIn(
+    }
+        .flowOn(dispatcher.io)
+        .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = MedicineListScreenState.Loading

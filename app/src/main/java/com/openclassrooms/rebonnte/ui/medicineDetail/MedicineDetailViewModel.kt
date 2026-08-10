@@ -14,6 +14,7 @@ import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetHistoryByMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
 import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
+import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.model.toUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,6 +27,7 @@ class MedicineDetailViewModel(
     private val getHistoryByMedicine: GetHistoryByMedicineUseCase,
     private val checkAisleExists: CheckAisleExistsUseCase,
     private val archiveMedicine: ArchiveMedicineUseCase,
+    private val dispatcher: DispatcherProvider,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -44,7 +46,7 @@ class MedicineDetailViewModel(
     }
 
     private fun loadMedicine() {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher.io) {
             _uiState.value = MedicineDetailState.Loading
             val medicine = getMedicineById(medicineId)
             if (medicine != null) {
@@ -117,7 +119,7 @@ class MedicineDetailViewModel(
             }
             return
         }
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher.io) {
             if (!checkAisleExists(input)) {
                 _formState.update {
                     it.copy(
@@ -177,7 +179,7 @@ class MedicineDetailViewModel(
     private fun updateField(updatedField: UpdatedField) {
         val state = _uiState.value
         if (state !is MedicineDetailState.MedicineFound) return
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher.io) {
             _uiState.value = MedicineDetailState.Loading
             updateMedicine(
                 medicineId = state.medicine.id,
