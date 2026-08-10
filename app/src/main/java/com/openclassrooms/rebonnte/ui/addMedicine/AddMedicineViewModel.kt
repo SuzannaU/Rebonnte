@@ -53,17 +53,10 @@ class AddMedicineViewModel(
     }
 
     fun addMedicine() {
-        if (!validate()) return
         _saveState.value = SaveState.Loading
 
         viewModelScope.launch {
-            val aisleNumber = _formState.value.aisleNumber
-            val aisleExists = aisleRepository.getAisleByNumber(aisleNumber)
-            println(aisleExists)
-            if (aisleExists == null) {
-                _formState.update {
-                    it.copy(formErrors = it.formErrors.copy(aisleDoesNotExistError = true))
-                }
+            if (!validate()) {
                 _saveState.value = SaveState.Idle
                 return@launch
             }
@@ -71,7 +64,7 @@ class AddMedicineViewModel(
             val medicine = Medicine(
                 id = _formState.value.id,
                 name = _formState.value.name,
-                aisleNumber = aisleNumber,
+                aisleNumber = _formState.value.aisleNumber,
                 currentStock = _formState.value.currentStock.toInt()
             )
 
@@ -80,7 +73,7 @@ class AddMedicineViewModel(
         }
     }
 
-    private fun validate(): Boolean {
+    private suspend fun validate(): Boolean {
         val state = _formState.value
 
         val nameError = state.name.isBlank()
@@ -89,17 +82,22 @@ class AddMedicineViewModel(
             state.currentStock.isBlank() || !state.currentStock.all { it.isDigit() }
         val aisleDigitError = state.aisleNumber.isBlank() || !state.aisleNumber.all { it.isDigit() }
 
-        // TODO add logic to check if aisle exists
+        val aisleDoesNotExistError = if (!aisleDigitError) {
+            aisleRepository.getAisleByNumber(aisleNumber = state.aisleNumber) == null
+        } else {
+            false
+        }
 
         val errors = FormErrorState(
             nameError = nameError,
             nameLengthError = nameLengthError,
             stockDigitError = stockDigitError,
             aisleDigitError = aisleDigitError,
+            aisleDoesNotExistError = aisleDoesNotExistError,
         )
 
         _formState.update { it.copy(formErrors = errors) }
 
-        return !nameError && !nameLengthError && !stockDigitError && !aisleDigitError
+        return !nameError && !nameLengthError && !stockDigitError && !aisleDigitError && !aisleDoesNotExistError
     }
 }

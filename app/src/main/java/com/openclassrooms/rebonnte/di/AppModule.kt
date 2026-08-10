@@ -2,6 +2,8 @@ package com.openclassrooms.rebonnte.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.MemoryCacheSettings
+import com.google.firebase.firestore.firestoreSettings
 import com.openclassrooms.rebonnte.data.datasource.AisleDataSource
 import com.openclassrooms.rebonnte.data.datasource.AisleFirestoreDataSource
 import com.openclassrooms.rebonnte.data.datasource.HistoryDataSource
@@ -33,7 +35,13 @@ import org.koin.dsl.module
 val appModule = module {
 
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
-    single<FirebaseFirestore> { FirebaseFirestore.getInstance() }
+
+    // Disabling of offline persistence to ensure displayed data are always up-to-date and server synced
+    single<FirebaseFirestore> { FirebaseFirestore.getInstance().apply {
+        firestoreSettings = firestoreSettings {
+            setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
+        }
+    } }
 
     single<AuthService> { FirebaseAuthService(get()) }
     single<UserDataSource> { UserFirestoreDataSource(get(), get()) }

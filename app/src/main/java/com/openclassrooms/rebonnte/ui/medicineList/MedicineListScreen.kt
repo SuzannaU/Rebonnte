@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.R
+import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.MEDICINE_LIST_ROUTE
 import com.openclassrooms.rebonnte.ui.components.BottomNavigationBar
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
@@ -67,7 +68,9 @@ fun MedicineListScreen(
 
 
     when (val state = uiState) {
-        MedicineListScreenState.Loading -> {}
+        MedicineListScreenState.Loading -> {
+            LoadingScreen()
+        }
         is MedicineListScreenState.MedicinesFound -> {
             MedicineListContent(
                 medicines = state.medicines,

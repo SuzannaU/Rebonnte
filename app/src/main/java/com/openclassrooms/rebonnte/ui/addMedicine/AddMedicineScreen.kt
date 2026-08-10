@@ -127,10 +127,12 @@ private fun AddMedicineContent(
                 onValueChange = onAisleChange,
                 label = { Text(stringResource(R.string.aisle_number)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                isError = formState.formErrors.aisleDigitError,
+                isError = formState.formErrors.aisleDigitError || formState.formErrors.aisleDoesNotExistError,
                 supportingText = {
                     if (formState.formErrors.aisleDigitError) {
                         Text(stringResource(R.string.error_aisle_invalid))
+                    } else if (formState.formErrors.aisleDoesNotExistError) {
+                        Text(stringResource(R.string.error_aisle_not_exists))
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
