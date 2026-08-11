@@ -20,8 +20,5 @@ class UserRepositoryFirestoreImpl(
 
     override suspend fun createUser(user: User) {
         userDataSource.saveUser(user.toDto())
-
-//        val user = getCurrentUser()
-//        userDataSource.saveUser(user?.toDto() ?: UserDto())
     }
 }

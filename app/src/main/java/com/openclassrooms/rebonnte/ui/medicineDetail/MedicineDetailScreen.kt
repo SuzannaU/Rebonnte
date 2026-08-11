@@ -311,7 +311,7 @@ private fun HistoryItem(history: HistoryUi) {
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "User: ${history.userId}")
+            Text(text = "User: ${history.username}")
             Text(text = "Date: ${history.dateTime}")
             Text(text = "Details: ${history.details.asString()}")
         }

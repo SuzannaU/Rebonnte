@@ -31,6 +31,7 @@ import com.openclassrooms.rebonnte.domain.useCase.GetHistoryByMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesByAisleUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesOrderedByUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetUsernameByIdUseCase
 import com.openclassrooms.rebonnte.domain.useCase.LogOutUseCase
 import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
 import com.openclassrooms.rebonnte.ui.DefaultDispatcherProvider
@@ -77,13 +78,14 @@ val appModule = module {
     factory<GetMedicineByIdUseCase> { GetMedicineByIdUseCase(get()) }
     factory<GetMedicinesByAisleUseCase> { GetMedicinesByAisleUseCase(get())}
     factory<GetMedicinesOrderedByUseCase> { GetMedicinesOrderedByUseCase(get()) }
+    factory<GetUsernameByIdUseCase> { GetUsernameByIdUseCase(get()) }
     factory<LogOutUseCase> { LogOutUseCase(get()) }
     factory<UpdateMedicineUseCase> { UpdateMedicineUseCase(get(), get()) }
 
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { AisleDetailViewModel(get(), get(),get()) }
     viewModel { AisleListViewModel(get(),get(), get(), get(), get()) }
-    viewModel { MedicineDetailViewModel(get(), get(), get(),get(), get(),get(), get()) }
+    viewModel { MedicineDetailViewModel(get(), get(), get(),get(), get(),get(), get(), get()) }
     viewModel { MedicineListViewModel(get(), get()) }
     viewModel { AddMedicineViewModel(get(), get(), get(), get()) }
 }

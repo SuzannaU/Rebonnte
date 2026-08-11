@@ -13,6 +13,7 @@ import com.openclassrooms.rebonnte.domain.useCase.ArchiveMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetHistoryByMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetUsernameByIdUseCase
 import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.model.toUi
@@ -25,6 +26,7 @@ class MedicineDetailViewModel(
     private val getMedicineById: GetMedicineByIdUseCase,
     private val updateMedicine: UpdateMedicineUseCase,
     private val getHistoryByMedicine: GetHistoryByMedicineUseCase,
+    private val getUsernameById: GetUsernameByIdUseCase,
     private val checkAisleExists: CheckAisleExistsUseCase,
     private val archiveMedicine: ArchiveMedicineUseCase,
     private val dispatcher: DispatcherProvider,
@@ -67,7 +69,7 @@ class MedicineDetailViewModel(
                 getHistoryByMedicine(medicineId = medicineId)
                     .collect { histories ->
                         val historiesUi = histories.map { history ->
-                            history.toUi()
+                            history.toUi(getUsernameById(history.userId))
                         }
                         _uiState.value = MedicineDetailState.MedicineFound(
                             medicine = medicineUi,

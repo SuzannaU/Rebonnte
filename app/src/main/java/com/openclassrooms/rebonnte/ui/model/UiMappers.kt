@@ -4,20 +4,12 @@ import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
-import com.openclassrooms.rebonnte.domain.model.User
 import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.ui.util.UiText
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
-
-fun User.toUi(): UserUi {
-    return UserUi(
-        username = this.username,
-        email = this.email,
-    )
-}
 
 fun Aisle.toUi(): AisleUi {
     return AisleUi(
@@ -34,10 +26,10 @@ fun Medicine.toUi(): MedicineUi {
     )
 }
 
-fun History.toUi(): HistoryUi {
+fun History.toUi(username: String): HistoryUi {
     return HistoryUi(
         medicineId = this.medicineId,
-        userId = this.userId,
+        username = username,
         dateTime = this.dateTime.formatToString(),
         details = when {
             isCreation -> UiText.StringResource(R.string.history_creation)
