@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.R
+import com.openclassrooms.rebonnte.ui.ErrorScreen
 import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.MEDICINE_LIST_ROUTE
 import com.openclassrooms.rebonnte.ui.components.BottomNavigationBar
@@ -82,6 +83,14 @@ fun MedicineListScreen(
                 onMedicineClick = onMedicineClick,
                 onAislesClick = onAislesClick,
                 onAddMedicineClick = onAddMedicineClick,
+            )
+        }
+
+        is MedicineListScreenState.Error -> {
+            ErrorScreen(
+                errorMessage = state.message,
+                isRetryEnabled = false,
+                onRetry = {},
             )
         }
     }

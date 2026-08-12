@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     when {
                         uiState.errorMessageId != null -> {
                             ErrorScreen(
-                                errorMessage = stringResource(uiState.errorMessageId!!),
+                                errorMessage = uiState.errorMessageId!!,
                                 isRetryEnabled = true,
                                 onRetry = {
                                     startSignInActivity()
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
                         !uiState.isAuthConnected -> {
                             ErrorScreen(
-                                errorMessage = stringResource(R.string.auth_connexion_problem),
+                                errorMessage = R.string.auth_connexion_problem,
                                 isRetryEnabled = true,
                                 onRetry = {
                                     startSignInActivity()
@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
 
         val signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
-            .setTheme(R.style.Theme_Rebonnte_Login) //TODO add theme colors in themes.xml
+            .setTheme(R.style.Theme_Rebonnte_Login)
             .setAvailableProviders(providers)
             //.setLogo(R.drawable.logo)
             .build()

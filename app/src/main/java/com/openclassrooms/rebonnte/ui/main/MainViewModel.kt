@@ -2,13 +2,11 @@ package com.openclassrooms.rebonnte.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.rebonnte.R
-import com.openclassrooms.rebonnte.domain.exception.AuthException
-import com.openclassrooms.rebonnte.domain.exception.NetworkException
 import com.openclassrooms.rebonnte.domain.model.User
 import com.openclassrooms.rebonnte.domain.repository.UserRepository
 import com.openclassrooms.rebonnte.domain.service.AuthService
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
+import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -22,7 +20,7 @@ class MainViewModel(
     private val authService: AuthService,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<MainUiState>(MainUiState(isLoading = true))
+    private val _uiState = MutableStateFlow(MainUiState(isLoading = true))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -48,23 +46,17 @@ class MainViewModel(
         viewModelScope.launch(dispatcher.io) {
             try {
                 val authUser = authService.getAuthUser()
-                authUser?.let {
-                    userRepository.createUser(
-                        User(
-                            id = it.uid,
-                            username = it.displayName,
-                            email = it.email,
-                        )
+                userRepository.createUser(
+                    User(
+                        id = authUser.uid,
+                        username = authUser.displayName,
+                        email = authUser.email,
                     )
-                }
+                )
+
             } catch (e: Exception) {
                 e.printStackTrace()
-                val errorRes = when (e) {
-                    is AuthException -> R.string.auth_error
-                    is NetworkException -> R.string.network_error
-                    else -> R.string.unknown_error
-                }
-                _uiState.update { it.copy(errorMessageId = errorRes) }
+                _uiState.update { it.copy(errorMessageId = e.toErrorMessageId()) }
             }
         }
     }

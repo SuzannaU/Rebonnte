@@ -12,6 +12,8 @@ sealed class MedicineDetailState {
         val medicine: MedicineUi,
         val histories: List<HistoryUi>,
     ) : MedicineDetailState()
+
+    data class Error(val message: Int) : MedicineDetailState()
 }
 
 data class EditMedicineFormState(

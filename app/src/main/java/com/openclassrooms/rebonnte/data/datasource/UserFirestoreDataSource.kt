@@ -1,6 +1,5 @@
 package com.openclassrooms.rebonnte.data.datasource
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import com.openclassrooms.rebonnte.data.dto.UserDto
@@ -16,7 +15,7 @@ class UserFirestoreDataSource(
 
     override suspend fun getCurrentUser(): UserDto? {
         val authUser = authService.getAuthUser()
-        val uid = authUser?.uid ?: return null
+        val uid = authUser.uid
         return firestore.collection(USER_COLLECTION).document(uid)
             .get()
             .await()

@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.R
+import com.openclassrooms.rebonnte.ui.ErrorScreen
 import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.components.ConfirmationDialog
 import com.openclassrooms.rebonnte.ui.components.TextFieldDialog
@@ -165,7 +166,20 @@ fun MedicineDetailScreen(
             }
         }
 
-        MedicineDetailState.MedicineNotFound -> {}
+        MedicineDetailState.MedicineNotFound -> {
+            ErrorScreen(
+                errorMessage = R.string.no_medicine_found,
+                isRetryEnabled = false,
+                onRetry = {},
+            )
+        }
+        is MedicineDetailState.Error -> {
+            ErrorScreen(
+                errorMessage = state.message,
+                isRetryEnabled = false,
+                onRetry = {},
+            )
+        }
     }
 }
 

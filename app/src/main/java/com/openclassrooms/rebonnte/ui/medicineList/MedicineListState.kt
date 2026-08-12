@@ -8,4 +8,6 @@ sealed class MedicineListScreenState {
     data class MedicinesFound(
         val medicines : List<MedicineUi>
     ) : MedicineListScreenState()
+
+    data class Error(val message: Int) : MedicineListScreenState()
 }

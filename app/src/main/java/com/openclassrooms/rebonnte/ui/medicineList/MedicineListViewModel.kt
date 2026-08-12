@@ -8,11 +8,13 @@ import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.model.SortOption
 import com.openclassrooms.rebonnte.ui.model.toDomainSortOption
 import com.openclassrooms.rebonnte.ui.model.toUi
+import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
@@ -59,9 +61,12 @@ class MedicineListViewModel(
                 }
             }
 
-        MedicineListScreenState.MedicinesFound(filteredMedicines)
+        MedicineListScreenState.MedicinesFound(filteredMedicines) as MedicineListScreenState
     }
         .flowOn(dispatcher.io)
+        .catch { e ->
+            emit(MedicineListScreenState.Error(e.toErrorMessageId()))
+        }
         .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

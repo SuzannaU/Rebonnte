@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.useCase.AddMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
+import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -70,8 +72,14 @@ class AddMedicineViewModel(
                 currentStock = _formState.value.currentStock.toInt()
             )
 
-            addMedicine(medicine)
-            _saveState.value = SaveState.MedicineSaved
+            when (val result = addMedicine(medicine)) {
+                is DataResult.Success -> {
+                    _saveState.value = SaveState.MedicineSaved
+                }
+                is DataResult.Failure -> {
+                    _saveState.value = SaveState.Error(result.exception.toErrorMessageId())
+                }
+            }
         }
     }
 
@@ -85,7 +93,10 @@ class AddMedicineViewModel(
         val aisleDigitError = state.aisleNumber.isBlank() || !state.aisleNumber.all { it.isDigit() }
 
         val aisleDoesNotExistError = if (!aisleDigitError) {
-            !checkAisleExists(aisleNumber = state.aisleNumber)
+            when (val result = checkAisleExists(aisleNumber = state.aisleNumber)) {
+                is DataResult.Success -> !result.data
+                is DataResult.Failure -> false // Or handle as actual error
+            }
         } else {
             false
         }

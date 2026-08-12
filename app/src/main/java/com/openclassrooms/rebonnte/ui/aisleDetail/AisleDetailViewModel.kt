@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesByAisleUseCase
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.model.toUi
+import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class AisleDetailViewModel(
@@ -28,14 +30,18 @@ class AisleDetailViewModel(
     fun loadAisle() {
         viewModelScope.launch(dispatcher.io) {
             _uiState.value = AisleDetailScreenState.Loading
-            getMedicinesByAisle(aisleNumber).collect { medicines ->
-                val medicinesUi = medicines.map { medicine ->
-                    medicine.toUi()
+            getMedicinesByAisle(aisleNumber)
+                .catch { e ->
+                    _uiState.value = AisleDetailScreenState.Error(e.toErrorMessageId())
                 }
-                _uiState.value = AisleDetailScreenState.AisleFound(
-                    aisleNumber, medicinesUi,
-                )
-            }
+                .collect { medicines ->
+                    val medicinesUi = medicines.map { medicine ->
+                        medicine.toUi()
+                    }
+                    _uiState.value = AisleDetailScreenState.AisleFound(
+                        aisleNumber, medicinesUi,
+                    )
+                }
         }
     }
 }

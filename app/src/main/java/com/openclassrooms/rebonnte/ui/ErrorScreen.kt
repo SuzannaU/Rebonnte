@@ -32,7 +32,7 @@ import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 
 @Composable
 fun ErrorScreen(
-    errorMessage: String,
+    errorMessage: Int,
     modifier: Modifier = Modifier,
     isRetryEnabled: Boolean,
     onRetry: () -> Unit,
@@ -68,7 +68,7 @@ fun ErrorScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = errorMessage,
+                text = stringResource(errorMessage),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
@@ -103,12 +103,24 @@ fun ErrorScreen(
 
 @Preview(showBackground = true)
 @Composable
+fun ErrorScreenOnRetryPreview() {
+    RebonnteTheme {
+        ErrorScreen(
+            errorMessage = R.string.unknown_error,
+            onRetry = {},
+            isRetryEnabled = true,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
 fun ErrorScreenPreview() {
     RebonnteTheme {
         ErrorScreen(
-            errorMessage = "An error has occured,\nplease try again later",
+            errorMessage = R.string.network_error,
             onRetry = {},
-            isRetryEnabled = true,
+            isRetryEnabled = false,
         )
     }
 }

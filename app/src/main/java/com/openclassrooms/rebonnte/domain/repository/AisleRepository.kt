@@ -1,10 +1,11 @@
 package com.openclassrooms.rebonnte.domain.repository
 
 import com.openclassrooms.rebonnte.domain.model.Aisle
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import kotlinx.coroutines.flow.Flow
 
 interface AisleRepository {
-    suspend fun getAisleByNumber(aisleNumber: String): Aisle?
+    suspend fun getAisleByNumber(aisleNumber: String): DataResult<Aisle?>
     fun getAisles(): Flow<List<Aisle>>
-    suspend fun addAisle(aisle: Aisle)
+    suspend fun addAisle(aisle: Aisle): DataResult<Unit>
 }

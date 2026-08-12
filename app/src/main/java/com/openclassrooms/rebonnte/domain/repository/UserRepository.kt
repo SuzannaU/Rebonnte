@@ -1,9 +1,10 @@
 package com.openclassrooms.rebonnte.domain.repository
 
 import com.openclassrooms.rebonnte.domain.model.User
+import com.openclassrooms.rebonnte.domain.util.DataResult
 
 interface UserRepository {
-    suspend fun getCurrentUser(): User?
-    suspend fun getUserById(userId: String): User?
-    suspend fun createUser(user: User)
+    suspend fun getCurrentUser(): DataResult<User?>
+    suspend fun getUserById(userId: String): DataResult<User?>
+    suspend fun createUser(user: User): DataResult<Unit>
 }

@@ -3,8 +3,11 @@ package com.openclassrooms.rebonnte.data.repositoryImpl
 import com.openclassrooms.rebonnte.data.datasource.HistoryDataSource
 import com.openclassrooms.rebonnte.data.dto.toDomain
 import com.openclassrooms.rebonnte.data.dto.toDto
+import com.openclassrooms.rebonnte.data.util.toDomainException
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
+import com.openclassrooms.rebonnte.domain.util.DataResult
+import com.openclassrooms.rebonnte.domain.util.wrapDataResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -12,8 +15,10 @@ class HistoryRepositoryFirestoreImpl(
     private val historyDataSource: HistoryDataSource,
 ) : HistoryRepository {
 
-    override suspend fun getHistoryById(historyId: String): History? {
-        return historyDataSource.getHistoryById(historyId = historyId)?.toDomain()
+    override suspend fun getHistoryById(historyId: String): DataResult<History?> {
+        return wrapDataResult(onError = { it.toDomainException() }) {
+            historyDataSource.getHistoryById(historyId = historyId)?.toDomain()
+        }
     }
 
     override fun getHistories(): Flow<List<History>> {
@@ -32,7 +37,9 @@ class HistoryRepositoryFirestoreImpl(
         }
     }
 
-    override suspend fun saveHistory(history: History) {
-        historyDataSource.saveHistory(history.toDto())
+    override suspend fun saveHistory(history: History): DataResult<Unit> {
+        return wrapDataResult(onError = { it.toDomainException() }) {
+            historyDataSource.saveHistory(history.toDto())
+        }
     }
 }

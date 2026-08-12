@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthService {
     val authState: Flow<String?>
-    fun getAuthUser(): AuthUser?
+    fun getAuthUser(): AuthUser
     fun signOut()
 }

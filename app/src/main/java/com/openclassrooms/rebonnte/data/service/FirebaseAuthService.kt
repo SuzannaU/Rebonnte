@@ -1,6 +1,7 @@
 package com.openclassrooms.rebonnte.data.service
 
 import com.google.firebase.auth.FirebaseAuth
+import com.openclassrooms.rebonnte.domain.exception.UserNotFoundException
 import com.openclassrooms.rebonnte.domain.model.AuthUser
 import com.openclassrooms.rebonnte.domain.service.AuthService
 import kotlinx.coroutines.channels.awaitClose
@@ -25,8 +26,8 @@ class FirebaseAuthService(
         }
     }
 
-    override fun getAuthUser(): AuthUser? {
-        val firebaseAuthUser = firebaseAuth.currentUser ?: return null
+    override fun getAuthUser(): AuthUser {
+        val firebaseAuthUser = firebaseAuth.currentUser ?: throw UserNotFoundException("AuthUser not found")
         return AuthUser(
             uid = firebaseAuthUser.uid,
             email = firebaseAuthUser.email ?: "",
