@@ -16,4 +16,4 @@
 local.properties
 /app/google-services.json
 /profiling
-/.artifacts
+.artifacts

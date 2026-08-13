@@ -1,6 +1,0 @@
-- [ ] Create `DataResult` utility
-- [ ] Update `MedicineRepository` interface
-- [ ] Update `MedicineRepositoryFirestoreImpl` with error handling
-- [ ] Update `UpdateMedicineUseCase`
-- [ ] Update `AddMedicineViewModel` to handle results
-- [ ] Verify changes
