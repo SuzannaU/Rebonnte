@@ -34,7 +34,7 @@ class AisleListViewModel(
         loadAisles()
     }
 
-    fun loadAisles() {
+    private fun loadAisles() {
         viewModelScope.launch(dispatcher.io) {
             _uiState.value = AisleListScreenState.Loading
             getAisles()
@@ -45,7 +45,11 @@ class AisleListViewModel(
                     val aislesUi = aisles.map { aisle ->
                         aisle.toUi()
                     }
-                    _uiState.value = AisleListScreenState.AislesFound(aislesUi)
+                    if (aislesUi.isEmpty()) {
+                        _uiState.value = AisleListScreenState.NoAisleFound
+                    } else {
+                        _uiState.value = AisleListScreenState.AislesFound(aislesUi)
+                    }
                 }
         }
     }
@@ -74,7 +78,8 @@ class AisleListViewModel(
                 _addAisleState.update { it.copy(aisleExistsError = true) }
                 return@launch
             } else if (existsResult is DataResult.Failure) {
-                _uiState.value = AisleListScreenState.Error(existsResult.exception.toErrorMessageId())
+                _uiState.value =
+                    AisleListScreenState.Error(existsResult.exception.toErrorMessageId())
                 return@launch
             }
 

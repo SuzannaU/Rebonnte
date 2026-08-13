@@ -61,15 +61,6 @@ fun History.toUi(username: String): HistoryUi {
     )
 }
 
-fun MedicineSortOption.toUiSortOption() : SortOption {
-    return when(this) {
-        MedicineSortOption.NAME_ASCENDING -> SortOption.NAME_ASCENDING
-        MedicineSortOption.NAME_DESCENDING -> SortOption.NAME_DESCENDING
-        MedicineSortOption.STOCK_ASCENDING -> SortOption.STOCK_ASCENDING
-        MedicineSortOption.STOCK_DESCENDING -> SortOption.STOCK_DESCENDING
-    }
-}
-
 fun SortOption.toDomainSortOption() : MedicineSortOption {
     return when(this) {
         SortOption.NAME_ASCENDING -> MedicineSortOption.NAME_ASCENDING

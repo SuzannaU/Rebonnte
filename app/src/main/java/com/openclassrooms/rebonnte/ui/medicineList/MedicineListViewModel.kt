@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 @OptIn(ExperimentalCoroutinesApi::class)
 class MedicineListViewModel(
     private val getMedicinesOrderedBy: GetMedicinesOrderedByUseCase,
-    private val dispatcher: DispatcherProvider,
+    dispatcher: DispatcherProvider,
 ) : ViewModel() {
 
 

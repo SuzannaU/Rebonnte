@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.ui.AISLE_LIST_ROUTE
+import com.openclassrooms.rebonnte.ui.ErrorScreen
 import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.components.BottomNavigationBar
 import com.openclassrooms.rebonnte.ui.components.TextFieldDialog
@@ -74,12 +75,29 @@ fun AisleListScreen(
             )
         }
 
-        is AisleListScreenState.Error -> {}
+        is AisleListScreenState.Error -> {
+            ErrorScreen(
+                errorMessage = state.errorMessageId,
+                isRetryEnabled = false,
+                onRetry = {},
+            )
+        }
+
         AisleListScreenState.Loading -> {
             LoadingScreen()
         }
 
-        AisleListScreenState.NoAisleFound -> {}
+        AisleListScreenState.NoAisleFound -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+            ) {
+                Text(
+                    text = "No Aisles found",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+        }
     }
 
     if (showAddAisleDialog) {

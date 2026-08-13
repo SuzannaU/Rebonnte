@@ -8,12 +8,12 @@ lifecycleRuntimeKtx = "2.11.0"
 koin-bom = "4.2.2"
 activity-compose = "1.13.0"
 navigation-compose = "2.9.8"
-compose-bom = "2026.06.01"
+compose-bom = "2026.08.00"
 material = "1.14.0"
-firebase-bom = "34.16.0"
+firebase-bom = "34.17.0"
 firebase-ui = "9.1.1"
 coil-compose = "2.7.0"
-junit = "6.1.2"
+junit = "6.1.3"
 mockk = "1.14.11"
 android-junit = "1.3.0"
 espresso-core = "3.7.0"
@@ -24,7 +24,6 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines"}
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines"}
-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines"}
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines"}
 
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom"}

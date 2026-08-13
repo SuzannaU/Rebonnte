@@ -4,7 +4,6 @@ import com.openclassrooms.rebonnte.ui.model.MedicineUi
 
 sealed class AisleDetailScreenState {
     object Loading : AisleDetailScreenState()
-    object AisleNotFound : AisleDetailScreenState()
 
     data class AisleFound(
         val aisleNumber: String,

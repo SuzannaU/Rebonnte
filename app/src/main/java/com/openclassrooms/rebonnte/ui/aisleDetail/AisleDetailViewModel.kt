@@ -27,12 +27,12 @@ class AisleDetailViewModel(
         loadAisle()
     }
 
-    fun loadAisle() {
+    private fun loadAisle() {
         viewModelScope.launch(dispatcher.io) {
             _uiState.value = AisleDetailScreenState.Loading
             getMedicinesByAisle(aisleNumber)
                 .catch { e ->
-                    _uiState.value = AisleDetailScreenState.Error(e.toErrorMessageId())
+                    _uiState.value = AisleDetailScreenState.Error(errorMessageId = e.toErrorMessageId())
                 }
                 .collect { medicines ->
                     val medicinesUi = medicines.map { medicine ->

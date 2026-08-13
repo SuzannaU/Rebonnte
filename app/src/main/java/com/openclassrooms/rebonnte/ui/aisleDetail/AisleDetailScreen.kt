@@ -25,13 +25,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.R
+import com.openclassrooms.rebonnte.ui.ErrorScreen
 import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
@@ -56,8 +56,14 @@ fun AisleDetailScreen(
             )
         }
 
-        AisleDetailScreenState.AisleNotFound -> {}
-        is AisleDetailScreenState.Error -> {}
+        is AisleDetailScreenState.Error -> {
+            ErrorScreen(
+                errorMessage = state.errorMessageId,
+                isRetryEnabled = false,
+                onRetry = {},
+            )
+        }
+
         AisleDetailScreenState.Loading -> {
             LoadingScreen()
         }
