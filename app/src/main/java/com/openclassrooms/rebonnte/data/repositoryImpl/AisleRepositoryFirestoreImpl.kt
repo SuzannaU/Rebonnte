@@ -3,7 +3,6 @@ package com.openclassrooms.rebonnte.data.repositoryImpl
 import com.openclassrooms.rebonnte.data.datasource.AisleDataSource
 import com.openclassrooms.rebonnte.data.dto.toDomain
 import com.openclassrooms.rebonnte.data.dto.toDto
-import com.openclassrooms.rebonnte.data.util.toDomainException
 import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.repository.AisleRepository
 import com.openclassrooms.rebonnte.domain.util.DataResult
@@ -16,7 +15,7 @@ class AisleRepositoryFirestoreImpl(
 ) : AisleRepository {
 
     override suspend fun getAisleByNumber(aisleNumber: String): DataResult<Aisle?> {
-        return wrapDataResult(onError = { it.toDomainException() }) {
+        return wrapDataResult {
             aisleDataSource.getAisleByNumber(aisleNumber)?.toDomain()
         }
     }
@@ -30,7 +29,7 @@ class AisleRepositoryFirestoreImpl(
     }
 
     override suspend fun addAisle(aisle: Aisle): DataResult<Unit> {
-        return wrapDataResult(onError = { it.toDomainException() }) {
+        return wrapDataResult {
             aisleDataSource.saveAisle(aisle.toDto())
         }
     }

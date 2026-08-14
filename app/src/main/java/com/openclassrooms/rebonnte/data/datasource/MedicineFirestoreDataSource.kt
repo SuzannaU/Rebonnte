@@ -9,8 +9,10 @@ import com.google.firebase.firestore.toObject
 import com.openclassrooms.rebonnte.data.dto.HistoryDto
 import com.openclassrooms.rebonnte.data.dto.MedicineDto
 import com.openclassrooms.rebonnte.data.dto.UpdatedFieldDto
+import com.openclassrooms.rebonnte.domain.exception.DataValidationException
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
@@ -33,14 +35,6 @@ class MedicineFirestoreDataSource(
             .toObject<MedicineDto>()
     }
 
-    override fun getUnarchivedMedicines(): Flow<List<MedicineDto>> {
-        return firestore
-            .collection(MEDICINE_COLLECTION)
-            .whereEqualTo(ARCHIVED_FIELD, false)
-            .orderBy(NAME_FIELD, Query.Direction.DESCENDING)
-            .dataObjects<MedicineDto>()
-    }
-
     override fun getUnarchivedMedicinesOrderedBy(sortOption: MedicineSortOption): Flow<List<MedicineDto>> {
         val (field, direction) = when (sortOption) {
             MedicineSortOption.NAME_ASCENDING -> NAME_FIELD to Query.Direction.ASCENDING
@@ -60,17 +54,20 @@ class MedicineFirestoreDataSource(
             .collection(MEDICINE_COLLECTION)
             .whereEqualTo(ARCHIVED_FIELD, false)
             .whereEqualTo(AISLE_NUMBER_FIELD, aisleNumber)
-            .orderBy(NAME_FIELD, Query.Direction.DESCENDING)
+            .orderBy(NAME_FIELD, Query.Direction.ASCENDING)
             .dataObjects<MedicineDto>()
     }
 
     override suspend fun addMedicineWithHistory(medicine: MedicineDto, history: HistoryDto) {
-        val medicineDocRef = firestore.collection(MEDICINE_COLLECTION).document(medicine.id)
+        val medicineDocRef = firestore
+            .collection(MEDICINE_COLLECTION)
+            .document(medicine.id)
 
         firestore.runTransaction { transaction ->
 
-            val historyDocRef = firestore.collection(HISTORY_COLLECTION)
-                .document()         //Test with predefined doc id
+            val historyDocRef = firestore
+                .collection(HISTORY_COLLECTION)
+                .document()
             val historyDocument = transaction.get(historyDocRef)
             if (historyDocument.exists()) {
                 throw FirebaseFirestoreException(
@@ -90,12 +87,15 @@ class MedicineFirestoreDataSource(
 
     override suspend fun updateMedicineWithHistory(
         medicineId: String,
-        updatedField: UpdatedFieldDto,
         history: HistoryDto,
     ) {
-        val medicineDocRef = firestore.collection(MEDICINE_COLLECTION).document(medicineId)
+        val medicineDocRef = firestore
+            .collection(MEDICINE_COLLECTION)
+            .document(medicineId)
 
         val updatedData = hashMapOf<String, Any>()
+        val updatedField = history.updatedField
+            ?: throw DataValidationException("No updated field provided")
         when {
             (updatedField.field == UpdatableFields.NAME) -> {
                 updatedData[NAME_FIELD] = updatedField.newValue
@@ -111,8 +111,9 @@ class MedicineFirestoreDataSource(
         }
 
         firestore.runTransaction { transaction ->
-            val historyDocRef = firestore.collection(HISTORY_COLLECTION)
-                .document()         //Test with predefined doc id
+            val historyDocRef = firestore
+                .collection(HISTORY_COLLECTION)
+                .document()
             val historyDocument = transaction.get(historyDocRef)
             if (historyDocument.exists()) {
                 throw FirebaseFirestoreException(
@@ -131,7 +132,8 @@ class MedicineFirestoreDataSource(
     }
 
     override suspend fun archiveMedicineById(medicineId: String) {
-        val docRef = firestore.collection(MEDICINE_COLLECTION)
+        val docRef = firestore
+            .collection(MEDICINE_COLLECTION)
             .document(medicineId)
         docRef.update(ARCHIVED_FIELD, true)
     }

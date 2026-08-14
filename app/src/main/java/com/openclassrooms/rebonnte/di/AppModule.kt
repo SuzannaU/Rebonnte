@@ -27,7 +27,7 @@ import com.openclassrooms.rebonnte.domain.useCase.AddMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.ArchiveMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetAislesUseCase
-import com.openclassrooms.rebonnte.domain.useCase.GetHistoryByMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetHistoriesByMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesByAisleUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesOrderedByUseCase
@@ -57,7 +57,7 @@ val appModule = module {
     } }
 
     single<AuthService> { FirebaseAuthService(get()) }
-    single<UserDataSource> { UserFirestoreDataSource(get(), get()) }
+    single<UserDataSource> { UserFirestoreDataSource(get()) }
     single<AisleDataSource> { AisleFirestoreDataSource(get()) }
     single<HistoryDataSource> { HistoryFirestoreDataSource(get()) }
     single<MedicineDataSource> { MedicineFirestoreDataSource(get()) }
@@ -74,7 +74,7 @@ val appModule = module {
     factory<ArchiveMedicineUseCase> { ArchiveMedicineUseCase(get()) }
     factory<CheckAisleExistsUseCase> { CheckAisleExistsUseCase(get()) }
     factory<GetAislesUseCase> { GetAislesUseCase(get()) }
-    factory<GetHistoryByMedicineUseCase> { GetHistoryByMedicineUseCase(get()) }
+    factory<GetHistoriesByMedicineUseCase> { GetHistoriesByMedicineUseCase(get()) }
     factory<GetMedicineByIdUseCase> { GetMedicineByIdUseCase(get()) }
     factory<GetMedicinesByAisleUseCase> { GetMedicinesByAisleUseCase(get())}
     factory<GetMedicinesOrderedByUseCase> { GetMedicinesOrderedByUseCase(get()) }

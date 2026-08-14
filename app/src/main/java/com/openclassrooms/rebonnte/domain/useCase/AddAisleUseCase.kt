@@ -8,6 +8,10 @@ class AddAisleUseCase(
     private val aisleRepository: AisleRepository,
 ) {
     suspend operator fun invoke(aisleNumber: String): DataResult<Unit> {
-        return aisleRepository.addAisle(Aisle(number = aisleNumber))
+        return aisleRepository.addAisle(
+            Aisle(
+                number = aisleNumber
+            )
+        )
     }
 }

@@ -18,7 +18,6 @@ interface MedicineRepository {
 
     suspend fun updateMedicineWithHistory(
         medicineId: String,
-        updatedField: UpdatedField,
         history: History,
     ): DataResult<Unit>
 

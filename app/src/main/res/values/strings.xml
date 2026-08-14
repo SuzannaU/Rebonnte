@@ -51,4 +51,6 @@
     <string name="try_again">Try again</string>
     <string name="auth_connexion_problem">Connexion problem during authentication</string>
     <string name="logout">Sign out</string>
+    <string name="unknown_user">Unknown User</string>
+    <string name="data_error">There was a problem with the Data.</string>
 </resources>

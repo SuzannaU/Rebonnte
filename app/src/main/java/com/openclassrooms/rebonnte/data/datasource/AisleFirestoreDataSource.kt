@@ -29,8 +29,9 @@ class AisleFirestoreDataSource(
     }
 
     override suspend fun saveAisle(aisle: AisleDto) {
-        val docRef = firestore.collection(AISlE_COLLECTION).document(aisle.id)
+        val docRef = firestore
+            .collection(AISlE_COLLECTION)
+            .document(aisle.id)
         docRef.set(aisle).await()
     }
-
 }

@@ -5,5 +5,5 @@ import java.io.Serializable
 
 data class AisleDto(
     @DocumentId
-    val id: String = "",
+    val id: String = "",    // Aisle number
 ) : Serializable

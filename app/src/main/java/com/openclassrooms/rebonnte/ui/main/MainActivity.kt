@@ -112,7 +112,7 @@ class MainActivity : ComponentActivity() {
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
-            viewModel.createUser()
+            viewModel.createUser()          // TODO instead of creating the user everytime, maybe check firestore if it exists
         }
     }
 }

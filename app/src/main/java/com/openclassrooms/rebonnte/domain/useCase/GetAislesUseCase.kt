@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class GetAislesUseCase(
     private val aisleRepository: AisleRepository,
 ) {
+
     operator fun invoke(): Flow<List<Aisle>> {
         return aisleRepository.getAisles()
     }

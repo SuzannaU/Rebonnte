@@ -6,6 +6,7 @@ import com.openclassrooms.rebonnte.domain.util.DataResult
 class CheckAisleExistsUseCase(
     private val aisleRepository: AisleRepository
 ) {
+
     suspend operator fun invoke(aisleNumber: String): DataResult<Boolean> {
         return when (val result = aisleRepository.getAisleByNumber(aisleNumber)) {
             is DataResult.Success -> DataResult.Success(result.data != null)

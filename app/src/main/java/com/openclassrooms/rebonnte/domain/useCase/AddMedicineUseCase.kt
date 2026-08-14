@@ -14,9 +14,7 @@ class AddMedicineUseCase(
     private val authService: AuthService,
 ) {
 
-    suspend operator fun invoke(
-        medicine: Medicine
-    ): DataResult<Unit> {
+    suspend operator fun invoke(medicine: Medicine): DataResult<Unit> {
 
         val userResult = wrapDataResult {
             authService.getAuthUser()

@@ -325,7 +325,7 @@ private fun HistoryItem(history: HistoryUi) {
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "User: ${history.username}")
+            Text(text = "User: ${history.username.asString()}")
             Text(text = "Date: ${history.dateTime}")
             Text(text = "Details: ${history.details.asString()}")
         }
@@ -344,8 +344,8 @@ private fun MedicineDetailContentPreview() {
                 "10"
             ),
             histories = listOf(
-                HistoryUi("1", "user1", "2026-08-01 10:00", UiText.RawString("Creation")),
-                HistoryUi("1", "user2", "2026-08-02 11:00", UiText.RawString("Stock changed from 10 to 5"))
+                HistoryUi("1", UiText.RawString("user1"), "2026-08-01 10:00", UiText.RawString("Creation")),
+                HistoryUi("1", UiText.RawString("user2"), "2026-08-02 11:00", UiText.RawString("Stock changed from 10 to 5"))
             ),
             onEditNameClick = {},
             onEditAisleClick = {},
@@ -361,7 +361,7 @@ private fun MedicineDetailContentPreview() {
 private fun HistoryItemPreview() {
     RebonnteTheme {
         HistoryItem(
-            history = HistoryUi("1", "user1", "2026-08-01 10:00", UiText.RawString("Stock changed from 10 to 5"))
+            history = HistoryUi("1", UiText.RawString("user1"), "2026-08-01 10:00", UiText.RawString("Stock changed from 10 to 5"))
         )
     }
 }

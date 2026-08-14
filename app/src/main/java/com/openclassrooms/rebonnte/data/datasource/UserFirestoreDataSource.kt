@@ -10,27 +10,22 @@ private const val USER_COLLECTION = "users"
 
 class UserFirestoreDataSource(
     private val firestore: FirebaseFirestore,
-    private val authService: AuthService
 ) : UserDataSource {
 
-    override suspend fun getCurrentUser(): UserDto? {
-        val authUser = authService.getAuthUser()
-        val uid = authUser.uid
-        return firestore.collection(USER_COLLECTION).document(uid)
-            .get()
-            .await()
-            .toObject<UserDto>()
-    }
-
     override suspend fun getUserById(userId: String): UserDto? {
-        return firestore.collection(USER_COLLECTION).document(userId)
+        return firestore
+            .collection(USER_COLLECTION)
+            .document(userId)
             .get()
             .await()
             .toObject<UserDto>()
     }
 
     override suspend fun saveUser(user: UserDto) {
-        firestore.collection(USER_COLLECTION).document(user.id)
-            .set(user).await()
+        firestore
+            .collection(USER_COLLECTION)
+            .document(user.id)
+            .set(user)
+            .await()
     }
 }

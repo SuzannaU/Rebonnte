@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetMedicinesOrderedByUseCase(
     private val medicineRepository: MedicineRepository,
 ) {
+
     operator fun invoke(selectedSortOption: MedicineSortOption): Flow<List<Medicine>> {
         return medicineRepository.getMedicinesOrderedBy(selectedSortOption)
     }

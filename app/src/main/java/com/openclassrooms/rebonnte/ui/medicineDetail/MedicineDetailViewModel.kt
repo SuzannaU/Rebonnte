@@ -3,18 +3,21 @@ package com.openclassrooms.rebonnte.ui.medicineDetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
 import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.useCase.ArchiveMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
-import com.openclassrooms.rebonnte.domain.useCase.GetHistoryByMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.GetHistoriesByMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetUsernameByIdUseCase
 import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
+import com.openclassrooms.rebonnte.ui.model.HistoryUi
 import com.openclassrooms.rebonnte.ui.model.toUi
+import com.openclassrooms.rebonnte.ui.util.UiText
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +27,7 @@ import kotlinx.coroutines.launch
 class MedicineDetailViewModel(
     private val getMedicineById: GetMedicineByIdUseCase,
     private val updateMedicine: UpdateMedicineUseCase,
-    private val getHistoryByMedicine: GetHistoryByMedicineUseCase,
+    private val getHistoriesByMedicine: GetHistoriesByMedicineUseCase,
     private val getUsernameById: GetUsernameByIdUseCase,
     private val checkAisleExists: CheckAisleExistsUseCase,
     private val archiveMedicine: ArchiveMedicineUseCase,
@@ -77,10 +80,10 @@ class MedicineDetailViewModel(
                     stock = medicineUi.currentStock
                 )
             }
-            getHistoryByMedicine(medicineId = medicineId)
+            getHistoriesByMedicine(medicineId = medicineId)
                 .collect { histories ->
-                    val historiesUi = histories.map { history ->
-                        history.toUi(getUsernameById(history.userId))
+                    val historiesUi: List<HistoryUi> = histories.map { history ->
+                        history.toUi(getUsernameByUserIdUtil(history.userId))
                     }
                     _uiState.value = MedicineDetailState.MedicineFound(
                         medicine = medicineUi,
@@ -95,6 +98,19 @@ class MedicineDetailViewModel(
     private fun onLoadFailure(exception: Throwable) {
         _uiState.value = MedicineDetailState.Error(exception.toErrorMessageId())
 
+    }
+
+    private suspend fun getUsernameByUserIdUtil(userId: String) : UiText {
+        return when (val usernameResult = getUsernameById(userId)) {
+            is DataResult.Failure -> {
+                UiText.StringResource(R.string.unknown_user)
+            }
+            is DataResult.Success -> {
+                usernameResult.data?.let {
+                    UiText.RawString(it)
+                } ?: UiText.StringResource(R.string.unknown_user)
+            }
+        }
     }
 
     fun onNameChange(input: String) {

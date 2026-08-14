@@ -1,11 +1,11 @@
 package com.openclassrooms.rebonnte.ui.model
 
+import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
-import com.openclassrooms.rebonnte.domain.model.UpdatableFields
-import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
+import com.openclassrooms.rebonnte.domain.model.UpdatableFields
 import com.openclassrooms.rebonnte.ui.util.UiText
 import java.text.DateFormat
 import java.util.Date
@@ -26,7 +26,7 @@ fun Medicine.toUi(): MedicineUi {
     )
 }
 
-fun History.toUi(username: String): HistoryUi {
+fun History.toUi(username: UiText): HistoryUi {
     return HistoryUi(
         medicineId = this.medicineId,
         username = username,
@@ -35,6 +35,7 @@ fun History.toUi(username: String): HistoryUi {
             isCreation -> UiText.StringResource(R.string.history_creation)
             updatedField == null ->
                 UiText.StringResource(R.string.history_no_details)
+
             updatedField.field == UpdatableFields.AISLE ->
                 UiText.StringResource(
                     R.string.history_update_format,
@@ -42,6 +43,7 @@ fun History.toUi(username: String): HistoryUi {
                     updatedField.oldValue,
                     updatedField.newValue
                 )
+
             updatedField.field == UpdatableFields.NAME ->
                 UiText.StringResource(
                     R.string.history_update_format,
@@ -49,6 +51,7 @@ fun History.toUi(username: String): HistoryUi {
                     updatedField.oldValue,
                     updatedField.newValue
                 )
+
             updatedField.field == UpdatableFields.STOCK ->
                 UiText.StringResource(
                     R.string.history_update_format,
@@ -56,13 +59,14 @@ fun History.toUi(username: String): HistoryUi {
                     updatedField.oldValue,
                     updatedField.newValue
                 )
+
             else -> UiText.StringResource(R.string.history_no_details)
         }
     )
 }
 
-fun SortOption.toDomainSortOption() : MedicineSortOption {
-    return when(this) {
+fun SortOption.toDomainSortOption(): MedicineSortOption {
+    return when (this) {
         SortOption.NAME_ASCENDING -> MedicineSortOption.NAME_ASCENDING
         SortOption.NAME_DESCENDING -> MedicineSortOption.NAME_DESCENDING
         SortOption.STOCK_ASCENDING -> MedicineSortOption.STOCK_ASCENDING

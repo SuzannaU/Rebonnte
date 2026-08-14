@@ -4,11 +4,11 @@ import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetHistoryByMedicineUseCase(
+class GetHistoriesByMedicineUseCase(
     private val historyRepository: HistoryRepository,
 ) {
 
     operator fun invoke(medicineId: String): Flow<List<History>> {
-        return historyRepository.getHistoryByMedicineId(medicineId = medicineId)
+        return historyRepository.getHistoriesByMedicineId(medicineId = medicineId)
     }
 }

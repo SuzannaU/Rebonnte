@@ -8,13 +8,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface MedicineDataSource {
     suspend fun getMedicineById(medicineId: String): MedicineDto?
-    fun getUnarchivedMedicines(): Flow<List<MedicineDto>>
     fun getUnarchivedMedicinesOrderedBy(sortOption: MedicineSortOption): Flow<List<MedicineDto>>
     fun getMedicinesByAisleNumber(aisleNumber: String): Flow<List<MedicineDto>>
     suspend fun addMedicineWithHistory(medicine: MedicineDto, history: HistoryDto)
     suspend fun updateMedicineWithHistory(
         medicineId: String,
-        updatedField: UpdatedFieldDto,
         history: HistoryDto
     )
     suspend fun archiveMedicineById(medicineId: String)
