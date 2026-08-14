@@ -3,12 +3,21 @@ package com.openclassrooms.rebonnte.ui.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -34,6 +43,7 @@ import com.openclassrooms.rebonnte.ui.aisleList.AisleListScreen
 import com.openclassrooms.rebonnte.ui.medicineDetail.MedicineDetailScreen
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineListScreen
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -122,68 +132,92 @@ private fun RebonnteNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = AISLE_LIST_ROUTE
-    ) {
-        composable(AISLE_LIST_ROUTE) {
-            AisleListScreen(
-                viewModel = koinViewModel(),
-                onAisleClick = { number -> navController.navigate("aisleDetail/$number") },
-                onMedicinesClick = { navController.navigate(MEDICINE_LIST_ROUTE) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.navigationBarsPadding(),
             )
         }
-        composable(
-            AISLE_DETAIL_ROUTE,
-            arguments = listOf(
-                navArgument("aisleNumber") {
-                    type = NavType.StringType
-                }
-            )
+    ) { _ ->             // padding values are ignored here and applied individually by each screen
+
+        NavHost(
+            modifier = modifier,
+            navController = navController,
+            startDestination = AISLE_LIST_ROUTE
         ) {
-            AisleDetailScreen(
-                viewModel = koinViewModel(),
-                onMedicineClick = { id -> navController.navigate("medicineDetail/$id") },
-                onAddMedicineClick = { aisleNumber -> navController.navigate("addMedicine?aisleNumber=$aisleNumber") },
-                onBackClick = { navController.navigateUp() }
-            )
-        }
-        composable(MEDICINE_LIST_ROUTE) {
-            MedicineListScreen(
-                viewModel = koinViewModel(),
-                onMedicineClick = { id -> navController.navigate("medicineDetail/$id") },
-                onAislesClick = { navController.navigate(AISLE_LIST_ROUTE) },
-                onAddMedicineClick = { navController.navigate(ADD_MEDICINE_BASE_ROUTE) }
-            )
-        }
-        composable(
-            MEDICINE_DETAIL_ROUTE,
-            arguments = listOf(
-                navArgument("medicineId") {
-                    type = NavType.StringType
-                }
-            )
-        ) {
-            MedicineDetailScreen(
-                viewModel = koinViewModel(),
-                onBackClick = { navController.navigateUp() },
-            )
-        }
-        composable(
-            ADD_MEDICINE_ROUTE,
-            arguments = listOf(
-                navArgument("aisleNumber") {
-                    type = NavType.StringType
-                    nullable = true
-                    defaultValue = ""
-                }
-            )
-        ) {
-            AddMedicineScreen(
-                viewModel = koinViewModel(),
-                onBackClick = { navController.navigateUp() }
-            )
+            composable(AISLE_LIST_ROUTE) {
+                AisleListScreen(
+                    viewModel = koinViewModel(),
+                    onAisleClick = { number -> navController.navigate("aisleDetail/$number") },
+                    onMedicinesClick = { navController.navigate(MEDICINE_LIST_ROUTE) }
+                )
+            }
+            composable(
+                AISLE_DETAIL_ROUTE,
+                arguments = listOf(
+                    navArgument("aisleNumber") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                AisleDetailScreen(
+                    viewModel = koinViewModel(),
+                    onMedicineClick = { id -> navController.navigate("medicineDetail/$id") },
+                    onAddMedicineClick = { aisleNumber -> navController.navigate("addMedicine?aisleNumber=$aisleNumber") },
+                    onBackClick = { navController.navigateUp() }
+                )
+            }
+            composable(MEDICINE_LIST_ROUTE) {
+                MedicineListScreen(
+                    viewModel = koinViewModel(),
+                    onMedicineClick = { id -> navController.navigate("medicineDetail/$id") },
+                    onAislesClick = { navController.navigate(AISLE_LIST_ROUTE) },
+                    onAddMedicineClick = { navController.navigate(ADD_MEDICINE_BASE_ROUTE) }
+                )
+            }
+            composable(
+                MEDICINE_DETAIL_ROUTE,
+                arguments = listOf(
+                    navArgument("medicineId") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                MedicineDetailScreen(
+                    viewModel = koinViewModel(),
+                    onBackClick = { navController.navigateUp() },
+                )
+            }
+            composable(
+                ADD_MEDICINE_ROUTE,
+                arguments = listOf(
+                    navArgument("aisleNumber") {
+                        type = NavType.StringType
+                        nullable = true
+                        defaultValue = ""
+                    }
+                )
+            ) {
+                val successMessage = stringResource(R.string.medicine_save_successful)
+                AddMedicineScreen(
+                    viewModel = koinViewModel(),
+                    onBackClick = { navController.navigateUp() },
+                    onMedicineSaved = {
+                        navController.navigateUp()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = successMessage,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                )
+            }
         }
     }
 }

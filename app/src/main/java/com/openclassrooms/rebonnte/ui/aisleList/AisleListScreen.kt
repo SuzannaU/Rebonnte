@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,11 +52,11 @@ fun AisleListScreen(
     onMedicinesClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val addAisleState by viewModel.addAisleState.collectAsStateWithLifecycle()
+    val addAisleFormState by viewModel.addAisleState.collectAsStateWithLifecycle()
     var showAddAisleDialog by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(addAisleState.isSuccess) {
-        if (addAisleState.isSuccess) {
+    LaunchedEffect(addAisleFormState.isSuccess) {
+        if (addAisleFormState.isSuccess) {
             showAddAisleDialog = false
             viewModel.resetAddAisleState()
         }
@@ -93,7 +94,7 @@ fun AisleListScreen(
                     .fillMaxSize(),
             ) {
                 Text(
-                    text = "No Aisles found",
+                    text = stringResource(R.string.no_aisles_found),
                     style = MaterialTheme.typography.titleLarge
                 )
             }
@@ -106,12 +107,12 @@ fun AisleListScreen(
             label = stringResource(R.string.aisle_number),
             initialValue = "",
             isDigits = true,
-            isError = addAisleState.aisleBlankError || addAisleState.aisleDigitError || addAisleState.aisleExistsError,
-            errorText = if (addAisleState.aisleBlankError) {
+            isError = addAisleFormState.aisleBlankError || addAisleFormState.aisleDigitError || addAisleFormState.aisleExistsError,
+            errorText = if (addAisleFormState.aisleBlankError) {
                 stringResource(R.string.error_aisle_empty)
-            } else if (addAisleState.aisleDigitError) {
+            } else if (addAisleFormState.aisleDigitError) {
                 stringResource(R.string.error_aisle_invalid)
-            } else if (addAisleState.aisleExistsError) {
+            } else if (addAisleFormState.aisleExistsError) {
                 stringResource(R.string.error_aisle_exists)
             } else null,
             onDismiss = {
@@ -213,6 +214,24 @@ private fun AisleItem(aisle: AisleUi, onAisleClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun AisleListContentPreview() {
+    RebonnteTheme {
+        AisleListContent(
+            aisles = listOf(
+                AisleUi("1"),
+                AisleUi("2"),
+                AisleUi("3")
+            ),
+            onAisleClick = {},
+            onMedicinesClick = {},
+            onAddAisleClick = {},
+            onSignOutClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun AisleListContentDarkPreview() {
     RebonnteTheme {
         AisleListContent(
             aisles = listOf(

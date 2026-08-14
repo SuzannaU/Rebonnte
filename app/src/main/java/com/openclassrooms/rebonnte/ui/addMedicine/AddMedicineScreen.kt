@@ -13,7 +13,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,10 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.R
+import com.openclassrooms.rebonnte.ui.ErrorScreen
 import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 
@@ -37,21 +38,21 @@ import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 fun AddMedicineScreen(
     viewModel: AddMedicineViewModel,
     onBackClick: () -> Unit,
+    onMedicineSaved: () -> Unit,
 ) {
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val saveState by viewModel.saveState.collectAsStateWithLifecycle()
 
     LaunchedEffect(saveState) {
         if (saveState is SaveState.MedicineSaved) {
-            onBackClick()
+            onMedicineSaved()
         }
     }
 
-    when (saveState) {
+    when (val state = saveState) {
         is SaveState.Idle -> {
             AddMedicineContent(
                 formState = formState,
-                saveState = saveState,
                 onNameChange = viewModel::updateName,
                 onAisleChange = viewModel::updateAisle,
                 onStockChange = viewModel::updateStock,
@@ -60,12 +61,19 @@ fun AddMedicineScreen(
             )
         }
 
-        is SaveState.Error -> {}
+        is SaveState.Error -> {
+            ErrorScreen(
+                errorMessage = state.messageId,
+                isRetryEnabled = true,
+                onRetry = viewModel::onAddMedicine,
+            )
+        }
+
         SaveState.Loading -> {
             LoadingScreen()
         }
 
-        SaveState.MedicineSaved -> {}
+        SaveState.MedicineSaved -> {}       // Handled by the LaunchEffect
     }
 
 }
@@ -74,7 +82,6 @@ fun AddMedicineScreen(
 @Composable
 private fun AddMedicineContent(
     formState: FormState,
-    saveState: SaveState,
     onNameChange: (String) -> Unit,
     onAisleChange: (String) -> Unit,
     onStockChange: (String) -> Unit,
@@ -127,12 +134,14 @@ private fun AddMedicineContent(
                 onValueChange = onAisleChange,
                 label = { Text(stringResource(R.string.aisle_number)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                isError = formState.formErrors.aisleDigitError || formState.formErrors.aisleDoesNotExistError,
+                isError = formState.formErrors.aisleDigitError || formState.formErrors.aisleDoesNotExistError || formState.formErrors.aisleVerificationError,
                 supportingText = {
                     if (formState.formErrors.aisleDigitError) {
                         Text(stringResource(R.string.error_aisle_invalid))
                     } else if (formState.formErrors.aisleDoesNotExistError) {
                         Text(stringResource(R.string.error_aisle_not_exists))
+                    } else if (formState.formErrors.aisleVerificationError) {
+                        Text(stringResource(R.string.error_aisle_unverifiable))
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -163,14 +172,6 @@ private fun AddMedicineContent(
                 Text(stringResource(R.string.add_medicine))
             }
         }
-
-        if (saveState is SaveState.Error) {
-            Text(
-                text = stringResource(saveState.messageId),
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        }
     }
 }
 
@@ -180,7 +181,21 @@ private fun AddMedicineContentPreview() {
     RebonnteTheme {
         AddMedicineContent(
             formState = FormState(aisleNumber = "10"),
-            saveState = SaveState.Idle,
+            onNameChange = {},
+            onAisleChange = {},
+            onStockChange = {},
+            onAddClick = {},
+            onBackClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun AddMedicineContentDarkPreview() {
+    RebonnteTheme {
+        AddMedicineContent(
+            formState = FormState(aisleNumber = "10"),
             onNameChange = {},
             onAisleChange = {},
             onStockChange = {},
@@ -205,7 +220,6 @@ private fun AddMedicineErrorPreview() {
                     stockDigitError = true
                 )
             ),
-            saveState = SaveState.Idle,
             onNameChange = {},
             onAisleChange = {},
             onStockChange = {},

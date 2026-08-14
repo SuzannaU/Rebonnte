@@ -14,6 +14,7 @@ data class FormErrorState(
     val stockDigitError: Boolean = false,
     val aisleDigitError: Boolean = false,
     val aisleDoesNotExistError: Boolean = false,
+    val aisleVerificationError: Boolean = false,
 )
 sealed class SaveState {
     object Idle : SaveState()

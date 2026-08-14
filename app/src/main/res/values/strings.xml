@@ -26,6 +26,7 @@
     <string name="navigate_back">Navigate back</string>
     <string name="aisle_number_n">Aisle # %1$s</string>
     <string name="stock_n">Stock: %1$s</string>
+    <string name="aisle_n_stock_n">Aisle # %2$s, Stock: %1$s</string>
     <string name="navigate_to_medicine_name">Navigate to %1$s</string>
     <string name="aisles">Aisles</string>
     <string name="add_aisle">Add Aisle</string>
@@ -53,4 +54,9 @@
     <string name="logout">Sign out</string>
     <string name="unknown_user">Unknown User</string>
     <string name="data_error">There was a problem with the Data.</string>
+    <string name="medicine_save_successful">Medicine was saved successfully</string>
+    <string name="error_aisle_unverifiable">Could not verify if aisle exists</string>
+    <string name="no_aisles_found">No Aisles found</string>
+    <string name="navigate_to_aisles_list">navigate to aisles list</string>
+    <string name="navigate_to_medicines_list">navigate to medicines list</string>
 </resources>

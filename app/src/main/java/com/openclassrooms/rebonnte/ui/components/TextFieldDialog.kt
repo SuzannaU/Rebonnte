@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -118,6 +119,21 @@ private fun TextFieldDialogContent(
 @Preview(showBackground = true)
 @Composable
 private fun AddAisleDialogPreview() {
+    RebonnteTheme {
+        TextFieldDialogContent(
+            onDismiss = {},
+            onConfirm = {},
+            title = "Title",
+            label = "Label",
+            initialValue = "Initial Value",
+            isDigits = false,
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun AddAisleDialogDarkPreview() {
     RebonnteTheme {
         TextFieldDialogContent(
             onDismiss = {},

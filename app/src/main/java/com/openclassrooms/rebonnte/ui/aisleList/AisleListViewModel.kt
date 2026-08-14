@@ -27,7 +27,7 @@ class AisleListViewModel(
     private var _uiState = MutableStateFlow<AisleListScreenState>(AisleListScreenState.Loading)
     val uiState = _uiState.asStateFlow()
 
-    private var _addAisleState = MutableStateFlow(AddAisleState())
+    private var _addAisleState = MutableStateFlow(AddAisleFormState())
     val addAisleState = _addAisleState.asStateFlow()
 
     init {
@@ -96,7 +96,7 @@ class AisleListViewModel(
     }
 
     fun resetAddAisleState() {
-        _addAisleState.value = AddAisleState()
+        _addAisleState.value = AddAisleFormState()
     }
 
     fun onLogout() {

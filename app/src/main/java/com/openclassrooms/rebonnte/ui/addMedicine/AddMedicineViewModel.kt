@@ -91,11 +91,15 @@ class AddMedicineViewModel(
         val stockDigitError =
             state.currentStock.isBlank() || !state.currentStock.all { it.isDigit() }
         val aisleDigitError = state.aisleNumber.isBlank() || !state.aisleNumber.all { it.isDigit() }
+        var aisleVerificationError = false
 
         val aisleDoesNotExistError = if (!aisleDigitError) {
             when (val result = checkAisleExists(aisleNumber = state.aisleNumber)) {
                 is DataResult.Success -> !result.data
-                is DataResult.Failure -> false // Or handle as actual error
+                is DataResult.Failure -> {
+                    aisleVerificationError = true
+                    false
+                }
             }
         } else {
             false
@@ -107,10 +111,11 @@ class AddMedicineViewModel(
             stockDigitError = stockDigitError,
             aisleDigitError = aisleDigitError,
             aisleDoesNotExistError = aisleDoesNotExistError,
+            aisleVerificationError = aisleVerificationError,
         )
 
         _formState.update { it.copy(formErrors = errors) }
 
-        return !nameError && !nameLengthError && !stockDigitError && !aisleDigitError && !aisleDoesNotExistError
+        return !nameError && !nameLengthError && !stockDigitError && !aisleDigitError && !aisleDoesNotExistError && !aisleVerificationError
     }
 }

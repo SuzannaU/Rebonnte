@@ -1,24 +1,17 @@
 package com.openclassrooms.rebonnte.ui.aisleDetail
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,12 +20,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.ui.ErrorScreen
 import com.openclassrooms.rebonnte.ui.LoadingScreen
+import com.openclassrooms.rebonnte.ui.components.MedicineItem
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 
@@ -117,36 +111,12 @@ private fun AisleDetailContent(
                 items(medicines) { medicine ->
                     MedicineItem(
                         medicine = medicine,
-                        onClick = { onMedicineClick(medicine.id) }
+                        showAisleNumber = false,
+                        onClick = { onMedicineClick(medicine.id) },
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun MedicineItem(
-    medicine: MedicineUi,
-    onClick: (String) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick(medicine.id) }
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column {
-            Text(text = medicine.name, style = MaterialTheme.typography.titleMedium)
-            Text(text = stringResource(R.string.stock_n, medicine.currentStock))
-        }
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = stringResource(
-                R.string.navigate_to_medicine_name, medicine.name
-            )
-        )
     }
 }
 
@@ -168,13 +138,20 @@ private fun AisleDetailContentPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-private fun MedicineItemPreview() {
+private fun AisleDetailContentDarkPreview() {
     RebonnteTheme {
-        MedicineItem(
-            medicine = MedicineUi("1", "Paracetamol", "1", "10"),
-            onClick = {}
+        AisleDetailContent(
+            aisleNumber = "15",
+            medicines = listOf(
+                MedicineUi("1", "Paracetamol", "1", "10"),
+                MedicineUi("2", "Ibuprofen", "1", "5"),
+                MedicineUi("3", "Aspirin", "1", "20")
+            ),
+            onMedicineClick = {},
+            onAddMedicineClick = {},
+            onBackClick = {},
         )
     }
 }

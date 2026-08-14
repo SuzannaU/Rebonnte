@@ -15,7 +15,7 @@ sealed class AisleListScreenState {
     ) : AisleListScreenState()
 }
 
-data class AddAisleState(
+data class AddAisleFormState(
     val aisleBlankError: Boolean = false,
     val aisleDigitError: Boolean = false,
     val aisleExistsError: Boolean = false,

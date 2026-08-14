@@ -51,6 +51,7 @@ import com.openclassrooms.rebonnte.ui.ErrorScreen
 import com.openclassrooms.rebonnte.ui.LoadingScreen
 import com.openclassrooms.rebonnte.ui.MEDICINE_LIST_ROUTE
 import com.openclassrooms.rebonnte.ui.components.BottomNavigationBar
+import com.openclassrooms.rebonnte.ui.components.MedicineItem
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.model.SortOption
 import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
@@ -207,7 +208,8 @@ private fun MedicineListContent(
                             items(medicines) { medicine ->
                                 MedicineItem(
                                     medicine = medicine,
-                                    onClick = { onMedicineClick(medicine.id) }
+                                    onClick = { onMedicineClick(medicine.id) },
+                                    showAisleNumber = true,
                                 )
                             }
                         }
@@ -215,31 +217,6 @@ private fun MedicineListContent(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun MedicineItem(medicine: MedicineUi, onClick: (String) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick(medicine.id) }
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column {
-            Text(text = medicine.name, style = MaterialTheme.typography.bodyLarge)
-            Text(
-                text = stringResource(R.string.stock_n, medicine.currentStock),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = stringResource(
-                R.string.go_to_medicine_name, medicine.name
-            )
-        )
     }
 }
 
@@ -378,17 +355,6 @@ private fun MedicineListContentEmptyPreview() {
             onSearchQueryChange = {},
             onAislesClick = {},
             onAddMedicineClick = {},
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MedicineItemPreview() {
-    RebonnteTheme {
-        MedicineItem(
-            medicine = MedicineUi("1", "Paracetamol", "1", "10"),
-            onClick = {}
         )
     }
 }
