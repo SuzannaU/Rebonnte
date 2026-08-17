@@ -90,8 +90,8 @@ fun MedicineListScreen(
         is MedicineListScreenState.Error -> {
             ErrorScreen(
                 errorMessage = state.message,
-                isRetryEnabled = false,
-                onRetry = {},
+                isBackEnabled = true,
+                onBack = onAislesClick,
             )
         }
     }

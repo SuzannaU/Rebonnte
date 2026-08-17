@@ -20,5 +20,4 @@ fun LoadingScreen(
             modifier = Modifier.align(Alignment.Center),
         )
     }
-
 }

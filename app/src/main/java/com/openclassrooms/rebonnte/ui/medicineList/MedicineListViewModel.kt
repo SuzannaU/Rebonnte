@@ -44,8 +44,8 @@ class MedicineListViewModel(
     }
 
     val listScreenState: StateFlow<MedicineListScreenState> = combine(
-        _medicinesFlow,
-        _searchQuery,
+        flow = _medicinesFlow,
+        flow2 = _searchQuery,
     ) { medicines, query ->
 
         val filteredMedicines: List<MedicineUi> =
