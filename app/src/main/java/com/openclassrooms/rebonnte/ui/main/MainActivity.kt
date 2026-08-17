@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
 
                         !uiState.isAuthConnected -> {
                             ErrorScreen(
-                                errorMessage = R.string.auth_connexion_problem,
+                                errorMessage = R.string.auth_error,
                                 isRetryEnabled = true,
                                 onRetry = {
                                     startSignInActivity()
@@ -114,7 +114,7 @@ class MainActivity : ComponentActivity() {
             .createSignInIntentBuilder()
             .setTheme(R.style.Theme_Rebonnte_Login)
             .setAvailableProviders(providers)
-            //.setLogo(R.drawable.logo)
+            .setLogo(R.drawable.logo_rebonnte)
             .build()
 
         signInLauncher.launch(signInIntent)
@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
-            viewModel.createUser()          // TODO instead of creating the user everytime, maybe check firestore if it exists
+            viewModel.saveNewUserToDb()
         }
     }
 }
@@ -189,7 +189,8 @@ private fun RebonnteNavHost(
                 )
             ) {
                 MedicineDetailScreen(
-                    viewModel = koinViewModel(),
+                    detailViewModel = koinViewModel(),
+                    editViewModel = koinViewModel(),
                     onBackClick = { navController.navigateUp() },
                 )
             }

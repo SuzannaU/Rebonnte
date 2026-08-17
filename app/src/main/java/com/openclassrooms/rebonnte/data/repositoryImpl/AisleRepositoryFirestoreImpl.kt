@@ -22,9 +22,9 @@ class AisleRepositoryFirestoreImpl(
 
     override fun getAisles(): Flow<List<Aisle>> {
         return aisleDataSource.getAisles().map { aisleDtos ->
-            aisleDtos.map { aisleDto ->
-                aisleDto.toDomain()
-            }
+            aisleDtos
+                .map { it.toDomain() }
+                .sortedBy { it.number.toIntOrNull() ?: Int.MAX_VALUE }
         }
     }
 

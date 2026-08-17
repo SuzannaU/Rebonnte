@@ -8,7 +8,7 @@ import com.openclassrooms.rebonnte.domain.useCase.GetAislesUseCase
 import com.openclassrooms.rebonnte.domain.useCase.LogOutUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
-import com.openclassrooms.rebonnte.ui.model.toUi
+import com.openclassrooms.rebonnte.ui.util.toUi
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

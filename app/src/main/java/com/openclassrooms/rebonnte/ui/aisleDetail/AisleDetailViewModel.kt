@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesByAisleUseCase
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
-import com.openclassrooms.rebonnte.ui.model.toUi
+import com.openclassrooms.rebonnte.ui.util.toUi
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -5,14 +5,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.dataObjects
-import com.google.firebase.firestore.toObject
 import com.openclassrooms.rebonnte.data.dto.HistoryDto
 import com.openclassrooms.rebonnte.data.dto.MedicineDto
-import com.openclassrooms.rebonnte.data.dto.UpdatedFieldDto
 import com.openclassrooms.rebonnte.domain.exception.DataValidationException
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
-import com.openclassrooms.rebonnte.domain.util.DataResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
@@ -26,13 +23,11 @@ class MedicineFirestoreDataSource(
     private val firestore: FirebaseFirestore,
 ) : MedicineDataSource {
 
-    override suspend fun getMedicineById(medicineId: String): MedicineDto? {
+    override fun getMedicineById(medicineId: String): Flow<MedicineDto?> {
         return firestore
             .collection(MEDICINE_COLLECTION)
             .document(medicineId)
-            .get()
-            .await()
-            .toObject<MedicineDto>()
+            .dataObjects<MedicineDto>()
     }
 
     override fun getUnarchivedMedicinesOrderedBy(sortOption: MedicineSortOption): Flow<List<MedicineDto>> {

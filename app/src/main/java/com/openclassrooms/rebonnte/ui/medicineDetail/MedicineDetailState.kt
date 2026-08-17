@@ -13,7 +13,7 @@ sealed class MedicineDetailState {
         val histories: List<HistoryUi>,
     ) : MedicineDetailState()
 
-    data class Error(val message: Int) : MedicineDetailState()
+    data class Error(val messageId: Int) : MedicineDetailState()
 }
 
 data class EditMedicineFormState(
@@ -22,6 +22,7 @@ data class EditMedicineFormState(
     val stock: String = "",
     val formError: EditMedicineFormErrorState = EditMedicineFormErrorState(),
     val isSuccess: Boolean = false,
+    val errorId: Int? = null,
 )
 
 data class EditMedicineFormErrorState(

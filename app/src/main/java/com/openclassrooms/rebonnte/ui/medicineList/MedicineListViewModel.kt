@@ -6,8 +6,8 @@ import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesOrderedByUseCase
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.model.SortOption
-import com.openclassrooms.rebonnte.ui.model.toDomainSortOption
-import com.openclassrooms.rebonnte.ui.model.toUi
+import com.openclassrooms.rebonnte.ui.util.toDomainSortOption
+import com.openclassrooms.rebonnte.ui.util.toUi
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow

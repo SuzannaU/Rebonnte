@@ -8,7 +8,7 @@ import com.openclassrooms.rebonnte.domain.util.DataResult
 import kotlinx.coroutines.flow.Flow
 
 interface MedicineRepository {
-    suspend fun getMedicineById(medicineId: String): DataResult<Medicine?>
+    fun getMedicineById(medicineId: String): Flow<Medicine?>
     fun getMedicinesOrderedBy(sortOption: MedicineSortOption): Flow<List<Medicine>>
     fun getMedicinesByAisleNumber(aisleNumber: String): Flow<List<Medicine>>
     suspend fun addMedicineWithHistory(

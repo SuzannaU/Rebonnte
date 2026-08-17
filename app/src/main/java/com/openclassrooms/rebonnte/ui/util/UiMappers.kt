@@ -1,4 +1,4 @@
-package com.openclassrooms.rebonnte.ui.model
+package com.openclassrooms.rebonnte.ui.util
 
 import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.model.Aisle
@@ -6,7 +6,10 @@ import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
-import com.openclassrooms.rebonnte.ui.util.UiText
+import com.openclassrooms.rebonnte.ui.model.AisleUi
+import com.openclassrooms.rebonnte.ui.model.HistoryUi
+import com.openclassrooms.rebonnte.ui.model.MedicineUi
+import com.openclassrooms.rebonnte.ui.model.SortOption
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -32,7 +35,7 @@ fun History.toUi(username: UiText): HistoryUi {
         username = username,
         dateTime = this.dateTime.formatToString(),
         details = when {
-            isCreation -> UiText.StringResource(R.string.history_creation)
+            isCreation -> UiText.StringResource(R.string.creation)
             updatedField == null ->
                 UiText.StringResource(R.string.history_no_details)
 

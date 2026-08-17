@@ -3,7 +3,6 @@ package com.openclassrooms.rebonnte.data.datasource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import com.openclassrooms.rebonnte.data.dto.UserDto
-import com.openclassrooms.rebonnte.domain.service.AuthService
 import kotlinx.coroutines.tasks.await
 
 private const val USER_COLLECTION = "users"

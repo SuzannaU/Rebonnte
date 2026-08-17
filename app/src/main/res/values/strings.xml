@@ -1,20 +1,29 @@
 <resources>
     <string name="app_name">rebonnte</string>
+
+    <!--    Generics    -->
     <string name="dismiss">Dismiss</string>
     <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
+    <string name="no_result_found">No result found</string>
+    <string name="logout">Sign out</string>
+    <string name="unknown_user">Unknown User</string>
+    <string name="try_again">Try again</string>
+    <string name="back">Back</string>
+    <string name="navigate_back">Navigate back</string>
+    <string name="deletion_confirmation">Deletion Confirmation</string>
+    <string name="please_confirm_the_deletion_of_">Please confirm the deletion of %1$s</string>
+    <string name="name">Name</string>
+    <string name="creation">Creation</string>
+
+    <!--    Errors    -->
     <string name="error_title">Error</string>
     <string name="auth_error">Error during authentication</string>
     <string name="network_error">No internet connection.</string>
     <string name="database_error">Access denied or database error</string>
+    <string name="data_error">There was a problem with the data.</string>
     <string name="unknown_error">An unknown error occurred.</string>
-    <string name="name_a_z">Name (A-Z)</string>
-    <string name="name_z_a">Name (Z-A)</string>
-    <string name="stock_ascending">Stock (Lowest first)</string>
-    <string name="stock_descending">Stock (Highest  first)</string>
-    <string name="aisle_number">Aisle number</string>
-    <string name="add_medicine">Add Medicine</string>
-    <string name="medicine_name">Medicine Name</string>
-    <string name="current_stock">Current Stock</string>
     <string name="error_name_empty">Name cannot be empty</string>
     <string name="error_name_too_long">Name is too long (max 25 chars)</string>
     <string name="error_stock_empty">Stock cannot be empty</string>
@@ -23,40 +32,41 @@
     <string name="error_aisle_invalid">Aisle must be a number</string>
     <string name="error_aisle_exists">Aisle already exists</string>
     <string name="error_aisle_not_exists">This aisle number does not exist</string>
-    <string name="navigate_back">Navigate back</string>
-    <string name="aisle_number_n">Aisle # %1$s</string>
-    <string name="stock_n">Stock: %1$s</string>
-    <string name="aisle_n_stock_n">Aisle # %2$s, Stock: %1$s</string>
-    <string name="navigate_to_medicine_name">Navigate to %1$s</string>
-    <string name="aisles">Aisles</string>
-    <string name="add_aisle">Add Aisle</string>
-    <string name="navigate_to_aisle_number_n">Navigate to aisle number %1$s</string>
+    <string name="error_aisle_unverifiable">Could not verify if aisle exists</string>
+
+    <!--    Sorting    -->
+    <string name="sorting_options">Sorting options</string>
+    <string name="name_a_z">Name (A-Z)</string>
+    <string name="name_z_a">Name (Z-A)</string>
+    <string name="stock_ascending">Stock (Lowest first)</string>
+    <string name="stock_descending">Stock (Highest  first)</string>
+    <string name="sortoption_is_selected">%1$s is selected</string>
+
+    <!--    Medicine    -->
     <string name="medicines">Medicines</string>
-    <string name="cancel">Cancel</string>
+    <string name="medicine_name">Medicine Name</string>
     <string name="edit_name">Edit Name</string>
-    <string name="name">Name</string>
-    <string name="edit_aisle_number">Edit Aisle Number</string>
+    <string name="add_medicine">Add Medicine</string>
+    <string name="current_stock">Current Stock</string>
+    <string name="stock_n">Stock: %1$s</string>
+    <string name="aisle_n_stock_n">Aisle # %1$s, Stock: %2$s</string>
+    <string name="navigate_to_medicine_name">Navigate to %1$s</string>
     <string name="edit_stock">Edit Stock</string>
     <string name="stock">Stock</string>
-    <string name="deletion_confirmation">Deletion Confirmation</string>
-    <string name="please_confirm_the_deletion_of_medicine">Please confirm the deletion of %1$s</string>
-    <string name="sorting_options">Sorting options</string>
     <string name="no_medicine_found">No medicine found</string>
-    <string name="no_result_found">No result found</string>
-    <string name="search">Search</string>
-    <string name="go_to_medicine_name">Go to %1$s</string>
-    <string name="sortoption_is_selected">%1$s is selected</string>
-    <string name="history_creation">Creation</string>
     <string name="history_no_details">No details available</string>
     <string name="history_update_format">%1$s changed from %2$s to %3$s</string>
-    <string name="try_again">Try again</string>
-    <string name="auth_connexion_problem">Connexion problem during authentication</string>
-    <string name="logout">Sign out</string>
-    <string name="unknown_user">Unknown User</string>
-    <string name="data_error">There was a problem with the Data.</string>
     <string name="medicine_save_successful">Medicine was saved successfully</string>
-    <string name="error_aisle_unverifiable">Could not verify if aisle exists</string>
+    <string name="navigate_to_medicines_list">navigate to medicines list</string>
+
+    <!--     Aisle     -->
+    <string name="aisles">Aisles</string>
+    <string name="add_aisle">Add Aisle</string>
+    <string name="aisle_number">Aisle number</string>
+    <string name="aisle_number_n">Aisle # %1$s</string>
+    <string name="navigate_to_aisle_number_n">Navigate to aisle number %1$s</string>
+    <string name="edit_aisle_number">Edit Aisle Number</string>
     <string name="no_aisles_found">No Aisles found</string>
     <string name="navigate_to_aisles_list">navigate to aisles list</string>
-    <string name="navigate_to_medicines_list">navigate to medicines list</string>
+
 </resources>

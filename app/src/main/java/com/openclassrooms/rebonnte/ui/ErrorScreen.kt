@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.openclassrooms.rebonnte.R
@@ -34,8 +35,10 @@ import com.openclassrooms.rebonnte.ui.theme.RebonnteTheme
 fun ErrorScreen(
     errorMessage: Int,
     modifier: Modifier = Modifier,
-    isRetryEnabled: Boolean,
-    onRetry: () -> Unit,
+    isRetryEnabled: Boolean = false,
+    onRetry: () -> Unit = {},
+    isBackEnabled: Boolean = false,
+    onBack: () -> Unit = {},
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
@@ -97,18 +100,53 @@ fun ErrorScreen(
                     )
                 }
             }
+
+            if (isBackEnabled) {
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    onClick = onBack,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 64.dp)
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.back),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ErrorScreenOnRetryPreview() {
+fun ErrorScreenWithButtonsPreview() {
     RebonnteTheme {
         ErrorScreen(
             errorMessage = R.string.unknown_error,
-            onRetry = {},
             isRetryEnabled = true,
+            isBackEnabled = true,
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun ErrorScreenWithButtonsDarkPreview() {
+    RebonnteTheme {
+        ErrorScreen(
+            errorMessage = R.string.unknown_error,
+            isRetryEnabled = true,
+            isBackEnabled = true,
         )
     }
 }
@@ -119,7 +157,6 @@ fun ErrorScreenPreview() {
     RebonnteTheme {
         ErrorScreen(
             errorMessage = R.string.network_error,
-            onRetry = {},
             isRetryEnabled = false,
         )
     }

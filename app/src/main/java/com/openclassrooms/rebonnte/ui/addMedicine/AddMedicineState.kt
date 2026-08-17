@@ -1,5 +1,7 @@
 package com.openclassrooms.rebonnte.ui.addMedicine
 
+import com.openclassrooms.rebonnte.ui.util.generateRandomAlphanumeric
+
 data class FormState(
     val id: String = generateRandomAlphanumeric(20),
     val name: String = "",
@@ -21,11 +23,4 @@ sealed class SaveState {
     object Loading : SaveState()
     object MedicineSaved : SaveState()
     data class Error(val messageId: Int) : SaveState()
-}
-
-fun generateRandomAlphanumeric(length: Int): String {
-    val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-
-    return List(length) { charPool.random() }
-        .joinToString("")
 }

@@ -3,10 +3,10 @@ package com.openclassrooms.rebonnte.data.repositoryImpl
 import com.openclassrooms.rebonnte.data.datasource.MedicineDataSource
 import com.openclassrooms.rebonnte.data.dto.toDomain
 import com.openclassrooms.rebonnte.data.dto.toDto
+import com.openclassrooms.rebonnte.domain.exception.DatabaseException
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
-import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.domain.util.wrapDataResult
@@ -17,18 +17,21 @@ class MedicineRepositoryFirestoreImpl(
     private val medicineDataSource: MedicineDataSource,
 ) : MedicineRepository {
 
-    override suspend fun getMedicineById(medicineId: String): DataResult<Medicine?> {
-        return wrapDataResult {
-            medicineDataSource.getMedicineById(medicineId)?.toDomain()
-        }
+    override fun getMedicineById(medicineId: String): Flow<Medicine?> {
+        return medicineDataSource.getMedicineById(medicineId)
+            .map { medicine ->
+                medicine?.toDomain()
+            }
+
     }
 
     override fun getMedicinesOrderedBy(sortOption: MedicineSortOption): Flow<List<Medicine>> {
-        return medicineDataSource.getUnarchivedMedicinesOrderedBy(sortOption).map { medicineDtos ->
-            medicineDtos.map { medicineDto ->
-                medicineDto.toDomain()
+        return medicineDataSource.getUnarchivedMedicinesOrderedBy(sortOption)
+            .map { medicineDtos ->
+                medicineDtos.map { medicineDto ->
+                    medicineDto.toDomain()
+                }
             }
-        }
     }
 
     override fun getMedicinesByAisleNumber(aisleNumber: String): Flow<List<Medicine>> {

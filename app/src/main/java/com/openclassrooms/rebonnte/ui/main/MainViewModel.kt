@@ -3,8 +3,10 @@ package com.openclassrooms.rebonnte.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.User
-import com.openclassrooms.rebonnte.domain.repository.UserRepository
 import com.openclassrooms.rebonnte.domain.service.AuthService
+import com.openclassrooms.rebonnte.domain.useCase.CheckUserExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.SaveUserToDbUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val dispatcher: DispatcherProvider,
-    private val userRepository: UserRepository,
+    private val saveUserToDb: SaveUserToDbUseCase,
+    private val checkUserExists: CheckUserExistsUseCase,
     private val authService: AuthService,
 ) : ViewModel() {
 
@@ -42,21 +45,31 @@ class MainViewModel(
         }
     }
 
-    fun createUser() {
+    fun saveNewUserToDb() {
         viewModelScope.launch(dispatcher.io) {
-            try {
-                val authUser = authService.getAuthUser()
-                userRepository.createUser(
-                    User(
-                        id = authUser.uid,
-                        username = authUser.displayName,
-                        email = authUser.email,
-                    )
-                )
+            val authUser = authService.getAuthUser()
 
-            } catch (e: Exception) {
-                e.printStackTrace()
-                _uiState.update { it.copy(errorMessageId = e.toErrorMessageId()) }
+            val userExistsResult = checkUserExists(authUser.uid)
+            if (userExistsResult is DataResult.Success && userExistsResult.data) {
+                return@launch
+            }
+
+            val creationResult = saveUserToDb(
+                User(
+                    id = authUser.uid,
+                    username = authUser.displayName,
+                    email = authUser.email,
+                )
+            )
+            when (creationResult) {
+                is DataResult.Success -> {
+                    return@launch
+                }
+
+                is DataResult.Failure -> {
+                    creationResult.exception.printStackTrace()
+                    _uiState.update { it.copy(errorMessageId = creationResult.exception.toErrorMessageId()) }
+                }
             }
         }
     }

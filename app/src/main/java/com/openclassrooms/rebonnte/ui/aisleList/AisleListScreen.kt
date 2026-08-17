@@ -200,10 +200,10 @@ private fun AisleItem(aisle: AisleUi, onAisleClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onAisleClick() }
-            .padding(16.dp),
+            .padding(vertical = 12.dp, horizontal = 32.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = aisle.number, style = MaterialTheme.typography.bodyMedium)
+        Text(text = aisle.number, style = MaterialTheme.typography.bodyLarge)
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = stringResource(R.string.navigate_to_aisle_number_n, aisle.number),

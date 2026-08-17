@@ -54,27 +54,32 @@ import com.openclassrooms.rebonnte.ui.util.UiText
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MedicineDetailScreen(
-    viewModel: MedicineDetailViewModel,
+    detailViewModel: MedicineDetailViewModel,
+    editViewModel: EditMedicineViewModel,
     onBackClick: () -> Unit,
 ) {
 
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val formState by viewModel.formState.collectAsStateWithLifecycle()
+    val detailState by detailViewModel.uiState.collectAsStateWithLifecycle()
+    val formState by editViewModel.formState.collectAsStateWithLifecycle()
     var showNameEditDialog by rememberSaveable { mutableStateOf(false) }
     var showAisleEditDialog by rememberSaveable { mutableStateOf(false) }
     var showStockEditDialog by rememberSaveable { mutableStateOf(false) }
     var showDeleteConfirmationDialog by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(formState.isSuccess) {
+    LaunchedEffect(formState.isSuccess, formState.errorId) {
         if (formState.isSuccess) {
             showNameEditDialog = false
             showAisleEditDialog = false
             showStockEditDialog = false
-            viewModel.resetAddAisleState()
+            editViewModel.resetSuccessState()
+        }
+        formState.errorId?.let { errorResId ->
+            detailViewModel.setErrorMessage(errorResId)
+            editViewModel.resetSuccessState()
         }
     }
 
-    when (val state = uiState) {
+    when (val state = detailState) {
         MedicineDetailState.Loading -> {
             LoadingScreen()
         }
@@ -103,7 +108,7 @@ fun MedicineDetailScreen(
                         } else null,
                         onDismiss = { showNameEditDialog = false },
                         onConfirm = { newName ->
-                            viewModel.onNameChange(newName)
+                            editViewModel.onSaveName(newName)
                         },
                     )
                 }
@@ -124,7 +129,7 @@ fun MedicineDetailScreen(
                         } else null,
                         onDismiss = { showAisleEditDialog = false },
                         onConfirm = { newAisle ->
-                            viewModel.onAisleChange(newAisle)
+                            editViewModel.onSaveAisle(newAisle)
                         },
                     )
                 }
@@ -143,7 +148,7 @@ fun MedicineDetailScreen(
                         } else null,
                         onDismiss = { showStockEditDialog = false },
                         onConfirm = { newStock ->
-                            viewModel.onStockChange(newStock)
+                            editViewModel.onSaveStock(newStock)
                         },
                     )
                 }
@@ -152,13 +157,13 @@ fun MedicineDetailScreen(
                     ConfirmationDialog(
                         title = stringResource(R.string.deletion_confirmation),
                         text = stringResource(
-                            R.string.please_confirm_the_deletion_of_medicine,
+                            R.string.please_confirm_the_deletion_of_,
                             state.medicine.name
                         ),
                         onDismissRequest = { showDeleteConfirmationDialog = false },
                         onDismissClick = { showDeleteConfirmationDialog = false },
                         onConfirmClick = {
-                            viewModel.onArchiveClick()
+                            detailViewModel.onArchiveClick()
                             onBackClick()
                         },
                     )
@@ -169,15 +174,15 @@ fun MedicineDetailScreen(
         MedicineDetailState.MedicineNotFound -> {
             ErrorScreen(
                 errorMessage = R.string.no_medicine_found,
-                isRetryEnabled = false,
-                onRetry = {},
+                isBackEnabled = true,
+                onBack = onBackClick,
             )
         }
         is MedicineDetailState.Error -> {
             ErrorScreen(
-                errorMessage = state.message,
-                isRetryEnabled = false,
-                onRetry = {},
+                errorMessage = state.messageId,
+                isBackEnabled = true,
+                onBack = onBackClick,
             )
         }
     }

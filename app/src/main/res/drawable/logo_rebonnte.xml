@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="45">
+        <!-- Teal Half (Top) -->
+        <path
+            android:fillColor="#006B60"
+            android:pathData="M36,54 L36,32 A18,18 0 0,1 72,32 L72,54 Z" />
+        <!-- White Half (Bottom) -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M72,54 L72,76 A18,18 0 0,1 36,76 L36,54 Z" />
+        <!-- Pill Outline -->
+        <path
+            android:strokeColor="#005048"
+            android:strokeWidth="1"
+            android:pathData="M36,32 A18,18 0 0,1 72,32 L72,76 A18,18 0 0,1 36,76 Z" />
+        <!-- Integrated + sign (White on Teal half) -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M52,26 L56,26 L56,42 L52,42 Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M46,32 L62,32 L62,36 L46,36 Z" />
+    </group>
+</vector>

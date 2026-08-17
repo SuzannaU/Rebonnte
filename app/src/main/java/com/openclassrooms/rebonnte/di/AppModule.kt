@@ -26,6 +26,7 @@ import com.openclassrooms.rebonnte.domain.useCase.AddAisleUseCase
 import com.openclassrooms.rebonnte.domain.useCase.AddMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.ArchiveMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.CheckUserExistsUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetAislesUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetHistoriesByMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
@@ -33,6 +34,7 @@ import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesByAisleUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesOrderedByUseCase
 import com.openclassrooms.rebonnte.domain.useCase.GetUsernameByIdUseCase
 import com.openclassrooms.rebonnte.domain.useCase.LogOutUseCase
+import com.openclassrooms.rebonnte.domain.useCase.SaveUserToDbUseCase
 import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
 import com.openclassrooms.rebonnte.ui.DefaultDispatcherProvider
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
@@ -40,6 +42,7 @@ import com.openclassrooms.rebonnte.ui.addMedicine.AddMedicineViewModel
 import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailViewModel
 import com.openclassrooms.rebonnte.ui.aisleList.AisleListViewModel
 import com.openclassrooms.rebonnte.ui.main.MainViewModel
+import com.openclassrooms.rebonnte.ui.medicineDetail.EditMedicineViewModel
 import com.openclassrooms.rebonnte.ui.medicineDetail.MedicineDetailViewModel
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineListViewModel
 import org.koin.core.module.dsl.viewModel
@@ -49,12 +52,14 @@ val appModule = module {
 
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
 
-    // Disabling of offline persistence to ensure displayed data are always up-to-date and server synced
-    single<FirebaseFirestore> { FirebaseFirestore.getInstance().apply {
-        firestoreSettings = firestoreSettings {
-            setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
+    // Disabling of offline persistence to ensure displayed data are always up-to-date and server-synced
+    single<FirebaseFirestore> {
+        FirebaseFirestore.getInstance().apply {
+            firestoreSettings = firestoreSettings {
+                setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
+            }
         }
-    } }
+    }
 
     single<AuthService> { FirebaseAuthService(get()) }
     single<UserDataSource> { UserFirestoreDataSource(get()) }
@@ -73,19 +78,22 @@ val appModule = module {
     factory<AddMedicineUseCase> { AddMedicineUseCase(get(), get()) }
     factory<ArchiveMedicineUseCase> { ArchiveMedicineUseCase(get()) }
     factory<CheckAisleExistsUseCase> { CheckAisleExistsUseCase(get()) }
+    factory<CheckUserExistsUseCase> { CheckUserExistsUseCase(get()) }
     factory<GetAislesUseCase> { GetAislesUseCase(get()) }
     factory<GetHistoriesByMedicineUseCase> { GetHistoriesByMedicineUseCase(get()) }
     factory<GetMedicineByIdUseCase> { GetMedicineByIdUseCase(get()) }
-    factory<GetMedicinesByAisleUseCase> { GetMedicinesByAisleUseCase(get())}
+    factory<GetMedicinesByAisleUseCase> { GetMedicinesByAisleUseCase(get()) }
     factory<GetMedicinesOrderedByUseCase> { GetMedicinesOrderedByUseCase(get()) }
     factory<GetUsernameByIdUseCase> { GetUsernameByIdUseCase(get()) }
     factory<LogOutUseCase> { LogOutUseCase(get()) }
+    factory<SaveUserToDbUseCase> { SaveUserToDbUseCase(get()) }
     factory<UpdateMedicineUseCase> { UpdateMedicineUseCase(get(), get()) }
 
-    viewModel { MainViewModel(get(), get(), get()) }
-    viewModel { AisleDetailViewModel(get(), get(),get()) }
-    viewModel { AisleListViewModel(get(),get(), get(), get(), get()) }
-    viewModel { MedicineDetailViewModel(get(), get(), get(),get(), get(),get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get()) }
+    viewModel { AisleDetailViewModel(get(), get(), get()) }
+    viewModel { AisleListViewModel(get(), get(), get(), get(), get()) }
+    viewModel { MedicineDetailViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { EditMedicineViewModel(get(), get(), get(), get(), get()) }
     viewModel { MedicineListViewModel(get(), get()) }
     viewModel { AddMedicineViewModel(get(), get(), get(), get()) }
 }
