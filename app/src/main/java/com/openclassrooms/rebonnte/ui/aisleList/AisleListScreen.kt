@@ -32,7 +32,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
@@ -137,12 +140,18 @@ private fun AisleListContent(
     onAddAisleClick: () -> Unit,
     onSignOutClick: () -> Unit,
 ) {
+    val screenTitle = stringResource(R.string.aisles)
     Scaffold(
+        modifier = Modifier.semantics {
+            isTraversalGroup = true
+            paneTitle = screenTitle
+        },
         topBar = {
             TopAppBar(
+                modifier = Modifier.semantics { traversalIndex = 1f },
                 title = {
                     Text(
-                        text = stringResource(R.string.aisles),
+                        text = screenTitle,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.semantics { heading() },
                     )
@@ -164,14 +173,22 @@ private fun AisleListContent(
             )
         },
         bottomBar = {
-            BottomNavigationBar(
-                currentRoute = AISLE_LIST_ROUTE,
-                onAislesClick = {},
-                onMedicinesClick = onMedicinesClick,
-            )
+            Box(
+                Modifier.semantics {
+                    isTraversalGroup = true
+                    traversalIndex = 2f
+                },
+            ) {
+                BottomNavigationBar(
+                    currentRoute = AISLE_LIST_ROUTE,
+                    onAislesClick = {},
+                    onMedicinesClick = onMedicinesClick,
+                )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
+                modifier = Modifier.semantics { traversalIndex = 3f },
                 onClick = onAddAisleClick
             ) {
                 Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_aisle))
@@ -182,6 +199,10 @@ private fun AisleListContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .semantics {
+                    isTraversalGroup = true
+                    traversalIndex = 4f
+                },
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()

@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.FontWeight
@@ -111,13 +112,19 @@ private fun MedicineListContent(
     onAislesClick: () -> Unit,
     onAddMedicineClick: () -> Unit,
 ) {
+    val screenTitle = stringResource(R.string.medicines)
     Scaffold(
+        modifier = Modifier.semantics {
+            isTraversalGroup = true
+            paneTitle = screenTitle
+        },
         topBar = {
             Column {
                 TopAppBar(
+                    modifier = Modifier.semantics { traversalIndex = 1f },
                     title = {
                         Text(
-                            text = stringResource(R.string.medicines),
+                            text = screenTitle,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.semantics { heading() },
                         )
@@ -151,14 +158,22 @@ private fun MedicineListContent(
             }
         },
         bottomBar = {
-            BottomNavigationBar(
-                currentRoute = MEDICINE_LIST_ROUTE,
-                onAislesClick = onAislesClick,
-                onMedicinesClick = {},
-            )
+            Box(
+                Modifier.semantics {
+                    isTraversalGroup = true
+                    traversalIndex = 2f
+                },
+            ) {
+                BottomNavigationBar(
+                    currentRoute = MEDICINE_LIST_ROUTE,
+                    onAislesClick = onAislesClick,
+                    onMedicinesClick = {},
+                )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
+                modifier = Modifier.semantics { traversalIndex = 3f },
                 onClick = onAddMedicineClick
             ) {
                 Icon(
@@ -173,18 +188,25 @@ private fun MedicineListContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .semantics {
+                    isTraversalGroup = true
+                    traversalIndex = 4f
+                },
         ) {
             CustomSearchBar(
                 query = searchQuery,
                 onQueryChange = { onSearchQueryChange(it) },
                 onSearch = { onSearchQueryChange(it) },
                 placeholder = stringResource(R.string.search),
+                modifier = Modifier
+                    .semantics { traversalIndex = 1f },
             )
 
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .semantics { traversalIndex = 2f },
                 contentAlignment = Alignment.Center
             ) {
                 when {
@@ -267,13 +289,11 @@ private fun CustomSearchBar(
     Box(
         modifier
             .fillMaxWidth()
-            .semantics { isTraversalGroup = true }
             .padding(horizontal = 16.dp)
     ) {
         SearchBar(
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .semantics { traversalIndex = 0f },
+                .align(Alignment.TopCenter),
             windowInsets = WindowInsets(0.dp),
             inputField = {
                 SearchBarDefaults.InputField(
