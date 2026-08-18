@@ -1,6 +1,5 @@
 package com.openclassrooms.rebonnte.domain.useCase
 
-import com.openclassrooms.rebonnte.domain.exception.DataValidationException
 import com.openclassrooms.rebonnte.domain.model.AuthUser
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.UpdatedField
