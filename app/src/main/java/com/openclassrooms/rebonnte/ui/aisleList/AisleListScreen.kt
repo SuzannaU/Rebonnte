@@ -31,6 +31,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
@@ -142,6 +144,7 @@ private fun AisleListContent(
                     Text(
                         text = stringResource(R.string.aisles),
                         fontWeight = FontWeight.Bold,
+                        modifier = Modifier.semantics { heading() },
                     )
                 },
                 actions = {
@@ -199,14 +202,20 @@ private fun AisleItem(aisle: AisleUi, onAisleClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onAisleClick() }
-            .padding(vertical = 12.dp, horizontal = 32.dp),
+            .clickable(
+                onClickLabel = stringResource(
+                    R.string.navigate_to_aisle_number_n,
+                    aisle.number
+                )
+            ) { onAisleClick() }
+            .padding(vertical = 12.dp, horizontal = 32.dp)
+            .semantics(mergeDescendants = true) {},
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = aisle.number, style = MaterialTheme.typography.bodyLarge)
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = stringResource(R.string.navigate_to_aisle_number_n, aisle.number),
+            contentDescription = null,
         )
     }
 }

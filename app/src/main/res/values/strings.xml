@@ -6,16 +6,24 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="search">Search</string>
+    <string name="clear_search">Clear search</string>
     <string name="no_result_found">No result found</string>
     <string name="logout">Sign out</string>
     <string name="unknown_user">Unknown User</string>
     <string name="try_again">Try again</string>
     <string name="back">Back</string>
+    <string name="content_is_loading">Content is loading</string>
     <string name="navigate_back">Navigate back</string>
+    <string name="archive_confirmation">Archive Confirmation</string>
     <string name="deletion_confirmation">Deletion Confirmation</string>
+    <string name="please_confirm_the_archiving_of_">Please confirm the archiving of %1$s</string>
     <string name="please_confirm_the_deletion_of_">Please confirm the deletion of %1$s</string>
     <string name="name">Name</string>
+    <string name="name_">"Name: "</string>
+    <string name="details">Details</string>
     <string name="creation">Creation</string>
+    <string name="archived">Archived</string>
+    <string name="archive_">Archive %1$s</string>
 
     <!--    Errors    -->
     <string name="error_title">Error</string>
@@ -51,8 +59,14 @@
     <string name="stock_n">Stock: %1$s</string>
     <string name="aisle_n_stock_n">Aisle # %1$s, Stock: %2$s</string>
     <string name="navigate_to_medicine_name">Navigate to %1$s</string>
+    <string name="localisation_aisle">Localisation: Aisle #</string>
+    <string name="current_stock_">"Current Stock: "</string>
     <string name="edit_stock">Edit Stock</string>
     <string name="stock">Stock</string>
+    <string name="history">History</string>
+    <string name="user_">User: %1$s</string>
+    <string name="date_">Date: %1$s</string>
+    <string name="details_">Details: %1$s</string>
     <string name="no_medicine_found">No medicine found</string>
     <string name="history_no_details">No details available</string>
     <string name="history_update_format">%1$s changed from %2$s to %3$s</string>
@@ -68,6 +82,5 @@
     <string name="edit_aisle_number">Edit Aisle Number</string>
     <string name="no_aisles_found">No Aisles found</string>
     <string name="navigate_to_aisles_list">navigate to aisles list</string>
-    <string name="archived">Archived</string>
 
 </resources>

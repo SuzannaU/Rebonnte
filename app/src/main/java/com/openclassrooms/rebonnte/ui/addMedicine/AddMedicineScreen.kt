@@ -23,6 +23,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
@@ -91,7 +95,12 @@ private fun AddMedicineContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.add_medicine)) },
+                title = {
+                    Text(
+                        stringResource(R.string.add_medicine),
+                        modifier = Modifier.semantics { heading() }
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -119,9 +128,15 @@ private fun AddMedicineContent(
                 isError = formState.formErrors.nameError || formState.formErrors.nameLengthError,
                 supportingText = {
                     if (formState.formErrors.nameError) {
-                        Text(stringResource(R.string.error_name_empty))
+                        Text(
+                            text = stringResource(R.string.error_name_empty),
+                            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite }
+                        )
                     } else if (formState.formErrors.nameLengthError) {
-                        Text(stringResource(R.string.error_name_too_long))
+                        Text(
+                            text = stringResource(R.string.error_name_too_long),
+                            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite }
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -137,11 +152,20 @@ private fun AddMedicineContent(
                 isError = formState.formErrors.aisleDigitError || formState.formErrors.aisleDoesNotExistError || formState.formErrors.aisleVerificationError,
                 supportingText = {
                     if (formState.formErrors.aisleDigitError) {
-                        Text(stringResource(R.string.error_aisle_invalid))
+                        Text(
+                            text = stringResource(R.string.error_aisle_invalid),
+                            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite }
+                        )
                     } else if (formState.formErrors.aisleDoesNotExistError) {
-                        Text(stringResource(R.string.error_aisle_not_exists))
+                        Text(
+                            text = stringResource(R.string.error_aisle_not_exists),
+                            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite }
+                        )
                     } else if (formState.formErrors.aisleVerificationError) {
-                        Text(stringResource(R.string.error_aisle_unverifiable))
+                        Text(
+                            text = stringResource(R.string.error_aisle_unverifiable),
+                            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite }
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -157,7 +181,10 @@ private fun AddMedicineContent(
                 isError = formState.formErrors.stockDigitError,
                 supportingText = {
                     if (formState.formErrors.stockDigitError) {
-                        Text(stringResource(R.string.error_stock_invalid))
+                        Text(
+                            text = stringResource(R.string.error_stock_invalid),
+                            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite }
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

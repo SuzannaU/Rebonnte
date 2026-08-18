@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -37,6 +36,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
@@ -66,7 +67,7 @@ fun MedicineDetailScreen(
     var showNameEditDialog by rememberSaveable { mutableStateOf(false) }
     var showAisleEditDialog by rememberSaveable { mutableStateOf(false) }
     var showStockEditDialog by rememberSaveable { mutableStateOf(false) }
-    var showDeleteConfirmationDialog by rememberSaveable { mutableStateOf(false) }
+    var showArchiveConfirmationDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(formState.isSuccess, formState.errorId) {
         if (formState.isSuccess) {
@@ -94,7 +95,7 @@ fun MedicineDetailScreen(
                 onEditAisleClick = { showAisleEditDialog = true },
                 onEditStockClick = { showStockEditDialog = true },
                 onBackClick = onBackClick,
-                onDeleteClick = { showDeleteConfirmationDialog = true },
+                onDeleteClick = { showArchiveConfirmationDialog = true },
             )
             when {
                 showNameEditDialog -> {
@@ -155,15 +156,15 @@ fun MedicineDetailScreen(
                     )
                 }
 
-                showDeleteConfirmationDialog -> {
+                showArchiveConfirmationDialog -> {
                     ConfirmationDialog(
-                        title = stringResource(R.string.deletion_confirmation),
+                        title = stringResource(R.string.archive_confirmation),
                         text = stringResource(
-                            R.string.please_confirm_the_deletion_of_,
+                            R.string.please_confirm_the_archiving_of_,
                             state.medicine.name
                         ),
-                        onDismissRequest = { showDeleteConfirmationDialog = false },
-                        onDismissClick = { showDeleteConfirmationDialog = false },
+                        onDismissRequest = { showArchiveConfirmationDialog = false },
+                        onDismissClick = { showArchiveConfirmationDialog = false },
                         onConfirmClick = {
                             detailViewModel.onArchiveClick()
                             onBackClick()
@@ -208,7 +209,8 @@ private fun MedicineDetailContent(
                 title = {
                     Text(
                         text = medicine.name,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.semantics { heading() },
                     )
                 },
                 navigationIcon = {
@@ -223,7 +225,7 @@ private fun MedicineDetailContent(
                     IconButton(onClick = onDeleteClick) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete ${medicine.name}"
+                            contentDescription = stringResource(R.string.archive_, medicine.name)
                         )
                     }
                 }
@@ -235,38 +237,48 @@ private fun MedicineDetailContent(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
                 item {
-                    Text(text = "Details", style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        text = stringResource(R.string.details),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.semantics { heading() }
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     DetailField(
-                        titleText = "Name: ",
+                        titleText = stringResource(R.string.name_),
                         value = medicine.name,
-                        contentDescription = "Edit name",
+                        contentDescription = stringResource(R.string.edit_name),
                         onEditClick = onEditNameClick,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
                     DetailField(
-                        titleText = "Localisation: Aisle #",
+                        titleText = stringResource(R.string.localisation_aisle),
                         value = medicine.aisleNumber,
-                        contentDescription = "Edit aisle number",
+                        contentDescription = stringResource(R.string.edit_aisle_number),
                         onEditClick = onEditAisleClick,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
                     DetailField(
-                        titleText = "Current Stock: ",
+                        titleText = stringResource(R.string.current_stock_),
                         value = medicine.currentStock,
-                        contentDescription = "Edit stock",
+                        contentDescription = stringResource(R.string.edit_stock),
                         onEditClick = onEditStockClick,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = "History", style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        text = stringResource(R.string.history),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.semantics { heading() },
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 items(histories) { history ->
@@ -287,6 +299,7 @@ private fun DetailField(
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = Modifier.semantics(mergeDescendants = true){},
     ) {
         Row(
             modifier = Modifier
@@ -328,13 +341,14 @@ private fun HistoryItem(history: HistoryUi) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .semantics(mergeDescendants = true){},
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "User: ${history.username.asString()}")
-            Text(text = "Date: ${history.dateTime}")
-            Text(text = "Details: ${history.details.asString()}")
+            Text(text = stringResource(R.string.user_, history.username.asString()))
+            Text(text = stringResource(R.string.date_, history.dateTime))
+            Text(text = stringResource(R.string.details_, history.details.asString()))
         }
     }
 }

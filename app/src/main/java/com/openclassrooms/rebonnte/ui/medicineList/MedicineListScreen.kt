@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
@@ -32,7 +33,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
@@ -116,6 +119,7 @@ private fun MedicineListContent(
                         Text(
                             text = stringResource(R.string.medicines),
                             fontWeight = FontWeight.Bold,
+                            modifier = Modifier.semantics { heading() },
                         )
                     },
                     actions = {
@@ -259,6 +263,7 @@ private fun CustomSearchBar(
     modifier: Modifier = Modifier,
     placeholder: String,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     Box(
         modifier
             .fillMaxWidth()
@@ -286,6 +291,19 @@ private fun CustomSearchBar(
                             contentDescription = stringResource(R.string.search)
                         )
                     },
+                    trailingIcon = {
+                        if (query.isNotEmpty()) {
+                            IconButton(onClick = {
+                                onQueryChange("")
+                                keyboardController?.hide()
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = stringResource(R.string.clear_search)
+                                )
+                            }
+                        }
+                    }
                 )
             },
             expanded = false,
