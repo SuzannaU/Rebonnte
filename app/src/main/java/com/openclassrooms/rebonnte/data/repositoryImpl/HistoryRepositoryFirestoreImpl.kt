@@ -11,7 +11,7 @@ class HistoryRepositoryFirestoreImpl(
     private val historyDataSource: HistoryDataSource,
 ) : HistoryRepository {
 
-    // Writing operations for Histories are done by the MedicineRepository because a History is tied to its Medicine
+    // Writing operations for Histories are done by the MedicineRepository because a History writing is tied to its Medicine
 
     override fun getHistoriesByMedicineId(medicineId: String): Flow<List<History>> {
         return historyDataSource.getHistoriesByMedicineId(medicineId).map { historyDtos ->

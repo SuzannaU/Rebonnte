@@ -24,7 +24,7 @@ class AisleRepositoryFirestoreImpl(
         return aisleDataSource.getAisles().map { aisleDtos ->
             aisleDtos
                 .map { it.toDomain() }
-                .sortedBy { it.number.toIntOrNull() ?: Int.MAX_VALUE }
+                .sortedBy { it.number.toIntOrNull() ?: 0 }
         }
     }
 
