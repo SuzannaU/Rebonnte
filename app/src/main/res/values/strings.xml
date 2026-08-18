@@ -68,5 +68,6 @@
     <string name="edit_aisle_number">Edit Aisle Number</string>
     <string name="no_aisles_found">No Aisles found</string>
     <string name="navigate_to_aisles_list">navigate to aisles list</string>
+    <string name="archived">Archived</string>
 
 </resources>

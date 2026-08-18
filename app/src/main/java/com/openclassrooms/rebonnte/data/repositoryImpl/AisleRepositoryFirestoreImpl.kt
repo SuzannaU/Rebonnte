@@ -1,8 +1,8 @@
 package com.openclassrooms.rebonnte.data.repositoryImpl
 
 import com.openclassrooms.rebonnte.data.datasource.AisleDataSource
-import com.openclassrooms.rebonnte.data.dto.toDomain
-import com.openclassrooms.rebonnte.data.dto.toDto
+import com.openclassrooms.rebonnte.data.util.toDomain
+import com.openclassrooms.rebonnte.data.util.toDto
 import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.repository.AisleRepository
 import com.openclassrooms.rebonnte.domain.util.DataResult

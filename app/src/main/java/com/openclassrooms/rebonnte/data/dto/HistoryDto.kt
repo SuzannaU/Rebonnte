@@ -12,6 +12,7 @@ data class HistoryDto(
     val userId: String = "",
     val dateTime: Timestamp = Timestamp.now(),
     val creation: Boolean = false,
+    val archiving: Boolean = false,
     val updatedField: UpdatedFieldDto? = null,
 ) : Serializable
 

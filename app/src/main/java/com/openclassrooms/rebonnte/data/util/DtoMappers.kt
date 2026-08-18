@@ -1,6 +1,11 @@
-package com.openclassrooms.rebonnte.data.dto
+package com.openclassrooms.rebonnte.data.util
 
 import com.google.firebase.Timestamp
+import com.openclassrooms.rebonnte.data.dto.AisleDto
+import com.openclassrooms.rebonnte.data.dto.HistoryDto
+import com.openclassrooms.rebonnte.data.dto.MedicineDto
+import com.openclassrooms.rebonnte.data.dto.UpdatedFieldDto
+import com.openclassrooms.rebonnte.data.dto.UserDto
 import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
@@ -62,6 +67,7 @@ fun History.toDto(): HistoryDto {
         userId = userId,
         dateTime = Timestamp(dateTime),
         creation = isCreation,
+        archiving = isArchiving,
         updatedField = updatedField?.toDto(),
     )
 }
@@ -73,6 +79,7 @@ fun HistoryDto.toDomain(): History {
         userId = userId,
         dateTime = dateTime.toDate(),
         isCreation = creation,
+        isArchiving = archiving,
         updatedField = updatedField?.toDomain(),
     )
 }

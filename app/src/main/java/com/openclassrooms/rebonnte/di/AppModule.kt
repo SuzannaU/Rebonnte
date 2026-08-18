@@ -76,7 +76,7 @@ val appModule = module {
 
     factory<AddAisleUseCase> { AddAisleUseCase(get()) }
     factory<AddMedicineUseCase> { AddMedicineUseCase(get(), get()) }
-    factory<ArchiveMedicineUseCase> { ArchiveMedicineUseCase(get()) }
+    factory<ArchiveMedicineUseCase> { ArchiveMedicineUseCase(get(), get()) }
     factory<CheckAisleExistsUseCase> { CheckAisleExistsUseCase(get()) }
     factory<CheckUserExistsUseCase> { CheckUserExistsUseCase(get()) }
     factory<GetAislesUseCase> { GetAislesUseCase(get()) }

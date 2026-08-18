@@ -3,7 +3,6 @@ package com.openclassrooms.rebonnte.domain.repository
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
-import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import kotlinx.coroutines.flow.Flow
 
@@ -21,5 +20,8 @@ interface MedicineRepository {
         history: History,
     ): DataResult<Unit>
 
-    suspend fun archiveMedicineById(medicineId: String): DataResult<Unit>
+    suspend fun archiveMedicineWithHistory(
+        medicineId: String,
+        history: History
+    ): DataResult<Unit>
 }

@@ -8,6 +8,7 @@ import com.google.firebase.firestore.dataObjects
 import com.openclassrooms.rebonnte.data.dto.HistoryDto
 import com.openclassrooms.rebonnte.data.dto.MedicineDto
 import com.openclassrooms.rebonnte.domain.exception.DataValidationException
+import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
 import kotlinx.coroutines.flow.Flow
@@ -126,10 +127,34 @@ class MedicineFirestoreDataSource(
         }.await()
     }
 
-    override suspend fun archiveMedicineById(medicineId: String) {
-        val docRef = firestore
+    override suspend fun archiveMedicineWithHistory(
+        medicineId: String,
+        history: HistoryDto,
+    ) {
+        val medicineDocRef = firestore
             .collection(MEDICINE_COLLECTION)
             .document(medicineId)
-        docRef.update(ARCHIVED_FIELD, true)
+
+        val updatedData: Map<String, Boolean> = hashMapOf(ARCHIVED_FIELD to true)
+
+        firestore.runTransaction { transaction ->
+            val historyDocRef = firestore
+                .collection(HISTORY_COLLECTION)
+                .document()
+            val historyDocument = transaction.get(historyDocRef)
+            if (historyDocument.exists()) {
+                throw FirebaseFirestoreException(
+                    "History doc ref already exists",
+                    FirebaseFirestoreException.Code.ALREADY_EXISTS
+                )
+            }
+            val historyToSave = history.copy(
+                id = historyDocRef.id,
+                dateTime = Timestamp.now()
+            )
+
+            transaction.update(medicineDocRef, updatedData)
+            transaction.set(historyDocRef, historyToSave)
+        }.await()
     }
 }

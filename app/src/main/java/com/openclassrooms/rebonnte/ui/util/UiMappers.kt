@@ -36,6 +36,7 @@ fun History.toUi(username: UiText): HistoryUi {
         dateTime = this.dateTime.formatToString(),
         details = when {
             isCreation -> UiText.StringResource(R.string.creation)
+            isArchiving -> UiText.StringResource(R.string.archived)
             updatedField == null ->
                 UiText.StringResource(R.string.history_no_details)
 

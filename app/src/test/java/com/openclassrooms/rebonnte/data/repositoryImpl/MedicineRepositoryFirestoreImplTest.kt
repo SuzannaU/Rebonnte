@@ -183,22 +183,24 @@ class MedicineRepositoryFirestoreImplTest {
     @Test
     fun `archiveMedicineById returns Success when dataSource succeeds`() = runTest {
         val medicineId = "1"
-        coEvery { medicineDataSource.archiveMedicineById(any()) } returns Unit
+        val history = History(medicineId = "1", userId = "u1", dateTime = Date(), isArchiving = true)
+        coEvery { medicineDataSource.archiveMedicineWithHistory(any(), any()) } returns Unit
 
-        val result = medicineRepository.archiveMedicineById(medicineId)
+        val result = medicineRepository.archiveMedicineWithHistory(medicineId, history)
 
         assertTrue(result is DataResult.Success)
-        coVerify(exactly = 1) { medicineDataSource.archiveMedicineById(medicineId) }
+        coVerify(exactly = 1) { medicineDataSource.archiveMedicineWithHistory(medicineId, any()) }
     }
 
     @Test
     fun `archiveMedicineById returns Failure when dataSource fails`() = runTest {
         val medicineId = "1"
-        coEvery { medicineDataSource.archiveMedicineById(any()) } throws Exception()
+        val history = History(medicineId = "1", userId = "u1", dateTime = Date(), isArchiving = true)
+        coEvery { medicineDataSource.archiveMedicineWithHistory(any(), any()) } throws Exception()
 
-        val result = medicineRepository.archiveMedicineById(medicineId)
+        val result = medicineRepository.archiveMedicineWithHistory(medicineId, history)
 
         assertTrue(result is DataResult.Failure)
-        coVerify(exactly = 1) { medicineDataSource.archiveMedicineById(medicineId) }
+        coVerify(exactly = 1) { medicineDataSource.archiveMedicineWithHistory(medicineId, any()) }
     }
 }

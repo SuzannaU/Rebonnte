@@ -8,6 +8,7 @@ data class History(
     val userId: String,
     val dateTime: Date,
     val isCreation: Boolean = false,
+    val isArchiving: Boolean = false,
     val updatedField: UpdatedField? = null,
 )
 

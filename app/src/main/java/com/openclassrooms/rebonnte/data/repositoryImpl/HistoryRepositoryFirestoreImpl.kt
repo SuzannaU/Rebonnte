@@ -1,7 +1,7 @@
 package com.openclassrooms.rebonnte.data.repositoryImpl
 
 import com.openclassrooms.rebonnte.data.datasource.HistoryDataSource
-import com.openclassrooms.rebonnte.data.dto.toDomain
+import com.openclassrooms.rebonnte.data.util.toDomain
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
 import kotlinx.coroutines.flow.Flow

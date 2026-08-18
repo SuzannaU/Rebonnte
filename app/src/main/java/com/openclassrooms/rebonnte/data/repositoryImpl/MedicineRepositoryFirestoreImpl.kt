@@ -1,9 +1,8 @@
 package com.openclassrooms.rebonnte.data.repositoryImpl
 
 import com.openclassrooms.rebonnte.data.datasource.MedicineDataSource
-import com.openclassrooms.rebonnte.data.dto.toDomain
-import com.openclassrooms.rebonnte.data.dto.toDto
-import com.openclassrooms.rebonnte.domain.exception.DatabaseException
+import com.openclassrooms.rebonnte.data.util.toDomain
+import com.openclassrooms.rebonnte.data.util.toDto
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
@@ -63,9 +62,15 @@ class MedicineRepositoryFirestoreImpl(
         }
     }
 
-    override suspend fun archiveMedicineById(medicineId: String): DataResult<Unit> {
+    override suspend fun archiveMedicineWithHistory(
+        medicineId: String,
+        history: History
+    ): DataResult<Unit> {
         return wrapDataResult {
-            medicineDataSource.archiveMedicineById(medicineId)
+            medicineDataSource.archiveMedicineWithHistory(
+                medicineId = medicineId,
+                history = history.toDto()
+            )
         }
     }
 }
