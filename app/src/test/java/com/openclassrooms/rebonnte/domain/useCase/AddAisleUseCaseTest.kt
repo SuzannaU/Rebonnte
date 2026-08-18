@@ -2,6 +2,7 @@ package com.openclassrooms.rebonnte.domain.useCase
 
 import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.repository.AisleRepository
+import com.openclassrooms.rebonnte.domain.useCase.aisle.AddAisleUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify

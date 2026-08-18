@@ -1,4 +1,4 @@
-package com.openclassrooms.rebonnte.domain.useCase
+package com.openclassrooms.rebonnte.domain.useCase.user
 
 import com.openclassrooms.rebonnte.domain.repository.UserRepository
 import com.openclassrooms.rebonnte.domain.util.DataResult

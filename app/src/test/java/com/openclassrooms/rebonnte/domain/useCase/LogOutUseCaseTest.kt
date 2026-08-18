@@ -1,6 +1,7 @@
 package com.openclassrooms.rebonnte.domain.useCase
 
 import com.openclassrooms.rebonnte.domain.service.AuthService
+import com.openclassrooms.rebonnte.domain.useCase.user.LogOutUseCase
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

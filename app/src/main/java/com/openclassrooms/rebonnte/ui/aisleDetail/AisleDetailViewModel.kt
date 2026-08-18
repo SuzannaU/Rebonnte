@@ -3,7 +3,7 @@ package com.openclassrooms.rebonnte.ui.aisleDetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesByAisleUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesByAisleUseCase
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.util.toUi
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId

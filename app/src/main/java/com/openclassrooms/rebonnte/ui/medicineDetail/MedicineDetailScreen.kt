@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -178,6 +180,7 @@ fun MedicineDetailScreen(
                 onBack = onBackClick,
             )
         }
+
         is MedicineDetailState.Error -> {
             ErrorScreen(
                 errorMessage = state.messageId,
@@ -232,43 +235,42 @@ private fun MedicineDetailContent(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                Text(text = "Details", style = MaterialTheme.typography.titleLarge)
-                Spacer(modifier = Modifier.height(8.dp))
-                DetailField(
-                    titleText = "Name: ",
-                    value = medicine.name,
-                    contentDescription = "Edit name",
-                    onEditClick = onEditNameClick,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+            LazyColumn(modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)) {
+                item {
+                    Text(text = "Details", style = MaterialTheme.typography.titleLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    DetailField(
+                        titleText = "Name: ",
+                        value = medicine.name,
+                        contentDescription = "Edit name",
+                        onEditClick = onEditNameClick,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                DetailField(
-                    titleText = "Localisation: Aisle #",
-                    value = medicine.aisleNumber,
-                    contentDescription = "Edit aisle number",
-                    onEditClick = onEditAisleClick,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                    DetailField(
+                        titleText = "Localisation: Aisle #",
+                        value = medicine.aisleNumber,
+                        contentDescription = "Edit aisle number",
+                        onEditClick = onEditAisleClick,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                DetailField(
-                    titleText = "Current Stock: ",
-                    value = medicine.currentStock,
-                    contentDescription = "Edit stock",
-                    onEditClick = onEditStockClick,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                    DetailField(
+                        titleText = "Current Stock: ",
+                        value = medicine.currentStock,
+                        contentDescription = "Edit stock",
+                        onEditClick = onEditStockClick,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "History", style = MaterialTheme.typography.titleLarge)
-                Spacer(modifier = Modifier.height(8.dp))
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(histories) { history ->
-                        HistoryItem(history = history)
-                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = "History", style = MaterialTheme.typography.titleLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                items(histories) { history ->
+                    HistoryItem(history = history)
                 }
             }
         }
@@ -344,13 +346,57 @@ private fun MedicineDetailContentPreview() {
         MedicineDetailContent(
             medicine = MedicineUi(
                 "1",
-                "Parsjkfjlkjslfkjdlkfjlsdkjflskjacetamol",
+                "Paracetamol",
                 "1",
                 "10"
             ),
             histories = listOf(
-                HistoryUi("1", UiText.RawString("user1"), "2026-08-01 10:00", UiText.RawString("Creation")),
-                HistoryUi("1", UiText.RawString("user2"), "2026-08-02 11:00", UiText.RawString("Stock changed from 10 to 5"))
+                HistoryUi(
+                    "1",
+                    UiText.RawString("user1"),
+                    "2026-08-01 10:00",
+                    UiText.RawString("Creation")
+                ),
+                HistoryUi(
+                    "1",
+                    UiText.RawString("user2"),
+                    "2026-08-02 11:00",
+                    UiText.RawString("Stock changed from 10 to 5")
+                )
+            ),
+            onEditNameClick = {},
+            onEditAisleClick = {},
+            onEditStockClick = {},
+            onBackClick = {},
+            onDeleteClick = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun MedicineDetailContentDarkPreview() {
+    RebonnteTheme {
+        MedicineDetailContent(
+            medicine = MedicineUi(
+                "1",
+                "Paracetamol",
+                "1",
+                "10"
+            ),
+            histories = listOf(
+                HistoryUi(
+                    "1",
+                    UiText.RawString("user1"),
+                    "2026-08-01 10:00",
+                    UiText.RawString("Creation")
+                ),
+                HistoryUi(
+                    "1",
+                    UiText.RawString("user2"),
+                    "2026-08-02 11:00",
+                    UiText.RawString("Stock changed from 10 to 5")
+                )
             ),
             onEditNameClick = {},
             onEditAisleClick = {},
@@ -366,7 +412,12 @@ private fun MedicineDetailContentPreview() {
 private fun HistoryItemPreview() {
     RebonnteTheme {
         HistoryItem(
-            history = HistoryUi("1", UiText.RawString("user1"), "2026-08-01 10:00", UiText.RawString("Stock changed from 10 to 5"))
+            history = HistoryUi(
+                "1",
+                UiText.RawString("user1"),
+                "2026-08-01 10:00",
+                UiText.RawString("Stock changed from 10 to 5")
+            )
         )
     }
 }

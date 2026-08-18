@@ -3,7 +3,7 @@ package com.openclassrooms.rebonnte.ui
 import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.exception.DatabaseException
 import com.openclassrooms.rebonnte.domain.model.Medicine
-import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesOrderedByUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesOrderedByUseCase
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineListScreenState
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineListViewModel
 import com.openclassrooms.rebonnte.ui.model.SortOption

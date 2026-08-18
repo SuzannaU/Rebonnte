@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.exception.DatabaseException
 import com.openclassrooms.rebonnte.domain.model.Medicine
-import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesByAisleUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesByAisleUseCase
 import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailScreenState
 import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailViewModel
 import io.mockk.coEvery

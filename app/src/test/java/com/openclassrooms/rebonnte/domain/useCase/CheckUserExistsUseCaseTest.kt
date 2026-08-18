@@ -2,6 +2,7 @@ package com.openclassrooms.rebonnte.domain.useCase
 
 import com.openclassrooms.rebonnte.domain.model.User
 import com.openclassrooms.rebonnte.domain.repository.UserRepository
+import com.openclassrooms.rebonnte.domain.useCase.user.CheckUserExistsUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk

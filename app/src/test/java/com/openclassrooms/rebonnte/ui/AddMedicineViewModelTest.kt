@@ -1,8 +1,8 @@
 package com.openclassrooms.rebonnte.ui
 
 import androidx.lifecycle.SavedStateHandle
-import com.openclassrooms.rebonnte.domain.useCase.AddMedicineUseCase
-import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.AddMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.aisle.CheckAisleExistsUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.addMedicine.AddMedicineViewModel
 import com.openclassrooms.rebonnte.ui.addMedicine.SaveState

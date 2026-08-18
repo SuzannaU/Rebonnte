@@ -2,7 +2,7 @@ package com.openclassrooms.rebonnte.ui.medicineList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.rebonnte.domain.useCase.GetMedicinesOrderedByUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesOrderedByUseCase
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.model.SortOption

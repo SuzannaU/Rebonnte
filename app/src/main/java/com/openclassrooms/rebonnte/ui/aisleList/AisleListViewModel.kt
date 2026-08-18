@@ -2,10 +2,10 @@ package com.openclassrooms.rebonnte.ui.aisleList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.rebonnte.domain.useCase.AddAisleUseCase
-import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
-import com.openclassrooms.rebonnte.domain.useCase.GetAislesUseCase
-import com.openclassrooms.rebonnte.domain.useCase.LogOutUseCase
+import com.openclassrooms.rebonnte.domain.useCase.aisle.AddAisleUseCase
+import com.openclassrooms.rebonnte.domain.useCase.aisle.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.aisle.GetAislesUseCase
+import com.openclassrooms.rebonnte.domain.useCase.user.LogOutUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.util.toUi

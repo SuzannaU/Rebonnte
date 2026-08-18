@@ -1,4 +1,4 @@
-package com.openclassrooms.rebonnte.domain.useCase
+package com.openclassrooms.rebonnte.domain.useCase.medicine
 
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption

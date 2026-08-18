@@ -4,6 +4,7 @@ import com.openclassrooms.rebonnte.domain.model.AuthUser
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.service.AuthService
+import com.openclassrooms.rebonnte.domain.useCase.medicine.AddMedicineUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify

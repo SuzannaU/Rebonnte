@@ -5,6 +5,7 @@ import com.openclassrooms.rebonnte.domain.model.UpdatableFields
 import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.service.AuthService
+import com.openclassrooms.rebonnte.domain.useCase.medicine.UpdateMedicineUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify

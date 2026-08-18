@@ -6,9 +6,9 @@ import com.openclassrooms.rebonnte.domain.exception.DatabaseException
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.UpdatableFields
 import com.openclassrooms.rebonnte.domain.model.UpdatedField
-import com.openclassrooms.rebonnte.domain.useCase.CheckAisleExistsUseCase
-import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
-import com.openclassrooms.rebonnte.domain.useCase.UpdateMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.aisle.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicineByIdUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.UpdateMedicineUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.medicineDetail.EditMedicineViewModel
 import io.mockk.coEvery

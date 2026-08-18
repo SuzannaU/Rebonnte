@@ -2,6 +2,7 @@ package com.openclassrooms.rebonnte.domain.useCase
 
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
+import com.openclassrooms.rebonnte.domain.useCase.medicine.GetHistoriesByMedicineUseCase
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

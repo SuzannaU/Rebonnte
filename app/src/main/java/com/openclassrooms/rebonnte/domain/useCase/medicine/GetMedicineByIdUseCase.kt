@@ -1,14 +1,14 @@
-package com.openclassrooms.rebonnte.domain.useCase
+package com.openclassrooms.rebonnte.domain.useCase.medicine
 
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetMedicinesByAisleUseCase(
+class GetMedicineByIdUseCase(
     private val medicineRepository: MedicineRepository,
 ) {
 
-    operator fun invoke(aisleNumber: String): Flow<List<Medicine>> {
-        return medicineRepository.getMedicinesByAisleNumber(aisleNumber)
+    operator fun invoke(medicineId: String) : Flow<Medicine?> {
+        return medicineRepository.getMedicineById(medicineId = medicineId)
     }
 }

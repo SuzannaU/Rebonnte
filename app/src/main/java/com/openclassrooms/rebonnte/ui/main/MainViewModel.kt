@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.User
 import com.openclassrooms.rebonnte.domain.service.AuthService
-import com.openclassrooms.rebonnte.domain.useCase.CheckUserExistsUseCase
-import com.openclassrooms.rebonnte.domain.useCase.SaveUserToDbUseCase
+import com.openclassrooms.rebonnte.domain.useCase.user.CheckUserExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.user.SaveUserToDbUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId

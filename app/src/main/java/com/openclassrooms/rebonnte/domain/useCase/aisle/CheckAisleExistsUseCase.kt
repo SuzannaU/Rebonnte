@@ -1,4 +1,4 @@
-package com.openclassrooms.rebonnte.domain.useCase
+package com.openclassrooms.rebonnte.domain.useCase.aisle
 
 import com.openclassrooms.rebonnte.domain.repository.AisleRepository
 import com.openclassrooms.rebonnte.domain.util.DataResult

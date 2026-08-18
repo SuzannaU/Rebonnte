@@ -1,20 +1,20 @@
-package com.openclassrooms.rebonnte.domain.useCase
+package com.openclassrooms.rebonnte.domain.useCase.medicine
 
 import com.openclassrooms.rebonnte.domain.model.AuthUser
 import com.openclassrooms.rebonnte.domain.model.History
-import com.openclassrooms.rebonnte.domain.model.UpdatedField
+import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.service.AuthService
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.domain.util.wrapDataResult
 import java.util.Calendar
 
-class UpdateMedicineUseCase(
+class AddMedicineUseCase(
     private val medicineRepository: MedicineRepository,
     private val authService: AuthService,
 ) {
 
-    suspend operator fun invoke(medicineId: String, updatedField: UpdatedField): DataResult<Unit> {
+    suspend operator fun invoke(medicine: Medicine): DataResult<Unit> {
 
         val userResult = wrapDataResult {
             authService.getAuthUser()
@@ -25,18 +25,14 @@ class UpdateMedicineUseCase(
                 val user = userResult.data
 
                 val history = History(
-                    medicineId = medicineId,
+                    medicineId = medicine.id,
                     userId = user.uid,
                     dateTime = Calendar.getInstance().time,
-                    updatedField = updatedField,
+                    isCreation = true,
                 )
 
-                return medicineRepository.updateMedicineWithHistory(
-                    medicineId = medicineId,
-                    history = history
-                )
+                return medicineRepository.addMedicineWithHistory(medicine, history)
             }
         }
     }
 }
-

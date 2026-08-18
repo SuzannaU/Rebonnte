@@ -2,8 +2,8 @@ package com.openclassrooms.rebonnte.ui
 
 import com.openclassrooms.rebonnte.domain.model.AuthUser
 import com.openclassrooms.rebonnte.domain.service.AuthService
-import com.openclassrooms.rebonnte.domain.useCase.CheckUserExistsUseCase
-import com.openclassrooms.rebonnte.domain.useCase.SaveUserToDbUseCase
+import com.openclassrooms.rebonnte.domain.useCase.user.CheckUserExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.user.SaveUserToDbUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.main.MainViewModel
 import io.mockk.coEvery

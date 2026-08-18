@@ -6,10 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
-import com.openclassrooms.rebonnte.domain.useCase.ArchiveMedicineUseCase
-import com.openclassrooms.rebonnte.domain.useCase.GetHistoriesByMedicineUseCase
-import com.openclassrooms.rebonnte.domain.useCase.GetMedicineByIdUseCase
-import com.openclassrooms.rebonnte.domain.useCase.GetUsernameByIdUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.ArchiveMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.GetHistoriesByMedicineUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicineByIdUseCase
+import com.openclassrooms.rebonnte.domain.useCase.user.GetUsernameByIdUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.model.HistoryUi
