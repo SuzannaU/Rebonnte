@@ -1,8 +1,10 @@
 name: CI Pull Request
 
 on:
+  push:
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   build-test-quality:
@@ -31,13 +33,8 @@ jobs:
             echo '{"project_info":{"project_number":"0","project_id":"dummy","storage_bucket":"dummy"},"client":[{"client_info":{"mobilesdk_app_id":"0","android_client_info":{"package_name":"com.openclassrooms.rebonnte"}},"api_key":[{"current_key":"dummy"}],"services":{"appinvite_service":{"status":1}}}]}' > app/google-services.json
           fi
 
-      - name: Build and Run Unit Tests
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew testDebugUnitTest jacocoTestReport
-
-      - name: SonarCloud Analysis
+      - name: Build, Run Unit Tests and Sonar Analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar
+        run: ./gradlew testDebugUnitTest jacocoTestReport sonar

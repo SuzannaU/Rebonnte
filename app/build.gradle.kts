@@ -116,7 +116,6 @@ val fileFilter = listOf(
 tasks.register<JacocoReport>("jacocoTestReport") {
     dependsOn(
         "testDebugUnitTest",
-        "connectedDebugAndroidTest"
     )
 
     reports {
