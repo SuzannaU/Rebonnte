@@ -1,11 +1,13 @@
 package com.openclassrooms.rebonnte.ui.aisleList
 
+import androidx.compose.runtime.Immutable
 import com.openclassrooms.rebonnte.ui.model.AisleUi
 
 sealed class AisleListScreenState {
     object Loading : AisleListScreenState()
     object NoAisleFound : AisleListScreenState()
 
+    @Immutable
     data class AislesFound(
         val aisles : List<AisleUi>
     ) : AisleListScreenState()

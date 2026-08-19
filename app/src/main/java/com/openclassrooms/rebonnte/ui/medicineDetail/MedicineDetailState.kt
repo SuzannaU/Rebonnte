@@ -1,5 +1,7 @@
 package com.openclassrooms.rebonnte.ui.medicineDetail
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import com.openclassrooms.rebonnte.ui.model.HistoryUi
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 
@@ -8,6 +10,7 @@ sealed class MedicineDetailState {
     object Loading : MedicineDetailState()
     object MedicineNotFound : MedicineDetailState()
 
+    @Immutable
     data class MedicineFound(
         val medicine: MedicineUi,
         val histories: List<HistoryUi>,

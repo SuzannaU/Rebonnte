@@ -2,10 +2,13 @@ package com.openclassrooms.rebonnte.ui.util
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.res.stringResource
 
+@Immutable
 sealed class UiText {
     data class RawString(val value: String) : UiText()
+
     class StringResource(
         @StringRes val resId: Int,
         vararg val args: Any,

@@ -4,10 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.model.Medicine
-import com.openclassrooms.rebonnte.domain.useCase.medicine.AddMedicineUseCase
 import com.openclassrooms.rebonnte.domain.useCase.aisle.CheckAisleExistsUseCase
+import com.openclassrooms.rebonnte.domain.useCase.medicine.AddMedicineUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
+import com.openclassrooms.rebonnte.ui.util.generateRandomAlphanumeric
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,12 @@ class AddMedicineViewModel(
 
     private val initialAisleNumber: String = savedStateHandle["aisleNumber"] ?: ""
 
-    private var _formState = MutableStateFlow(FormState(aisleNumber = initialAisleNumber))
+    private var _formState = MutableStateFlow(
+        FormState(
+            id = generateRandomAlphanumeric(20),
+            aisleNumber = initialAisleNumber
+        )
+    )
     val formState = _formState.asStateFlow()
 
     private var _saveState = MutableStateFlow<SaveState>(SaveState.Idle)
@@ -76,6 +82,7 @@ class AddMedicineViewModel(
                 is DataResult.Success -> {
                     _saveState.value = SaveState.MedicineSaved
                 }
+
                 is DataResult.Failure -> {
                     _saveState.value = SaveState.Error(result.exception.toErrorMessageId())
                 }
