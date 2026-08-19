@@ -1,7 +1,19 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.gms)
+    alias(libs.plugins.secrets)
+    alias(libs.plugins.sonar)
+    id("jacoco")
+}
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
 }
 
 android {
@@ -22,13 +34,40 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            } else {
+                val keystore = System.getenv("KEYSTORE_FILE")
+
+                if (keystore != null) {
+                    storeFile = file(keystore)
+                    storePassword = System.getenv("KEYSTORE_PASSWORD")
+                    keyAlias = System.getenv("KEY_ALIAS")
+                    keyPassword = System.getenv("KEY_PASSWORD")
+                }
+            }
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
         }
     }
 
@@ -39,19 +78,102 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     testOptions {
         unitTests.all {
             it.useJUnitPlatform()
+            it.configure<JacocoTaskExtension> {
+                isIncludeNoLocationClasses = true
+                excludes = listOf("jdk.internal.*")
+            }
         }
+    }
+    lint {
+        abortOnError = false
+        xmlReport = true
+        checkReleaseBuilds = false
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+val fileFilter = listOf(
+    "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
+    "**/*Test*.*", "android/**/*.*", "**/*$[0-9]*.*",
+    "**/*Directions*.*", "**/*Args*.*", "**/*_Factory.*",
+    "**/*_MembersInjector.*", "**/*_LifecycleAdapter.*",
+    "**/*Component*.*", "**/*Module*.*", "**/*_HiltModules*.*", "**/*Hilt*.*"
+)
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn(
+        "testDebugUnitTest",
+        "connectedDebugAndroidTest"
+    )
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
     }
 
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+    sourceDirectories.setFrom(
+        files(
+            "${project.projectDir}/src/main/java",
+            "${project.projectDir}/src/main/kotlin"
+        )
+    )
+
+    classDirectories.setFrom(
+        fileTree(layout.buildDirectory.asFile.get()) {
+            include("**/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes/**/*.class")
+            include("**/intermediates/javac/debug/classes/**/*.class")
+            exclude(fileFilter)
         }
+    )
+
+    executionData.setFrom(
+        fileTree(layout.buildDirectory.asFile.get()) {
+            include("**/*.exec")
+            include("**/*.ec")
+        }
+    )
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "SuzannaU_Rebonnte")
+        property("sonar.organization", "suzannau")
+        property("sonar.host.url", "https://sonarcloud.io")
+
+        val token = System.getenv("SONAR_TOKEN") ?: run {
+            val localProperties = Properties()
+            val localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                localProperties.load(localPropertiesFile.inputStream())
+            }
+            localProperties.getProperty("SONAR_TOKEN")
+        } ?: ""
+        property("sonar.token", token)
+
+        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+        property("sonar.androidLint.reportPaths", "${layout.buildDirectory.get()}/reports/lint-results-debug.xml")
     }
+}
+
+dependencyLocking {
+    lockAllConfigurations()
+}
+
+secrets {
+    defaultPropertiesFileName = "secrets.defaults.properties"
 }
 
 dependencies {
