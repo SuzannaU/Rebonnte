@@ -1,4 +1,4 @@
-name: CD on tag
+name: CD on tag, push and PR
 
 on:
   push:
@@ -35,7 +35,6 @@ jobs:
 
       - name: Build Release APK
         env:
-          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           KEYSTORE_FILE: release.jks
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}

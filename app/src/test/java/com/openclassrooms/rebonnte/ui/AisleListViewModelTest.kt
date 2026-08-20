@@ -11,6 +11,7 @@ import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.aisleList.AisleListScreenState
 import com.openclassrooms.rebonnte.ui.aisleList.AisleListViewModel
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -171,11 +172,12 @@ class AisleListViewModelTest {
     @Test
     fun `onLogout calls logOut use case`() = runTest(testDispatcher) {
         coEvery { getAisles() } returns flowOf(emptyList())
-        every { logOut() } returns Unit
+        coEvery { logOut() } returns Unit
+
         initViewModel()
 
         viewModel.onLogout()
 
-        verify { logOut() }
+        coVerify { logOut() }
     }
 }

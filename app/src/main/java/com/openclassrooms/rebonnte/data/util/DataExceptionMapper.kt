@@ -7,6 +7,18 @@ import com.openclassrooms.rebonnte.domain.exception.AuthException
 import com.openclassrooms.rebonnte.domain.exception.DatabaseException
 import com.openclassrooms.rebonnte.domain.exception.NetworkException
 import com.openclassrooms.rebonnte.domain.exception.UnknownException
+import com.openclassrooms.rebonnte.domain.util.DataResult
+
+
+suspend inline fun <T> wrapDataResult(
+    crossinline block: suspend () -> T
+): DataResult<T> {
+    return try {
+        DataResult.Success(block())
+    } catch (e: Exception) {
+        DataResult.Failure(e.toDomainException())
+    }
+}
 
 fun Throwable.toDomainException(): Throwable {
     return when (this) {

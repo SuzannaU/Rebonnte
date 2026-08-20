@@ -6,7 +6,7 @@ class LogOutUseCase(
     private val authService: AuthService
 ) {
 
-    operator fun invoke() {
+    suspend operator fun invoke() {
         authService.signOut()
     }
 }

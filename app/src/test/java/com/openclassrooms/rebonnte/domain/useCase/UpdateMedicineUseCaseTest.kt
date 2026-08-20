@@ -9,7 +9,6 @@ import com.openclassrooms.rebonnte.domain.useCase.medicine.UpdateMedicineUseCase
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -34,7 +33,7 @@ class UpdateMedicineUseCaseTest {
     fun `invoke should return failure when authService fails`() = runTest {
         val medicineId = "1"
         val updatedField = UpdatedField(UpdatableFields.NAME, "Old", "New")
-        every { authService.getAuthUser() } throws Exception()
+        coEvery { authService.getAuthUser() } returns DataResult.Failure(Exception())
 
         val result = updateMedicineUseCase(medicineId, updatedField)
 
@@ -49,7 +48,7 @@ class UpdateMedicineUseCaseTest {
         val medicineId = "1"
         val updatedField = UpdatedField(UpdatableFields.NAME, "Old", "New")
         val authUser = AuthUser(uid = "user1", email = "test@test.com", displayName = "Tester")
-        every { authService.getAuthUser() } returns authUser
+        coEvery { authService.getAuthUser() } returns DataResult.Success(authUser)
 
         val expectedResult = DataResult.Success(Unit)
         coEvery {

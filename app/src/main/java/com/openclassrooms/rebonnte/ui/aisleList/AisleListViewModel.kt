@@ -100,6 +100,8 @@ class AisleListViewModel(
     }
 
     fun onLogout() {
-        logOut()
+        viewModelScope.launch(dispatcher.io) {
+            logOut()
+        }
     }
 }

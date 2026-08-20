@@ -2,6 +2,7 @@ package com.openclassrooms.rebonnte.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openclassrooms.rebonnte.domain.model.AuthUser
 import com.openclassrooms.rebonnte.domain.model.User
 import com.openclassrooms.rebonnte.domain.service.AuthService
 import com.openclassrooms.rebonnte.domain.useCase.user.CheckUserExistsUseCase
@@ -47,29 +48,47 @@ class MainViewModel(
 
     fun saveNewUserToDb() {
         viewModelScope.launch(dispatcher.io) {
-            val authUser = authService.getAuthUser()
 
-            val userExistsResult = checkUserExists(authUser.uid)
-            if (userExistsResult is DataResult.Success && userExistsResult.data) {
+            val authUser = getAuthUser()
+
+            if (authUser == null) {
                 return@launch
-            }
-
-            val creationResult = saveUserToDb(
-                User(
-                    id = authUser.uid,
-                    username = authUser.displayName,
-                    email = authUser.email,
-                )
-            )
-            when (creationResult) {
-                is DataResult.Success -> {
+            } else {
+                val userExistsResult = checkUserExists(authUser.uid)
+                if (userExistsResult is DataResult.Success && userExistsResult.data) {
                     return@launch
                 }
+                val creationResult = saveUserToDb(
+                    User(
+                        id = authUser.uid,
+                        username = authUser.displayName,
+                        email = authUser.email,
+                    )
+                )
+                when (creationResult) {
+                    is DataResult.Success -> {
+                        return@launch
+                    }
 
-                is DataResult.Failure -> {
-                    creationResult.exception.printStackTrace()
-                    _uiState.update { it.copy(errorMessageId = creationResult.exception.toErrorMessageId()) }
+                    is DataResult.Failure -> {
+                        creationResult.exception.printStackTrace()
+                        _uiState.update { it.copy(errorMessageId = creationResult.exception.toErrorMessageId()) }
+                    }
                 }
+            }
+        }
+    }
+
+
+    private suspend fun getAuthUser(): AuthUser? {
+        when (val authUserResult = authService.getAuthUser()) {
+            is DataResult.Success -> {
+                return authUserResult.data
+            }
+
+            is DataResult.Failure -> {
+                _uiState.update { it.copy(errorMessageId = authUserResult.exception.toErrorMessageId()) }
+                return null
             }
         }
     }

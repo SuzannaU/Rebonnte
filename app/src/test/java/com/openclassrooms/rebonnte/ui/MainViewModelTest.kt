@@ -68,7 +68,7 @@ class MainViewModelTest {
         runTest(testDispatcher) {
             val authUser =
                 AuthUser(uid = "user123", email = "test@test.com", displayName = "Tester")
-            every { authService.getAuthUser() } returns authUser
+            coEvery { authService.getAuthUser() } returns DataResult.Success(authUser)
             coEvery { checkUserExists(authUser.uid) } returns DataResult.Success(false)
             coEvery { saveUserToDb(any()) } returns DataResult.Success(Unit)
 
@@ -85,7 +85,7 @@ class MainViewModelTest {
         runTest(testDispatcher) {
             val authUser =
                 AuthUser(uid = "user123", email = "test@test.com", displayName = "Tester")
-            every { authService.getAuthUser() } returns authUser
+            coEvery { authService.getAuthUser() } returns DataResult.Success(authUser)
             coEvery { checkUserExists(authUser.uid) } returns DataResult.Success(false)
             coEvery { saveUserToDb(any()) } returns DataResult.Failure(Exception())
 
@@ -104,7 +104,7 @@ class MainViewModelTest {
         runTest(testDispatcher) {
             val authUser =
                 AuthUser(uid = "user123", email = "test@test.com", displayName = "Tester")
-            every { authService.getAuthUser() } returns authUser
+            coEvery { authService.getAuthUser() } returns DataResult.Success(authUser)
             coEvery { checkUserExists(authUser.uid) } returns DataResult.Success(true)
 
             viewModel =

@@ -3,12 +3,12 @@ package com.openclassrooms.rebonnte.data.repositoryImpl
 import com.openclassrooms.rebonnte.data.datasource.MedicineDataSource
 import com.openclassrooms.rebonnte.data.util.toDomain
 import com.openclassrooms.rebonnte.data.util.toDto
+import com.openclassrooms.rebonnte.data.util.wrapDataResult
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.util.DataResult
-import com.openclassrooms.rebonnte.domain.util.wrapDataResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -21,7 +21,6 @@ class MedicineRepositoryFirestoreImpl(
             .map { medicine ->
                 medicine?.toDomain()
             }
-
     }
 
     override fun getMedicinesOrderedBy(sortOption: MedicineSortOption): Flow<List<Medicine>> {
