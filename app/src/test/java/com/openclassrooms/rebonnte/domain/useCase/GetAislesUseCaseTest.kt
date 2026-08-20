@@ -3,6 +3,7 @@ package com.openclassrooms.rebonnte.domain.useCase
 import com.openclassrooms.rebonnte.domain.model.Aisle
 import com.openclassrooms.rebonnte.domain.repository.AisleRepository
 import com.openclassrooms.rebonnte.domain.useCase.aisle.GetAislesUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -27,13 +28,13 @@ class GetAislesUseCaseTest {
     @Test
     fun `invoke should return flow from repository`() = runTest {
         val aisles = listOf(Aisle(number = "1"), Aisle(number = "2"))
-        val expectedFlow = flowOf(aisles)
+        val expectedFlow = flowOf(DataResult.Success(aisles))
         every { aisleRepository.getAisles() } returns expectedFlow
 
         val resultFlow = getAislesUseCase()
         val result = resultFlow.toList()
 
-        assertEquals(listOf(aisles), result)
+        assertEquals(listOf(DataResult.Success(aisles)), result)
         verify(exactly = 1) { aisleRepository.getAisles() }
     }
 }

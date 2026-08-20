@@ -7,7 +7,7 @@ class CheckUserExistsUseCase(
     private val userRepository: UserRepository,
 ) {
 
-    suspend operator fun invoke(userId: String) : DataResult<Boolean> {
+    suspend operator fun invoke(userId: String): DataResult<Boolean> {
         return when (val userResult = userRepository.getUserById(userId)) {
             is DataResult.Success -> DataResult.Success(userResult.data != null)
             is DataResult.Failure -> DataResult.Failure(userResult.exception)

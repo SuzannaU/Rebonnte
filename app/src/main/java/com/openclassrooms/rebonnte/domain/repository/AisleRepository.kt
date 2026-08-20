@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface AisleRepository {
     suspend fun getAisleByNumber(aisleNumber: String): DataResult<Aisle?>
-    fun getAisles(): Flow<List<Aisle>>
+    fun getAisles(): Flow<DataResult<List<Aisle>>>
     suspend fun addAisle(aisle: Aisle): DataResult<Unit>
 }

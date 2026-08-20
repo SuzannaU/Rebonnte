@@ -3,19 +3,20 @@ package com.openclassrooms.rebonnte.data.repositoryImpl
 import com.openclassrooms.rebonnte.data.datasource.AisleDataSource
 import com.openclassrooms.rebonnte.data.dto.AisleDto
 import com.openclassrooms.rebonnte.domain.model.Aisle
+import com.openclassrooms.rebonnte.domain.exception.UnknownException
 import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class AisleRepositoryFirestoreImplTest {
 
@@ -75,18 +76,25 @@ class AisleRepositoryFirestoreImplTest {
 
         val result = aisleRepository.getAisles().first()
 
-        assertEquals(3, result.size)
-        assertEquals("1", result[0].number)
-        assertEquals("2", result[1].number)
-        assertEquals("10", result[2].number)
+        assertTrue(result is DataResult.Success)
+        val data = (result as DataResult.Success).data
+        assertEquals(3, data.size)
+        assertEquals("1", data[0].number)
+        assertEquals("2", data[1].number)
+        assertEquals("10", data[2].number)
         coVerify(exactly = 1) { aisleDataSource.getAisles() }
     }
 
     @Test
-    fun `getAisles returns throws when datasource fails`() = runTest {
-        every { aisleDataSource.getAisles() } throws Exception()
+    fun `getAisles returns failure when datasource fails`() = runTest {
+        val exception = Exception("test")
+        every { aisleDataSource.getAisles() } returns flow { throw exception }
 
-        assertThrows<Exception> { aisleRepository.getAisles().first() }
+        val result = aisleRepository.getAisles().first()
+
+        assertTrue(result is DataResult.Failure)
+        assertTrue((result as DataResult.Failure).exception is UnknownException)
+        assertEquals("test", result.exception.message)
         coVerify(exactly = 1) { aisleDataSource.getAisles() }
     }
 

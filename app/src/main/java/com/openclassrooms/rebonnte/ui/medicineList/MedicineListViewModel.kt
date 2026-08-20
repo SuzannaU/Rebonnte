@@ -3,6 +3,7 @@ package com.openclassrooms.rebonnte.ui.medicineList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesOrderedByUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.model.MedicineUi
 import com.openclassrooms.rebonnte.ui.model.SortOption
@@ -14,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
@@ -46,27 +46,25 @@ class MedicineListViewModel(
     val listScreenState: StateFlow<MedicineListScreenState> = combine(
         flow = _medicinesFlow,
         flow2 = _searchQuery,
-    ) { medicines, query ->
-
-        val filteredMedicines: List<MedicineUi> =
-            if (query.isEmpty()) {
-                medicines.map {
-                    it.toUi()
-                }
-            } else {
-                medicines.filter { medicine ->
-                    medicine.name.contains(query, ignoreCase = true)
-                }.toList().map {
-                    it.toUi()
-                }
+    ) { result, query ->
+        when (result) {
+            is DataResult.Success -> {
+                val medicines = result.data
+                val filteredMedicines: List<MedicineUi> =
+                    if (query.isEmpty()) {
+                        medicines.map { it.toUi() }
+                    } else {
+                        medicines.filter { it.name.contains(query, ignoreCase = true) }.map { it.toUi() }
+                    }
+                MedicineListScreenState.MedicinesFound(filteredMedicines)
             }
 
-        MedicineListScreenState.MedicinesFound(filteredMedicines) as MedicineListScreenState
+            is DataResult.Failure -> {
+                MedicineListScreenState.Error(result.exception.toErrorMessageId())
+            }
+        }
     }
         .flowOn(dispatcher.io)
-        .catch { e ->
-            emit(MedicineListScreenState.Error(e.toErrorMessageId()))
-        }
         .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

@@ -4,6 +4,7 @@ import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesOrderedByUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -31,13 +32,13 @@ class GetMedicinesOrderedByUseCaseTest {
         val medicines = listOf(
             Medicine(id = "1", name = "Aspirin", aisleNumber = "1", currentStock = 10)
         )
-        val expectedFlow = flowOf(medicines)
+        val expectedFlow = flowOf(DataResult.Success(medicines))
         every { medicineRepository.getMedicinesOrderedBy(sortOption) } returns expectedFlow
 
         val resultFlow = getMedicinesOrderedByUseCase(sortOption)
         val result = resultFlow.toList()
 
-        assertEquals(listOf(medicines), result)
+        assertEquals(listOf(DataResult.Success(medicines)), result)
         verify(exactly = 1) { medicineRepository.getMedicinesOrderedBy(sortOption) }
     }
 }

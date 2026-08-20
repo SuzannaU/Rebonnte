@@ -32,7 +32,7 @@ class AddMedicineUseCaseTest {
     @Test
     fun `invoke should return failure when authService fails`() = runTest {
         val medicine = Medicine(id = "1", name = "Aspirin", aisleNumber = "1", currentStock = 10)
-        every { authService.getAuthUser() } throws Exception()
+        coEvery { authService.getAuthUser() } returns DataResult.Failure(Exception())
 
         val result = addMedicineUseCase(medicine)
 
@@ -46,7 +46,7 @@ class AddMedicineUseCaseTest {
     fun `invoke should call addMedicineWithHistory when authService succeeds`() = runTest {
         val medicine = Medicine(id = "1", name = "Aspirin", aisleNumber = "1", currentStock = 10)
         val authUser = AuthUser(uid = "user1", email = "test@test.com", displayName = "Tester")
-        every { authService.getAuthUser() } returns authUser
+        coEvery { authService.getAuthUser() } returns DataResult.Success(authUser)
 
         val expectedResult = DataResult.Success(Unit)
         coEvery { medicineRepository.addMedicineWithHistory(any(), any()) } returns expectedResult

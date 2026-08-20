@@ -6,7 +6,6 @@ import com.openclassrooms.rebonnte.domain.model.UpdatedField
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.service.AuthService
 import com.openclassrooms.rebonnte.domain.util.DataResult
-import com.openclassrooms.rebonnte.domain.util.wrapDataResult
 import java.util.Calendar
 
 class UpdateMedicineUseCase(
@@ -16,10 +15,7 @@ class UpdateMedicineUseCase(
 
     suspend operator fun invoke(medicineId: String, updatedField: UpdatedField): DataResult<Unit> {
 
-        val userResult = wrapDataResult {
-            authService.getAuthUser()
-        }
-        when (userResult) {
+        when (val userResult = authService.getAuthUser()) {
             is DataResult.Failure -> return userResult
             is DataResult.Success<AuthUser> -> {
                 val user = userResult.data

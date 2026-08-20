@@ -11,6 +11,7 @@ import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.aisleList.AisleListScreenState
 import com.openclassrooms.rebonnte.ui.aisleList.AisleListViewModel
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -58,7 +59,7 @@ class AisleListViewModelTest {
     @Test
     fun `loadAisles success with data updates uiState to AislesFound`() = runTest(testDispatcher) {
         val aisles = listOf(Aisle("1"), Aisle("2"))
-        coEvery { getAisles() } returns flowOf(aisles)
+        coEvery { getAisles() } returns flowOf(DataResult.Success(aisles))
 
         initViewModel()
 
@@ -69,7 +70,7 @@ class AisleListViewModelTest {
 
     @Test
     fun `loadAisles success with no data updates uiState to NoAisleFound`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flowOf(emptyList())
+        coEvery { getAisles() } returns flowOf(DataResult.Success(emptyList()))
 
         initViewModel()
 
@@ -78,7 +79,7 @@ class AisleListViewModelTest {
 
     @Test
     fun `loadAisles error updates uiState to Error`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flow { throw DatabaseException("test") }
+        coEvery { getAisles() } returns flowOf(DataResult.Failure(DatabaseException("test")))
 
         initViewModel()
 
@@ -89,7 +90,7 @@ class AisleListViewModelTest {
 
     @Test
     fun `onAddAisle blank input sets aisleBlankError`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flowOf(emptyList())
+        coEvery { getAisles() } returns flowOf(DataResult.Success(emptyList()))
         initViewModel()
 
         viewModel.onAddAisle(" ")
@@ -99,7 +100,7 @@ class AisleListViewModelTest {
 
     @Test
     fun `onAddAisle non-digit input sets aisleDigitError`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flowOf(emptyList())
+        coEvery { getAisles() } returns flowOf(DataResult.Success(emptyList()))
         initViewModel()
 
         viewModel.onAddAisle("12a")
@@ -109,7 +110,7 @@ class AisleListViewModelTest {
 
     @Test
     fun `onAddAisle existing aisle sets aisleExistsError`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flowOf(emptyList())
+        coEvery { getAisles() } returns flowOf(DataResult.Success(emptyList()))
         coEvery { checkAisleExists("1") } returns DataResult.Success(true)
         initViewModel()
 
@@ -120,7 +121,7 @@ class AisleListViewModelTest {
 
     @Test
     fun `onAddAisle checkAisle failure updates state to error`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flowOf(emptyList())
+        coEvery { getAisles() } returns flowOf(DataResult.Success(emptyList()))
         coEvery { checkAisleExists("1") } returns DataResult.Failure(DatabaseException("test"))
         initViewModel()
 
@@ -133,7 +134,7 @@ class AisleListViewModelTest {
 
     @Test
     fun `onAddAisle success updates isSuccess`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flowOf(emptyList())
+        coEvery { getAisles() } returns flowOf(DataResult.Success(emptyList()))
         coEvery { checkAisleExists("1") } returns DataResult.Success(false)
         coEvery { addAisle("1") } returns DataResult.Success(Unit)
         initViewModel()
@@ -145,7 +146,7 @@ class AisleListViewModelTest {
 
     @Test
     fun `onAddAisle failure updates uiState error`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flowOf(emptyList())
+        coEvery { getAisles() } returns flowOf(DataResult.Success(emptyList()))
         coEvery { checkAisleExists("1") } returns DataResult.Success(false)
         coEvery { addAisle("1") } returns DataResult.Failure(DatabaseException("test"))
         initViewModel()
@@ -159,7 +160,7 @@ class AisleListViewModelTest {
 
     @Test
     fun `resetAddAisleState resets state`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flowOf(emptyList())
+        coEvery { getAisles() } returns flowOf(DataResult.Success(emptyList()))
         initViewModel()
         viewModel.onAddAisle(" ")
         
@@ -170,12 +171,13 @@ class AisleListViewModelTest {
 
     @Test
     fun `onLogout calls logOut use case`() = runTest(testDispatcher) {
-        coEvery { getAisles() } returns flowOf(emptyList())
-        every { logOut() } returns Unit
+        coEvery { getAisles() } returns flowOf(DataResult.Success(emptyList()))
+        coEvery { logOut() } returns Unit
+
         initViewModel()
 
         viewModel.onLogout()
 
-        verify { logOut() }
+        coVerify { logOut() }
     }
 }

@@ -3,6 +3,7 @@ package com.openclassrooms.rebonnte.domain.useCase
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicineByIdUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -28,13 +29,13 @@ class GetMedicineByIdUseCaseTest {
     fun `invoke should return flow from repository`() = runTest {
         val medicineId = "med_id"
         val medicine = Medicine(id = medicineId, name = "Aspirin", aisleNumber = "1", currentStock = 10)
-        val expectedFlow = flowOf(medicine)
+        val expectedFlow = flowOf(DataResult.Success(medicine))
         every { medicineRepository.getMedicineById(medicineId) } returns expectedFlow
 
         val resultFlow = getMedicineByIdUseCase(medicineId)
         val result = resultFlow.toList()
 
-        assertEquals(listOf(medicine), result)
+        assertEquals(listOf(DataResult.Success(medicine)), result)
         verify(exactly = 1) { medicineRepository.getMedicineById(medicineId) }
     }
 }

@@ -53,7 +53,7 @@ class EditMedicineViewModelTest {
 
     private fun initViewModel() {
         val savedStateHandle = SavedStateHandle(mapOf("medicineId" to medicineId))
-        coEvery { getMedicineById(medicineId) } returns flowOf(medicine)
+        coEvery { getMedicineById(medicineId) } returns flowOf(DataResult.Success(medicine))
         viewModel = EditMedicineViewModel(getMedicineById, updateMedicine, checkAisleExists, dispatcherProvider, savedStateHandle)
     }
 
