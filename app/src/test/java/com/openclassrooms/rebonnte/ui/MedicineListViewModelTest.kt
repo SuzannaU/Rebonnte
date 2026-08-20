@@ -4,6 +4,7 @@ import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.exception.DatabaseException
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesOrderedByUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineListScreenState
 import com.openclassrooms.rebonnte.ui.medicineList.MedicineListViewModel
 import com.openclassrooms.rebonnte.ui.model.SortOption
@@ -11,7 +12,6 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -52,7 +52,7 @@ class MedicineListViewModelTest {
             Medicine(id = "1", name = "Aspirin", aisleNumber = "1", currentStock = 10),
             Medicine(id = "2", name = "Paracetamol", aisleNumber = "2", currentStock = 5)
         )
-        coEvery { getMedicinesOrderedBy(any()) } returns flowOf(medicines)
+        coEvery { getMedicinesOrderedBy(any()) } returns flowOf(DataResult.Success(medicines))
 
         initViewModel()
         backgroundScope.launch { viewModel.listScreenState.collect() }
@@ -69,7 +69,7 @@ class MedicineListViewModelTest {
             Medicine(id = "1", name = "Aspirin", aisleNumber = "1", currentStock = 10),
             Medicine(id = "2", name = "Paracetamol", aisleNumber = "2", currentStock = 5)
         )
-        coEvery { getMedicinesOrderedBy(any()) } returns flowOf(medicines)
+        coEvery { getMedicinesOrderedBy(any()) } returns flowOf(DataResult.Success(medicines))
         initViewModel()
         backgroundScope.launch { viewModel.listScreenState.collect() }
         runCurrent()
@@ -86,7 +86,7 @@ class MedicineListViewModelTest {
 
     @Test
     fun `onSortOptionSelected triggers reload with new sort`() = runTest(testDispatcher) {
-        coEvery { getMedicinesOrderedBy(any()) } returns flowOf(emptyList())
+        coEvery { getMedicinesOrderedBy(any()) } returns flowOf(DataResult.Success(emptyList()))
         initViewModel()
         backgroundScope.launch { viewModel.listScreenState.collect() }
         runCurrent()
@@ -99,7 +99,7 @@ class MedicineListViewModelTest {
 
     @Test
     fun `flow catch updates uiState to Error`() = runTest(testDispatcher) {
-        coEvery { getMedicinesOrderedBy(any()) } returns flow { throw DatabaseException("test") }
+        coEvery { getMedicinesOrderedBy(any()) } returns flowOf(DataResult.Failure(DatabaseException("test")))
 
         initViewModel()
         backgroundScope.launch { viewModel.listScreenState.collect() }

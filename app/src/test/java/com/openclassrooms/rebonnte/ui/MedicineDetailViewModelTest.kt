@@ -17,7 +17,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -66,8 +65,8 @@ class MedicineDetailViewModelTest {
         val medicine = Medicine(id = medicineId, name = "Aspirin", aisleNumber = "1", currentStock = 10)
         val histories = listOf(History(medicineId = medicineId, userId = "user1", dateTime = Date(), isCreation = true))
         
-        coEvery { getMedicineById(medicineId) } returns flowOf(medicine)
-        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(histories)
+        coEvery { getMedicineById(medicineId) } returns flowOf(DataResult.Success(medicine))
+        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(DataResult.Success(histories))
         coEvery { getUsernameById("user1") } returns DataResult.Success("John Doe")
 
         initViewModel()
@@ -85,8 +84,8 @@ class MedicineDetailViewModelTest {
         val medicine = Medicine(id = medicineId, name = "Aspirin", aisleNumber = "1", currentStock = 10)
         val histories = listOf(History(medicineId = medicineId, userId = "user1", dateTime = Date(), isCreation = true))
 
-        coEvery { getMedicineById(medicineId) } returns flowOf(medicine)
-        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(histories)
+        coEvery { getMedicineById(medicineId) } returns flowOf(DataResult.Success(medicine))
+        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(DataResult.Success(histories))
         coEvery { getUsernameById("user1") } returns DataResult.Failure(DatabaseException("test"))
 
         initViewModel()
@@ -101,8 +100,8 @@ class MedicineDetailViewModelTest {
 
     @Test
     fun `loadMedicine with null medicine updates uiState to MedicineNotFound`() = runTest(testDispatcher) {
-        coEvery { getMedicineById(medicineId) } returns flowOf(null)
-        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(emptyList())
+        coEvery { getMedicineById(medicineId) } returns flowOf(DataResult.Success(null))
+        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(DataResult.Success(emptyList()))
 
         initViewModel()
 
@@ -111,8 +110,8 @@ class MedicineDetailViewModelTest {
 
     @Test
     fun `loadMedicine error updates uiState to Error`() = runTest(testDispatcher) {
-        coEvery { getMedicineById(medicineId) } returns flow { throw DatabaseException("test") }
-        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(emptyList())
+        coEvery { getMedicineById(medicineId) } returns flowOf(DataResult.Failure(DatabaseException("test")))
+        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(DataResult.Success(emptyList()))
 
         initViewModel()
 
@@ -123,8 +122,8 @@ class MedicineDetailViewModelTest {
 
     @Test
     fun `onArchiveClick success calls use case`() = runTest(testDispatcher) {
-        coEvery { getMedicineById(medicineId) } returns flowOf(null)
-        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(emptyList())
+        coEvery { getMedicineById(medicineId) } returns flowOf(DataResult.Success(null))
+        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(DataResult.Success(emptyList()))
         coEvery { archiveMedicine(medicineId) } returns DataResult.Success(Unit)
         initViewModel()
 
@@ -135,8 +134,8 @@ class MedicineDetailViewModelTest {
 
     @Test
     fun `onArchiveClick failure sets error message`() = runTest(testDispatcher) {
-        coEvery { getMedicineById(medicineId) } returns flowOf(null)
-        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(emptyList())
+        coEvery { getMedicineById(medicineId) } returns flowOf(DataResult.Success(null))
+        coEvery { getHistoriesByMedicine(medicineId) } returns flowOf(DataResult.Success(emptyList()))
         coEvery { archiveMedicine(medicineId) } returns DataResult.Failure(DatabaseException("test"))
         initViewModel()
 

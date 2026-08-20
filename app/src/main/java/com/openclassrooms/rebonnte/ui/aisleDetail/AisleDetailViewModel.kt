@@ -4,12 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesByAisleUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.DispatcherProvider
 import com.openclassrooms.rebonnte.ui.util.toUi
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class AisleDetailViewModel(
@@ -31,16 +31,23 @@ class AisleDetailViewModel(
         viewModelScope.launch(dispatcher.io) {
             _uiState.value = AisleDetailScreenState.Loading
             getMedicinesByAisle(aisleNumber)
-                .catch { e ->
-                    _uiState.value = AisleDetailScreenState.Error(errorMessageId = e.toErrorMessageId())
-                }
-                .collect { medicines ->
-                    val medicinesUi = medicines.map { medicine ->
-                        medicine.toUi()
+                .collect { result ->
+                    when (result) {
+                        is DataResult.Success -> {
+                            val medicinesUi = result.data.map { medicine ->
+                                medicine.toUi()
+                            }
+                            _uiState.value = AisleDetailScreenState.AisleFound(
+                                aisleNumber, medicinesUi,
+                            )
+                        }
+
+                        is DataResult.Failure -> {
+                            _uiState.value = AisleDetailScreenState.Error(
+                                errorMessageId = result.exception.toErrorMessageId()
+                            )
+                        }
                     }
-                    _uiState.value = AisleDetailScreenState.AisleFound(
-                        aisleNumber, medicinesUi,
-                    )
                 }
         }
     }

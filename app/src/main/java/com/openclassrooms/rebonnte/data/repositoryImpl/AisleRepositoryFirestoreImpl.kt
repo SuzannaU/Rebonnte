@@ -1,6 +1,7 @@
 package com.openclassrooms.rebonnte.data.repositoryImpl
 
 import com.openclassrooms.rebonnte.data.datasource.AisleDataSource
+import com.openclassrooms.rebonnte.data.util.asDataResult
 import com.openclassrooms.rebonnte.data.util.toDomain
 import com.openclassrooms.rebonnte.data.util.toDto
 import com.openclassrooms.rebonnte.data.util.wrapDataResult
@@ -20,12 +21,12 @@ class AisleRepositoryFirestoreImpl(
         }
     }
 
-    override fun getAisles(): Flow<List<Aisle>> {
+    override fun getAisles(): Flow<DataResult<List<Aisle>>> {
         return aisleDataSource.getAisles().map { aisleDtos ->
             aisleDtos
                 .map { it.toDomain() }
                 .sortedBy { it.number.toIntOrNull() ?: 0 }
-        }
+        }.asDataResult()
     }
 
     override suspend fun addAisle(aisle: Aisle): DataResult<Unit> {

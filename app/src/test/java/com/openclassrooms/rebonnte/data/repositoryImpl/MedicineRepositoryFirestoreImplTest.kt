@@ -2,6 +2,7 @@ package com.openclassrooms.rebonnte.data.repositoryImpl
 
 import com.openclassrooms.rebonnte.data.datasource.MedicineDataSource
 import com.openclassrooms.rebonnte.data.dto.MedicineDto
+import com.openclassrooms.rebonnte.domain.exception.UnknownException
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.model.MedicineSortOption
@@ -12,13 +13,13 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.util.Date
 
 class MedicineRepositoryFirestoreImplTest {
@@ -40,8 +41,10 @@ class MedicineRepositoryFirestoreImplTest {
 
         val result = medicineRepository.getMedicineById(medicineId).first()
 
-        assertEquals("Med A", result?.name)
-        assertEquals(medicineId, result?.id)
+        assertTrue(result is DataResult.Success)
+        val data = (result as DataResult.Success).data
+        assertEquals("Med A", data?.name)
+        assertEquals(medicineId, data?.id)
         verify { medicineDataSource.getMedicineById(match { it == medicineId }) }
     }
 
@@ -52,17 +55,22 @@ class MedicineRepositoryFirestoreImplTest {
 
         val result = medicineRepository.getMedicineById(medicineId).first()
 
-        assertEquals(null, result)
+        assertTrue(result is DataResult.Success)
+        assertEquals(null, (result as DataResult.Success).data)
         verify { medicineDataSource.getMedicineById(match { it == medicineId }) }
     }
 
     @Test
-    fun `getMedicineById throws when datasource fails`() = runTest {
+    fun `getMedicineById returns failure when datasource fails`() = runTest {
         val medicineId = "med1"
-        every { medicineDataSource.getMedicineById(medicineId) } throws Exception()
+        val exception = Exception("test")
+        every { medicineDataSource.getMedicineById(medicineId) } returns flow { throw exception }
 
-        assertThrows<Exception> { medicineRepository.getMedicineById(medicineId).first() }
+        val result = medicineRepository.getMedicineById(medicineId).first()
 
+        assertTrue(result is DataResult.Failure)
+        assertTrue((result as DataResult.Failure).exception is UnknownException)
+        assertEquals("test", result.exception.message)
         verify { medicineDataSource.getMedicineById(match { it == medicineId }) }
     }
 
@@ -79,19 +87,25 @@ class MedicineRepositoryFirestoreImplTest {
 
         val result = medicineRepository.getMedicinesOrderedBy(sortOption).first()
 
-        assertEquals(2, result.size)
-        assertEquals("A", result[0].name)
-        assertEquals("B", result[1].name)
+        assertTrue(result is DataResult.Success)
+        val data = (result as DataResult.Success).data
+        assertEquals(2, data.size)
+        assertEquals("A", data[0].name)
+        assertEquals("B", data[1].name)
         verify { medicineDataSource.getUnarchivedMedicinesOrderedBy(match { it == sortOption }) }
     }
 
     @Test
-    fun `getMedicinesOrderedBy throws when datasource fails`() = runTest {
+    fun `getMedicinesOrderedBy returns failure when datasource fails`() = runTest {
         val sortOption = MedicineSortOption.NAME_ASCENDING
-        every { medicineDataSource.getUnarchivedMedicinesOrderedBy(sortOption) } throws Exception()
+        val exception = Exception("test")
+        every { medicineDataSource.getUnarchivedMedicinesOrderedBy(sortOption) } returns flow { throw exception }
 
-        assertThrows<Exception> { medicineRepository.getMedicinesOrderedBy(sortOption).first() }
+        val result = medicineRepository.getMedicinesOrderedBy(sortOption).first()
 
+        assertTrue(result is DataResult.Failure)
+        assertTrue((result as DataResult.Failure).exception is UnknownException)
+        assertEquals("test", result.exception.message)
         verify { medicineDataSource.getUnarchivedMedicinesOrderedBy(match { it == sortOption }) }
     }
 
@@ -107,16 +121,21 @@ class MedicineRepositoryFirestoreImplTest {
 
         val result = medicineRepository.getMedicinesByAisleNumber("10").first()
 
-        assertEquals(2, result.size)
+        assertTrue(result is DataResult.Success)
+        assertEquals(2, (result as DataResult.Success).data.size)
         verify { medicineDataSource.getMedicinesByAisleNumber(any()) }
     }
 
     @Test
-    fun `getMedicinesByAisleNumber throws when datasource fails`() = runTest {
-        every { medicineDataSource.getMedicinesByAisleNumber(any()) } throws Exception()
+    fun `getMedicinesByAisleNumber returns failure when datasource fails`() = runTest {
+        val exception = Exception("test")
+        every { medicineDataSource.getMedicinesByAisleNumber(any()) } returns flow { throw exception }
 
-        assertThrows<Exception> { medicineRepository.getMedicinesByAisleNumber("10").first() }
+        val result = medicineRepository.getMedicinesByAisleNumber("10").first()
 
+        assertTrue(result is DataResult.Failure)
+        assertTrue((result as DataResult.Failure).exception is UnknownException)
+        assertEquals("test", result.exception.message)
         verify { medicineDataSource.getMedicinesByAisleNumber(any()) }
     }
 

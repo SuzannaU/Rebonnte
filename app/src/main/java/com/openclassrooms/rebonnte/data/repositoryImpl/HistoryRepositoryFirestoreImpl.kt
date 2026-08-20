@@ -1,9 +1,11 @@
 package com.openclassrooms.rebonnte.data.repositoryImpl
 
 import com.openclassrooms.rebonnte.data.datasource.HistoryDataSource
+import com.openclassrooms.rebonnte.data.util.asDataResult
 import com.openclassrooms.rebonnte.data.util.toDomain
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -13,11 +15,11 @@ class HistoryRepositoryFirestoreImpl(
 
     // Writing operations for Histories are done by the MedicineRepository because a History writing is tied to its Medicine
 
-    override fun getHistoriesByMedicineId(medicineId: String): Flow<List<History>> {
+    override fun getHistoriesByMedicineId(medicineId: String): Flow<DataResult<List<History>>> {
         return historyDataSource.getHistoriesByMedicineId(medicineId).map { historyDtos ->
             historyDtos.map { historyDto ->
                 historyDto.toDomain()
             }
-        }
+        }.asDataResult()
     }
 }

@@ -8,6 +8,9 @@ import com.openclassrooms.rebonnte.domain.exception.DatabaseException
 import com.openclassrooms.rebonnte.domain.exception.NetworkException
 import com.openclassrooms.rebonnte.domain.exception.UnknownException
 import com.openclassrooms.rebonnte.domain.util.DataResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 
 
 suspend inline fun <T> wrapDataResult(
@@ -18,6 +21,12 @@ suspend inline fun <T> wrapDataResult(
     } catch (e: Exception) {
         DataResult.Failure(e.toDomainException())
     }
+}
+
+fun <T> Flow<T>.asDataResult(): Flow<DataResult<T>> {
+    return this
+        .map { DataResult.Success(it) as DataResult<T> }
+        .catch { emit(DataResult.Failure(it.toDomainException())) }
 }
 
 fun Throwable.toDomainException(): Throwable {

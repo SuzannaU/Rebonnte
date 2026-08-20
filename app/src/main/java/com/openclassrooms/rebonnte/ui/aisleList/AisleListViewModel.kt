@@ -12,7 +12,6 @@ import com.openclassrooms.rebonnte.ui.util.toUi
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -38,17 +37,24 @@ class AisleListViewModel(
         viewModelScope.launch(dispatcher.io) {
             _uiState.value = AisleListScreenState.Loading
             getAisles()
-                .catch { e ->
-                    _uiState.value = AisleListScreenState.Error(e.toErrorMessageId())
-                }
-                .collect { aisles ->
-                    val aislesUi = aisles.map { aisle ->
-                        aisle.toUi()
-                    }
-                    if (aislesUi.isEmpty()) {
-                        _uiState.value = AisleListScreenState.NoAisleFound
-                    } else {
-                        _uiState.value = AisleListScreenState.AislesFound(aislesUi)
+                .collect { result ->
+                    when (result) {
+                        is DataResult.Success -> {
+                            val aisles = result.data
+                            val aislesUi = aisles.map { aisle ->
+                                aisle.toUi()
+                            }
+                            if (aislesUi.isEmpty()) {
+                                _uiState.value = AisleListScreenState.NoAisleFound
+                            } else {
+                                _uiState.value = AisleListScreenState.AislesFound(aislesUi)
+                            }
+                        }
+
+                        is DataResult.Failure -> {
+                            _uiState.value =
+                                AisleListScreenState.Error(result.exception.toErrorMessageId())
+                        }
                     }
                 }
         }

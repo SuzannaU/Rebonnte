@@ -3,6 +3,7 @@ package com.openclassrooms.rebonnte.domain.useCase
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.repository.MedicineRepository
 import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesByAisleUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -30,13 +31,13 @@ class GetMedicinesByAisleUseCaseTest {
         val medicines = listOf(
             Medicine(id = "1", name = "Aspirin", aisleNumber = aisleNumber, currentStock = 10)
         )
-        val expectedFlow = flowOf(medicines)
+        val expectedFlow = flowOf(DataResult.Success(medicines))
         every { medicineRepository.getMedicinesByAisleNumber(aisleNumber) } returns expectedFlow
 
         val resultFlow = getMedicinesByAisleUseCase(aisleNumber)
         val result = resultFlow.toList()
 
-        assertEquals(listOf(medicines), result)
+        assertEquals(listOf(DataResult.Success(medicines)), result)
         verify(exactly = 1) { medicineRepository.getMedicinesByAisleNumber(aisleNumber) }
     }
 }

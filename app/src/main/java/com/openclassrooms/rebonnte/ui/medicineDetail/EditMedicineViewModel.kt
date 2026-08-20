@@ -39,16 +39,21 @@ class EditMedicineViewModel(
 
     private fun loadInitialData() {
         viewModelScope.launch(dispatcher.io) {
-            val medicine = getMedicineById(medicineId).first()
-            if (medicine != null) {
-                initialMedicine = medicine
-                _formState.update {
-                    it.copy(
-                        name = medicine.name,
-                        aisleNumber = medicine.aisleNumber,
-                        stock = medicine.currentStock.toString()
-                    )
+            val result = getMedicineById(medicineId).first()
+            if (result is DataResult.Success) {
+                val medicine = result.data
+                if (medicine != null) {
+                    initialMedicine = medicine
+                    _formState.update {
+                        it.copy(
+                            name = medicine.name,
+                            aisleNumber = medicine.aisleNumber,
+                            stock = medicine.currentStock.toString()
+                        )
+                    }
                 }
+            } else if (result is DataResult.Failure) {
+                _formState.update { it.copy(errorId = result.exception.toErrorMessageId()) }
             }
         }
     }
@@ -137,6 +142,7 @@ class EditMedicineViewModel(
                 is DataResult.Success -> {
                     _formState.update { it.copy(isSuccess = true) }
                 }
+
                 is DataResult.Failure -> {
                     _formState.update { it.copy(errorId = result.exception.toErrorMessageId()) }
                 }
@@ -145,12 +151,12 @@ class EditMedicineViewModel(
     }
 
     fun resetSuccessState() {
-        _formState.update { 
+        _formState.update {
             it.copy(
                 isSuccess = false,
                 formError = EditMedicineFormErrorState(),
                 errorId = null
-            ) 
+            )
         }
     }
 }

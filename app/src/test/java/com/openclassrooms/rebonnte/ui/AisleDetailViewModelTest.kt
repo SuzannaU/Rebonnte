@@ -5,12 +5,12 @@ import com.openclassrooms.rebonnte.R
 import com.openclassrooms.rebonnte.domain.exception.DatabaseException
 import com.openclassrooms.rebonnte.domain.model.Medicine
 import com.openclassrooms.rebonnte.domain.useCase.medicine.GetMedicinesByAisleUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailScreenState
 import com.openclassrooms.rebonnte.ui.aisleDetail.AisleDetailViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -50,7 +50,7 @@ class AisleDetailViewModelTest {
         val medicines = listOf(
             Medicine(id = "1", name = "Aspirin", aisleNumber = aisleNumber, currentStock = 10)
         )
-        coEvery { getMedicinesByAisle(aisleNumber) } returns flowOf(medicines)
+        coEvery { getMedicinesByAisle(aisleNumber) } returns flowOf(DataResult.Success(medicines))
 
         initViewModel()
 
@@ -64,9 +64,7 @@ class AisleDetailViewModelTest {
 
     @Test
     fun `loadAisle error updates uiState to Error`() = runTest(testDispatcher) {
-        coEvery { getMedicinesByAisle(aisleNumber) } returns flow {
-            throw DatabaseException("test")
-        }
+        coEvery { getMedicinesByAisle(aisleNumber) } returns flowOf(DataResult.Failure(DatabaseException("test")))
 
         initViewModel()
 

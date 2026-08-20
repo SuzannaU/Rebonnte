@@ -3,6 +3,7 @@ package com.openclassrooms.rebonnte.domain.useCase
 import com.openclassrooms.rebonnte.domain.model.History
 import com.openclassrooms.rebonnte.domain.repository.HistoryRepository
 import com.openclassrooms.rebonnte.domain.useCase.medicine.GetHistoriesByMedicineUseCase
+import com.openclassrooms.rebonnte.domain.util.DataResult
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -31,13 +32,13 @@ class GetHistoriesByMedicineUseCaseTest {
         val histories = listOf(
             History(id = "1", medicineId = medicineId, userId = "user1", dateTime = Date(), isCreation = true)
         )
-        val expectedFlow = flowOf(histories)
+        val expectedFlow = flowOf(DataResult.Success(histories))
         every { historyRepository.getHistoriesByMedicineId(medicineId) } returns expectedFlow
 
         val resultFlow = getHistoriesByMedicineUseCase(medicineId)
         val result = resultFlow.toList()
 
-        assertEquals(listOf(histories), result)
+        assertEquals(listOf(DataResult.Success(histories)), result)
         verify(exactly = 1) { historyRepository.getHistoriesByMedicineId(medicineId) }
     }
 }

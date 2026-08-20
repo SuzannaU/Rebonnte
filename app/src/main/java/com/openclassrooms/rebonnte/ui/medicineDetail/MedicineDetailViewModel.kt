@@ -18,7 +18,6 @@ import com.openclassrooms.rebonnte.ui.util.UiText
 import com.openclassrooms.rebonnte.ui.util.toErrorMessageId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
@@ -46,13 +45,22 @@ class MedicineDetailViewModel(
             combine(
                 getMedicineById(medicineId),
                 getHistoriesByMedicine(medicineId)
-            ) { medicine, histories ->
-                medicine to histories
+            ) { medicineResult, historiesResult ->
+                medicineResult to historiesResult
             }
-                .catch { e ->
-                    onLoadFailure(exception = e)
-                }
-                .collect { (medicine, histories) ->
+                .collect { (medicineResult, historiesResult) ->
+                    if (medicineResult is DataResult.Failure) {
+                        onLoadFailure(medicineResult.exception)
+                        return@collect
+                    }
+                    if (historiesResult is DataResult.Failure) {
+                        onLoadFailure(historiesResult.exception)
+                        return@collect
+                    }
+
+                    val medicine = (medicineResult as DataResult.Success).data
+                    val histories = (historiesResult as DataResult.Success).data
+
                     onLoadSuccess(medicine, histories)
                 }
         }
