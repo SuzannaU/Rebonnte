@@ -208,11 +208,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.analytics)
-    implementation(libs.firebase.messaging)
     implementation(libs.firebase.ui.auth)
-
-    // Tools
-    implementation(libs.coil.compose)
 
     // Testing
     testRuntimeOnly(libs.junit.platform)
